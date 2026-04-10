@@ -17,7 +17,7 @@ import { registerAllTools } from "./lib/register_tools";
 import { refreshProductStore } from "./data/product_store";
 
 const VERSION = "3.0.0";
-const HTTP_PORT = parseInt(process.env["MCP_HTTP_PORT"] ?? "3000", 10);
+const HTTP_PORT = parseInt(process.env["PORT"] ?? process.env["MCP_HTTP_PORT"] ?? "3000", 10);
 const API_KEY = process.env["MCP_API_KEY"] ?? "";
 
 function jsonResp(res: ServerResponse, status: number, body: unknown): void {
@@ -152,7 +152,7 @@ async function main(): Promise<void> {
     jsonResp(res, 404, { error: "Not found" });
   });
 
-  httpServer.listen(HTTP_PORT, () => {
+  httpServer.listen(HTTP_PORT, "0.0.0.0", () => {
     process.stderr.write(
       `[MCP] furniture-hub server v${VERSION} (HTTP port ${HTTP_PORT})\n` +
       `  Streamable HTTP: http://localhost:${HTTP_PORT}/mcp\n` +

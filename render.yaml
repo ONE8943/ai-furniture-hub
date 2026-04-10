@@ -1,0 +1,25 @@
+services:
+  - type: web
+    runtime: node
+    name: ai-furniture-hub
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:render
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RAKUTEN_API_MOCK
+        value: "false"
+      - key: SCRAPE_MOCK
+        value: "true"
+      - key: AMAZON_API_MOCK
+        value: "true"
+      - key: RAKUTEN_APP_ID
+        sync: false
+      - key: RAKUTEN_ACCESS_KEY
+        sync: false
+      - key: AFFILIATE_ID_RAKUTEN
+        sync: false
+      - key: AFFILIATE_ID_AMAZON
+        sync: false

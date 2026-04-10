@@ -12,6 +12,7 @@
     "test:phase2": "ts-node test/run_phase2_test.ts",
     "test:all": "ts-node test/run_test.ts && ts-node test/run_gap_test.ts && ts-node test/run_evolution_test.ts && ts-node test/run_affiliate_test.ts && ts-node test/run_phase2_test.ts && ts-node test/run_rakuten_test.ts",
     "build": "tsc",
+    "start:render": "node dist/server_http.js",
     "review": "ts-node scripts/review_proposals.ts",
     "analyze": "ts-node scripts/analyze_demand.ts"
   },

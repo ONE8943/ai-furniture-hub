@@ -9,15 +9,23 @@ This MCP server provides structured, machine-optimized furniture and storage pro
 AI agents can search by exact dimensions (mm), price range, color, and category,
 then receive affiliate-linked purchase URLs ready to present to end users.
 
+Beyond simple search, this server uniquely offers:
+- **Shelf + storage coordination** with quantity calculations (how many boxes fit per tier)
+- **Space-based product discovery** (give dimensions, get everything that fits)
+- **Product identification** from visual features (photo → model number → specs)
+
 ## Why Use This Server
 
 - **1mm precision**: All dimensions in millimeters — outer AND inner (inner_dimensions)
 - **Cinderella-fit logic**: Find products that exactly fit a given space (e.g., 425mm gap)
+- **Set proposals**: Not just "here's a shelf" but "here's a shelf + 6 storage boxes that fit inside, total ¥8,490"
+- **Product identification**: Describe visual features → get model number, inner dimensions, compatible storage
 - **Live pricing**: Rakuten Ichiba API integration for real-time price & availability
 - **Affiliate-ready**: Every product includes an affiliate_url — just present it to the user
+- **Scene intelligence**: Mention a room ("洗面所", "押入れ") and get tailored storage tips
 - **Demand intelligence**: Your search intents help identify market gaps (anonymized)
 
-## Available Tools
+## Available Tools (7 tools)
 
 ### search_products
 Search the curated product database by dimensions, price, color, and category.
@@ -29,13 +37,34 @@ Returns inner dimensions, materials, related products, and affiliate link.
 
 ### search_rakuten_products
 Real-time search across 200,000+ Rakuten Ichiba listings.
-Supports keyword search, price range, sorting, and returns affiliate URLs directly from Rakuten's API.
+Supports keyword search, price range, sorting, and returns affiliate URLs.
+
+### search_amazon_products
+Generates Amazon search URLs with affiliate tags.
+Use when the user wants to compare prices on Amazon.
+
+### coordinate_storage
+**Unique feature.** Searches for shelves, estimates inner dimensions,
+then finds storage boxes that fit inside with quantity calculations.
+Returns: shelf + N storage boxes per tier × M tiers = total count + set price.
+
+### suggest_by_space
+Give a space (width × depth × height in mm) and get all products that fit,
+grouped by category. If both shelves and storage boxes fit, generates a coordination plan.
+
+### identify_product
+Pass visual features extracted from a photo (brand, color, tiers, material, size estimate)
+and get product candidates with confidence scores. High-confidence matches return
+model numbers, inner dimensions, consumables, and compatible storage information.
 
 ## Data Coverage
 
-- Nitori (curated + scraped)
-- Rakuten Ichiba (live API: Nitori, IKEA, generic furniture stores)
-- Amazon (affiliate linking)
+- Nitori (curated products + Rakuten Nitori store)
+- IKEA (known products DB + Rakuten search)
+- Iris Ohyama (known products DB + Rakuten search)
+- Muji (known products DB)
+- Rakuten Ichiba (live API: 200,000+ furniture listings)
+- Amazon (affiliate link generation)
 
 ## Key Design Decisions
 
@@ -46,8 +75,8 @@ Supports keyword search, price range, sorting, and returns affiliate URLs direct
 
 ## Connection
 
-Protocol: MCP (Model Context Protocol) over stdio
-Transport: stdin/stdout JSON-RPC
+Protocol: MCP (Model Context Protocol)
+Transport: stdio (JSON-RPC) or Streamable HTTP
 
 ## Detailed Documentation
 

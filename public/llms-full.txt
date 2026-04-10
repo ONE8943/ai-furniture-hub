@@ -1,6 +1,6 @@
 # AI Furniture Hub - Full Tool Documentation
 
-> MCP Server v2.1.0 | Protocol: Model Context Protocol (stdio)
+> MCP Server v3.1.0 | Protocol: Model Context Protocol (stdio + HTTP)
 > Operator: ONE, Inc. (株式会社ONE) | https://fantastic-scone-73c867.netlify.app/
 
 ---
@@ -13,7 +13,7 @@ Search the curated product database with millimeter-precision dimension filters.
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| intent | string | YES | Why the user needs this product. Include placement location, use case, constraints. Example: "脱衣所の洗濯機横の隙間（約425mm）に収納棚を入れたい。下着や洗剤を入れる予定。" |
+| intent | string | YES | Why the user needs this product. Include placement location, use case, constraints. |
 | width_mm_min | number | no | Minimum width in mm |
 | width_mm_max | number | no | Maximum width in mm |
 | height_mm_min | number | no | Minimum height in mm |
@@ -25,36 +25,6 @@ Search the curated product database with millimeter-precision dimension filters.
 | color | string | no | Color name (e.g., "ホワイト", "ブラウン", "ナチュラル") |
 | category | string | no | Category (e.g., "シェルフ・棚", "カラーボックス", "キャビネット") |
 | in_stock_only | boolean | no | Only in-stock items (default: true) |
-
-### Response Structure
-
-```json
-{
-  "status": "success",
-  "total": 3,
-  "products": [
-    {
-      "id": "uuid",
-      "name": "Nクリック ボックス レギュラー3段",
-      "width_mm": 419,
-      "height_mm": 878,
-      "depth_mm": 298,
-      "inner_dimensions": { "width_mm": 390, "height_mm": 270, "depth_mm": 265 },
-      "price": 4490,
-      "in_stock": true,
-      "color": "ホワイト",
-      "category": "カラーボックス",
-      "affiliate_url": "https://...",
-      "affiliate_platform": "nitori"
-    }
-  ],
-  "affiliate_summary": {
-    "links_generated": 3,
-    "platforms": ["nitori", "rakuten"],
-    "estimated_commission_yen": 240
-  }
-}
-```
 
 ### Example Call
 
@@ -82,72 +52,24 @@ Get full product specifications by ID. Returns inner dimensions, materials, rela
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | id | string | YES | Product ID from search_products results |
-| intent | string | YES | Why the user needs product details (e.g., "購入前のサイズ最終確認") |
-
-### Response Structure
-
-```json
-{
-  "status": "success",
-  "product": {
-    "id": "uuid",
-    "name": "...",
-    "width_mm": 419,
-    "height_mm": 878,
-    "depth_mm": 298,
-    "inner_dimensions": { "width_mm": 390, "height_mm": 270, "depth_mm": 265 },
-    "price": 4490,
-    "material": "パーティクルボード",
-    "color": "ホワイト",
-    "description": "..."
-  },
-  "affiliate_url": "https://...",
-  "estimated_commission_yen": 67,
-  "related_products": [...],
-  "store_info": { "total": 7, "source": "merged" }
-}
-```
+| intent | string | YES | Why the user needs product details |
 
 ---
 
 ## Tool 3: search_rakuten_products
 
-Real-time search across Rakuten Ichiba marketplace. Returns live pricing, availability, and Rakuten-generated affiliate URLs.
+Real-time search across Rakuten Ichiba marketplace with auto-categorization and dimension extraction.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | intent | string | YES | Why the user needs this product |
-| keyword | string | YES | Search keyword (e.g., "カラーボックス ニトリ", "収納棚 スリム 幅30") |
+| keyword | string | YES | Search keyword (e.g., "カラーボックス 3段", "収納棚 スリム 幅30") |
 | price_min | integer | no | Minimum price in JPY |
 | price_max | integer | no | Maximum price in JPY |
-| sort | enum | no | "standard", "+itemPrice" (cheapest), "-itemPrice" (most expensive), "-reviewCount", "-reviewAverage", "+updateTimestamp" |
+| sort | enum | no | "standard", "+itemPrice", "-itemPrice", "-reviewCount", "-reviewAverage", "+updateTimestamp" |
 | hits | integer | no | Number of results, 1-30 (default: 10) |
-
-### Response Structure
-
-```json
-{
-  "status": "success",
-  "total": 5,
-  "api_total_count": 216,
-  "source": "rakuten_api",
-  "products": [
-    {
-      "name": "連結できるNカラボ レギュラー カラーボックス ニトリ",
-      "price": 1790,
-      "width_mm": 419,
-      "height_mm": 590,
-      "depth_mm": 298,
-      "url": "https://item.rakuten.co.jp/...",
-      "affiliate_url": "https://hb.afl.rakuten.co.jp/...",
-      "in_stock": true,
-      "estimated_commission_yen": 26
-    }
-  ]
-}
-```
 
 ### Example Call
 
@@ -166,18 +88,232 @@ Real-time search across Rakuten Ichiba marketplace. Returns live pricing, availa
 
 ---
 
+## Tool 4: search_amazon_products
+
+Generates Amazon search URLs with affiliate tags for product discovery on Amazon.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Why the user needs this product |
+| keyword | string | YES | Amazon search keyword |
+| price_min | integer | no | Minimum price in JPY |
+| price_max | integer | no | Maximum price in JPY |
+| sort | enum | no | "price-asc-rank", "price-desc-rank", "review-rank", "date-desc-rank" |
+
+### Response
+
+Returns an affiliate-tagged Amazon search URL. Present this URL directly to the user.
+
+---
+
+## Tool 5: coordinate_storage ★ Unique Feature
+
+**Shelf + storage box coordination with quantity calculation.**
+
+Searches for shelves, estimates their inner dimensions, then finds storage boxes
+that fit inside. Returns how many boxes fit per tier, total quantity needed,
+and the combined set price.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Placement location, use case, room type. Triggers scene-based tips. |
+| keyword | string | YES | Shelf search keyword (e.g., "カラーボックス 3段", "スチールラック 幅90") |
+| price_max | integer | no | Budget cap for the shelf (JPY) |
+| storage_keyword | string | no | Storage box keyword (auto-detected from scene if omitted) |
+| scene | string | no | Room hint ("押入れ", "洗面所", "キッチン", etc.) |
+| shelf_count | integer | no | How many shelf candidates to return (1-5, default: 3) |
+
+### Response Highlights
+
+```json
+{
+  "shelves": [
+    {
+      "shelf": { "name": "...", "price": 2990, "affiliate_url": "..." },
+      "estimated_inner": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
+      "fitting_storage": [
+        {
+          "storage": { "name": "Nインボックス", "price": 499, "affiliate_url": "..." },
+          "per_tier": 1,
+          "total": 3,
+          "set_price": 4487,
+          "fit_detail": "横1個 x 奥1個 x 3段 = 3個"
+        }
+      ]
+    }
+  ],
+  "scene_tips": ["カラーボックスは横置きでも使え、ベンチ兼収納になる", ...],
+  "scene_name": "リビング",
+  "total_combinations": 5
+}
+```
+
+### Example Call
+
+```json
+{
+  "tool": "coordinate_storage",
+  "arguments": {
+    "intent": "子供部屋のおもちゃ整理。カラーボックスを買って、中に入る収納ボックスも一緒に揃えたい。",
+    "keyword": "カラーボックス 3段",
+    "price_max": 5000,
+    "scene": "子供部屋"
+  }
+}
+```
+
+---
+
+## Tool 6: suggest_by_space
+
+**Space-first product discovery.** Give a space's dimensions and get everything that fits,
+grouped by category. If both shelves and storage boxes are found, an automatic coordination plan is generated.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Placement location, use case. Triggers scene-based tips. |
+| width_mm | number | YES | Available space width in mm |
+| depth_mm | number | YES | Available space depth in mm |
+| height_mm | number | YES | Available space height in mm |
+| price_max | integer | no | Budget cap (JPY) |
+| categories | string[] | no | Desired categories (auto-detected if omitted) |
+
+### Response Highlights
+
+```json
+{
+  "space": { "width_mm": 450, "depth_mm": 350, "height_mm": 900 },
+  "categories": [
+    {
+      "category": "カラーボックス",
+      "products": [
+        {
+          "name": "...", "price": 1190,
+          "margin_width_mm": 31, "margin_depth_mm": 52, "margin_height_mm": 22,
+          "affiliate_url": "..."
+        }
+      ]
+    }
+  ],
+  "coordination_plan": {
+    "shelf": { "...": "..." },
+    "shelf_inner": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
+    "fitting_items": [{ "total": 3, "set_price": 4487, "fit_detail": "横1個 x 奥1個 x 3段 = 3個" }]
+  },
+  "scene_tips": ["洗濯機横の隙間は15-30cmが多い。スリムタイプを選ぶ", ...]
+}
+```
+
+### Example Call
+
+```json
+{
+  "tool": "suggest_by_space",
+  "arguments": {
+    "intent": "洗面所の洗濯機横にある幅25cm、奥行35cm、高さ90cmの隙間に入る収納を探している。",
+    "width_mm": 250,
+    "depth_mm": 350,
+    "height_mm": 900
+  }
+}
+```
+
+---
+
+## Tool 7: identify_product
+
+**Photo-to-spec product identification.** Pass visual features extracted from a photo
+(by Vision AI) and get product candidates with confidence scores.
+High-confidence matches return model numbers, inner dimensions, consumables,
+and compatible storage information.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Why you need to identify this product |
+| features | string | YES | Visual features: brand, color, tiers, material, size estimate, shape details |
+| brand_hint | string | no | Brand name if logo is visible |
+| dimensions_hint | object | no | Estimated dimensions `{ width_mm?, height_mm?, depth_mm? }` |
+| include_compatible | boolean | no | Include compatible storage/consumable info (default: true) |
+
+### Response Highlights
+
+```json
+{
+  "identification_status": "exact",
+  "best_match_confidence": 85,
+  "candidates": [
+    {
+      "confidence": 85,
+      "match_reasons": ["ブランド「ニトリ」一致", "シリーズ「Nクリック」一致", "段数「3段」一致"],
+      "brand": "ニトリ",
+      "model_number": "8841424",
+      "name": "Nクリック レギュラー3段",
+      "outer_dimensions": { "width_mm": 419, "height_mm": 878, "depth_mm": 298 },
+      "inner_dimensions": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
+      "compatible_storage": [
+        { "name": "Nインボックス レギュラー", "model_number": "8422031", "fits_per_tier": 1 }
+      ],
+      "consumables": [
+        { "name": "Nクリック用キャスター4個セット", "model_number": "8841518" }
+      ]
+    }
+  ],
+  "tip": "高信頼度で「Nクリック レギュラー3段」と特定しました。型番: 8841424"
+}
+```
+
+### Example Call
+
+```json
+{
+  "tool": "identify_product",
+  "arguments": {
+    "intent": "写真の棚の型番を知りたい。中に入る収納ボックスも教えて。",
+    "features": "白いカラーボックス、3段、工具不要のはめ込み式、前面に丸い穴が見える",
+    "brand_hint": "ニトリ",
+    "dimensions_hint": { "width_mm": 420, "height_mm": 880 }
+  }
+}
+```
+
+---
+
 ## Recommended Workflow for AI Agents
 
-1. **Broad search**: Use `search_rakuten_products` with keywords for discovery
-2. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
-3. **Final check**: Use `get_product_detail` before recommending to user
-4. **Always present** `affiliate_url` to the end user
+1. **Photo identification**: User has a photo → use `identify_product` to get model number and specs
+2. **Space discovery**: User has dimensions → use `suggest_by_space` for everything that fits
+3. **Coordination**: User wants shelf + storage → use `coordinate_storage` for set proposals
+4. **Broad search**: Use `search_rakuten_products` with keywords for discovery
+5. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
+6. **Final check**: Use `get_product_detail` before recommending to user
+7. **Always present** `affiliate_url` to the end user
 
-## Data Quality Notes
+## Scene Intelligence
 
-- Dimensions from Rakuten are extracted from product titles/descriptions and converted to mm automatically
-- Curated products (search_products) have verified dimensions including inner_dimensions
-- Products with width_mm=0 indicate dimensions could not be extracted — use with caution
+Mention a room in the `intent` and get tailored tips:
+- **押入れ・クローゼット**:奥行80cm活用、キャスター付き推奨
+- **洗面所**: 湿気に強い素材、15-30cmスリム収納
+- **キッチン**: シンク下ラック、ファイルボックス活用
+- **リビング**: カラーボックス横置き、見せる/隠す収納のバランス
+- **子供部屋**: 子供の目線の高さ、ラベル付け、角丸収納
+- **玄関**: 縦型シューズラック、鍵・印鑑まとめ収納
+- **トイレ**: 幅14-20cmスリム、壁面収納
+
+## Known Products DB
+
+High-confidence identification is available for these product lines:
+- Nitori: Nクリック (Regular/Wide, 2-3段), カラーボックス
+- IKEA: KALLAX (2x2, 1x4)
+- Iris Ohyama: メタルラック 3段
+- Muji: スタッキングシェルフ 2段
 
 ## Gap Detection
 
