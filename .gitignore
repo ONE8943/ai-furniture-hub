@@ -5,5 +5,15 @@
 node_modules/
 dist/
 
-# ログ（必要に応じてコミット対象から外す）
+# ログ
 logs/
+
+# Cursor ローカル設定
+.cursor/
+
+# OS ファイル
+.DS_Store
+Thumbs.db
+
+# テスト一時ファイル
+test/verify_*.ts

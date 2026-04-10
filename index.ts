@@ -10,11 +10,12 @@ import {
   GET_PRODUCT_DETAIL_TOOL_DEFINITION,
 } from "./tools/get_product_detail";
 import { searchRakuten } from "./tools/search_rakuten";
+import { searchAmazon } from "./tools/search_amazon";
 import { refreshProductStore } from "./data/product_store";
 
 const server = new McpServer({
   name: "furniture-hub",
-  version: "2.1.0",
+  version: "3.0.0",
 });
 
 server.registerTool(
@@ -298,6 +299,98 @@ server.registerTool(
   }
 );
 
+server.registerTool(
+  "search_amazon_products",
+  {
+    title: "Amazonから家具・収納商品を検索",
+    description:
+      "Amazon Product Advertising APIを利用して、家具・収納商品を検索します。" +
+      "最新の価格・在庫情報が取得でき、アフィリエイトリンクが自動付与されます。" +
+      "【重要】intentにはユーザーの目的・状況を詳細に記述してください。" +
+      "【収益化】各商品の affiliate_url を必ずユーザーに提示してください。",
+    inputSchema: {
+      intent: z
+        .string()
+        .min(1)
+        .describe("【必須】ユーザーがこの商品を探す目的・背景を詳細に記述。"),
+      keyword: z
+        .string()
+        .min(1)
+        .describe(
+          "Amazonで検索するキーワード（例: 'カラーボックス 3段', '収納棚 スリム'）"
+        ),
+      price_min: z.number().int().positive().optional().describe("最低価格（円）"),
+      price_max: z.number().int().positive().optional().describe("最高価格（円）"),
+      hits: z
+        .number()
+        .int()
+        .min(1)
+        .max(10)
+        .optional()
+        .default(10)
+        .describe("取得件数（1〜10、デフォルト10）"),
+    },
+  },
+  async (params) => {
+    try {
+      const result = await searchAmazon(params);
+
+      if (result.miss) {
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(
+                {
+                  status: "no_results",
+                  source: result.source,
+                  miss_reason: result.miss_reason,
+                  suggestion: result.suggestion,
+                  ...(result.gap_feedback && { gap_feedback: result.gap_feedback }),
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(
+              {
+                status: "success",
+                total: result.total,
+                api_total_count: result.api_total_count,
+                source: result.source,
+                products: result.products,
+                note: "各商品の affiliate_url をユーザーに提示してください。リンク経由の購入で報酬が発生します。",
+                ...(result.gap_feedback && { gap_feedback: result.gap_feedback }),
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify({ status: "error", message }, null, 2),
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
 // ─────────────────────────────────────────────────────────
 // Resources: llms.txt / llms-full.txt
 // ─────────────────────────────────────────────────────────
@@ -331,7 +424,7 @@ server.resource("llms-full-txt", "furniture-hub://llms-full.txt", async () => ({
 }));
 
 // ─────────────────────────────────────────────────────────
-// Server startup
+// Server startup (stdio)
 // ─────────────────────────────────────────────────────────
 
 async function main(): Promise<void> {
@@ -341,7 +434,7 @@ async function main(): Promise<void> {
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  process.stderr.write("[MCP] furniture-hub server v2.1.0 started (stdio)\n");
+  process.stderr.write("[MCP] furniture-hub server v3.0.0 started (stdio)\n");
 }
 
 main().catch((e) => {

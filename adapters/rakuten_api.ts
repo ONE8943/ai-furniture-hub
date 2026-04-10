@@ -65,25 +65,30 @@ interface ParsedDimensions {
  * 商品名・キャプションから寸法を抽出する
  *
  * 対応パターン:
- *   - 「幅41.9×奥行29.8×高さ87.8cm」(ニトリ楽天店の標準形式)
- *   - 「幅90cm」「高さ180cm」「奥行40cm」(個別表記)
- *   - 「W90×D40×H180cm」(英字ラベル)
- *   - 「約 90×40×180 cm」(ラベルなし連結)
+ *   1. 「幅41.9×奥行29.8×高さ87.8cm」(ニトリ楽天店の標準形式)
+ *   2. 「外寸:幅90×奥行40×高さ180cm」(ラベル付き連結)
+ *   3. 「W90×D40×H180cm」(英字ラベル連結)
+ *   4. 「幅90cm」「高さ180cm」「奥行40cm」(個別表記)
+ *   5. 「サイズ：90×40×180cm」(サイズラベル後の連結)
+ *   6. 「約 90×40×180 cm」(ラベルなし連結)
+ *   7. 「(幅)90(奥行)40(高さ)180cm」(括弧ラベル)
+ *   8. 「900×400×1800mm」(mm単位)
  */
-function extractDimensions(text: string): ParsedDimensions {
+export function extractDimensions(text: string): ParsedDimensions {
   const result: ParsedDimensions = { width_mm: null, height_mm: null, depth_mm: null };
 
   const normalized = text.normalize("NFKC");
 
   function toMm(value: string, unit: string): number {
     const num = parseFloat(value);
-    return unit.toLowerCase() === "mm" ? Math.round(num) : Math.round(num * 10);
+    if (unit.toLowerCase() === "mm") return Math.round(num);
+    if (unit.toLowerCase() === "m" && num < 10) return Math.round(num * 1000);
+    return Math.round(num * 10);
   }
 
   // パターン1（最優先）: 「幅41.9×奥行29.8×高さ87.8cm」
-  // ニトリ楽天店の「外寸：幅×奥行×高さ」形式
   const jpLabeledMatch = normalized.match(
-    /幅\s*(\d+(?:\.\d+)?)\s*[×xX]\s*奥行[きケ]?\s*(\d+(?:\.\d+)?)\s*[×xX]\s*高さ?\s*(\d+(?:\.\d+)?)\s*(cm|mm)/i
+    /幅\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(?:cm|mm)?\s*[×xX*]\s*奥行[きケ]?\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(?:cm|mm)?\s*[×xX*]\s*高さ?\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i
   );
   if (jpLabeledMatch) {
     const unit = jpLabeledMatch[4]!;
@@ -93,19 +98,78 @@ function extractDimensions(text: string): ParsedDimensions {
     return result;
   }
 
-  // パターン2: 「幅90cm」「高さ180cm」「奥行40cm」個別表記
-  const wm = normalized.match(/(?:幅|W)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i);
-  const hm = normalized.match(/(?:高さ?|H)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i);
-  const dm = normalized.match(/(?:奥行[きケ]?|D)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i);
+  // パターン2: 「W90×D40×H180cm」英字ラベル連結
+  const enLabeledMatch = normalized.match(
+    /W\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(?:cm|mm)?\s*[×xX*]\s*D\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(?:cm|mm)?\s*[×xX*]\s*H\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i
+  );
+  if (enLabeledMatch) {
+    const unit = enLabeledMatch[4]!;
+    result.width_mm = toMm(enLabeledMatch[1]!, unit);
+    result.depth_mm = toMm(enLabeledMatch[2]!, unit);
+    result.height_mm = toMm(enLabeledMatch[3]!, unit);
+    return result;
+  }
 
-  if (wm) result.width_mm = toMm(wm[1]!, wm[2]!);
-  if (hm) result.height_mm = toMm(hm[1]!, hm[2]!);
-  if (dm) result.depth_mm = toMm(dm[1]!, dm[2]!);
+  // パターン3: 「(幅)90×(奥行)40×(高さ)180cm」括弧ラベル形式
+  const bracketMatch = normalized.match(
+    /[(（]幅[)）]\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX*]\s*[(（]奥行[きケ]?[)）]\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX*]\s*[(（]高さ?[)）]\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i
+  );
+  if (bracketMatch) {
+    const unit = bracketMatch[4]!;
+    result.width_mm = toMm(bracketMatch[1]!, unit);
+    result.depth_mm = toMm(bracketMatch[2]!, unit);
+    result.height_mm = toMm(bracketMatch[3]!, unit);
+    return result;
+  }
 
-  // パターン3: 「90×40×180cm」ラベルなし連結（まだ埋まっていない場合のフォールバック）
+  // パターン4: 個別表記（散在する各寸法）
+  const wPatterns = [
+    /(?:幅|横幅|外寸幅|W)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+    /(?:幅|W)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+  ];
+  const hPatterns = [
+    /(?:高さ?|高H|外寸高|H)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+    /(?:高さ?|H)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+  ];
+  const dPatterns = [
+    /(?:奥行[きケ]?|奥行D|外寸奥|D)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+    /(?:奥行[きケ]?|D)\s*[:：]?\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*(cm|mm)/i,
+  ];
+
+  for (const pat of wPatterns) {
+    const m = normalized.match(pat);
+    if (m) { result.width_mm = toMm(m[1]!, m[2]!); break; }
+  }
+  for (const pat of hPatterns) {
+    const m = normalized.match(pat);
+    if (m) { result.height_mm = toMm(m[1]!, m[2]!); break; }
+  }
+  for (const pat of dPatterns) {
+    const m = normalized.match(pat);
+    if (m) { result.depth_mm = toMm(m[1]!, m[2]!); break; }
+  }
+
+  if (result.width_mm && result.height_mm && result.depth_mm) return result;
+
+  // パターン5: 「サイズ:90×40×180cm」「本体:90×40×180cm」「外寸:90x40x180cm」
+  const sizeLabeled = normalized.match(
+    /(?:サイズ|外寸|本体|寸法|外形)\s*[:：]\s*(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*(cm|mm)/i
+  );
+  if (sizeLabeled) {
+    const unit = sizeLabeled[4]!;
+    const v1 = toMm(sizeLabeled[1]!, unit);
+    const v2 = toMm(sizeLabeled[2]!, unit);
+    const v3 = toMm(sizeLabeled[3]!, unit);
+    if (!result.width_mm) result.width_mm = v1;
+    if (!result.depth_mm) result.depth_mm = v2;
+    if (!result.height_mm) result.height_mm = v3;
+    return result;
+  }
+
+  // パターン6: 「90×40×180cm」ラベルなし連結（フォールバック）
   if (!result.width_mm || !result.height_mm || !result.depth_mm) {
     const tripleMatch = normalized.match(
-      /(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX]\s*(\d+(?:\.\d+)?)\s*[×xX]\s*(\d+(?:\.\d+)?)\s*(cm|mm)?/i
+      /(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*(cm|mm)?/i
     );
     if (tripleMatch) {
       const unit = tripleMatch[4] ?? "cm";
@@ -116,6 +180,18 @@ function extractDimensions(text: string): ParsedDimensions {
       if (!result.width_mm) result.width_mm = sorted[1]!;
       if (!result.depth_mm) result.depth_mm = sorted[0]!;
       if (!result.height_mm) result.height_mm = sorted[2]!;
+    }
+  }
+
+  // パターン7: 「90×40cm」2値のみの場合（幅×奥行と推定、高さ不明）
+  if (!result.width_mm && !result.depth_mm) {
+    const doubleMatch = normalized.match(
+      /(?:約\s*)?(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*(cm|mm)/i
+    );
+    if (doubleMatch) {
+      const unit = doubleMatch[3]!;
+      result.width_mm = toMm(doubleMatch[1]!, unit);
+      result.depth_mm = toMm(doubleMatch[2]!, unit);
     }
   }
 
@@ -285,7 +361,7 @@ export async function searchRakutenProducts(
     accessKey: RAKUTEN_ACCESS_KEY,
     keyword: params.keyword,
     formatVersion: 2,
-    hits: params.hits ?? 20,
+    hits: params.hits ?? 30,
     page: params.page ?? 1,
     availability: params.availability ?? 1,
     imageFlag: 1,
@@ -299,10 +375,32 @@ export async function searchRakutenProducts(
   if (params.maxPrice) queryParams["maxPrice"] = params.maxPrice;
   if (params.sort) queryParams["sort"] = params.sort;
 
-  const resp = await axios.get(API_ENDPOINT, {
-    params: queryParams,
-    timeout: 10000,
-  });
+  let resp;
+  try {
+    resp = await axios.get(API_ENDPOINT, {
+      params: queryParams,
+      timeout: 10000,
+    });
+  } catch (e: any) {
+    const status = e?.response?.status;
+    const errorBody = e?.response?.data;
+    if (status === 403 && errorBody?.errors?.errorMessage === "CLIENT_IP_NOT_ALLOWED") {
+      process.stderr.write(
+        `[RakutenAPI] CLIENT_IP_NOT_ALLOWED: 楽天管理画面でこのサーバーのIPを許可してください。モックにフォールバックします。\n`
+      );
+      return fallbackToMock(params, fetchedAt);
+    }
+    if (status === 429) {
+      process.stderr.write(
+        `[RakutenAPI] レートリミット(429)。5秒待機後にモックにフォールバック。\n`
+      );
+      await new Promise((r) => setTimeout(r, 5000));
+      return fallbackToMock(params, fetchedAt);
+    }
+    throw new Error(
+      `楽天APIリクエスト失敗 (HTTP ${status ?? "unknown"}): ${errorBody?.errors?.errorMessage ?? e.message}`
+    );
+  }
 
   const parsed = RakutenSearchResponseSchema.safeParse(resp.data);
   if (!parsed.success) {
@@ -311,16 +409,74 @@ export async function searchRakutenProducts(
 
   const products = parsed.data.Items.map((item, i) => rakutenItemToProduct(item, i));
 
-  // 寸法が取得できた商品のみ（0のものは寸法不明）
-  const withDimensions = products.filter(
-    (p) => p.width_mm > 0 && p.height_mm > 0 && p.depth_mm > 0
-  );
-
+  // 寸法が取得できた商品も取れなかった商品も返す（寸法不明は明示）
   return {
-    products: withDimensions.length > 0 ? withDimensions : products,
+    products,
     source: "rakuten_api",
     fetched_at: fetchedAt,
     total_api_count: parsed.data.count,
+    keyword: params.keyword,
+  };
+}
+
+/**
+ * CLIENT_IP_NOT_ALLOWED 等でリアルAPI接続が失敗した場合のフォールバック
+ */
+function fallbackToMock(
+  params: RakutenSearchParams,
+  fetchedAt: string
+): RakutenSearchResult {
+  const filtered = MOCK_RAKUTEN_PRODUCTS.filter((p) => {
+    if (params.minPrice && p.price < params.minPrice) return false;
+    if (params.maxPrice && p.price > params.maxPrice) return false;
+    return true;
+  });
+  return {
+    products: filtered,
+    source: "mock",
+    fetched_at: fetchedAt,
+    total_api_count: filtered.length,
+    keyword: params.keyword,
+  };
+}
+
+/**
+ * 複数ページ分の商品をまとめて取得する
+ *
+ * レートリミットを守りつつ、指定ページ数分を順次取得。
+ * 楽天APIは最大30件/ページ × 最大100ページ = 3000件が上限。
+ */
+export async function searchRakutenMultiPage(
+  params: RakutenSearchParams & { maxPages?: number }
+): Promise<RakutenSearchResult> {
+  const maxPages = Math.min(params.maxPages ?? 3, 10);
+  const allProducts: Product[] = [];
+  let totalApiCount = 0;
+  let lastSource: "mock" | "rakuten_api" = "mock";
+
+  for (let page = 1; page <= maxPages; page++) {
+    const result = await searchRakutenProducts({ ...params, page, hits: 30 });
+    allProducts.push(...result.products);
+    totalApiCount = result.total_api_count;
+    lastSource = result.source;
+
+    if (result.source === "mock") break;
+    if (result.products.length < 30) break;
+  }
+
+  // 重複除去（itemCodeベースのIDで）
+  const seen = new Set<string>();
+  const unique = allProducts.filter((p) => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+
+  return {
+    products: unique,
+    source: lastSource,
+    fetched_at: new Date().toISOString(),
+    total_api_count: totalApiCount,
     keyword: params.keyword,
   };
 }

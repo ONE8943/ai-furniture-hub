@@ -2,7 +2,15 @@ import "dotenv/config";
 import { Product } from "../schemas/product";
 import { PRODUCTS as DUMMY_PRODUCTS } from "./products";
 import { fetchNitoriProducts } from "../adapters/nitori_scraper";
-import { searchRakutenProducts, isRakutenApiConfigured } from "../adapters/rakuten_api";
+import {
+  searchRakutenProducts,
+  searchRakutenMultiPage,
+  isRakutenApiConfigured,
+} from "../adapters/rakuten_api";
+import {
+  searchAmazonProducts,
+  isAmazonApiConfigured,
+} from "../adapters/amazon_api";
 
 /**
  * 統合データレイヤー
@@ -52,33 +60,79 @@ export async function refreshProductStore(force = false): Promise<void> {
   if (!force && cacheAge < CACHE_TTL_MS) return; // キャッシュが新鮮
 
   try {
-    // ニトリ（スクレイピング）と楽天（API）を並列取得
-    const fetchTasks: Promise<{ products: Product[]; label: string }>[] = [
-      fetchNitoriProducts("シェルフ", 5).then((r) => ({ products: r.products, label: "nitori-shelf" })),
-      fetchNitoriProducts("カラーボックス", 5).then((r) => ({ products: r.products, label: "nitori-box" })),
-    ];
-
-    if (isRakutenApiConfigured()) {
-      fetchTasks.push(
-        searchRakutenProducts({ keyword: "収納棚 ニトリ" }).then((r) => ({
-          products: r.products,
-          label: "rakuten-shelf",
-        })),
-        searchRakutenProducts({ keyword: "カラーボックス ニトリ" }).then((r) => ({
-          products: r.products,
-          label: "rakuten-box",
-        }))
-      );
-    }
-
-    const results = await Promise.allSettled(fetchTasks);
+    type FetchTask = () => Promise<{ products: Product[]; label: string }>;
     const external: Product[] = [];
 
-    for (const r of results) {
-      if (r.status === "fulfilled") {
-        external.push(...r.value.products);
-      } else {
-        process.stderr.write(`[ProductStore] データ取得失敗: ${r.reason}\n`);
+    async function runTask(task: FetchTask): Promise<void> {
+      try {
+        const r = await task();
+        external.push(...r.products);
+        process.stderr.write(
+          `[ProductStore] ${r.label}: ${r.products.length}件取得\n`
+        );
+      } catch (e) {
+        process.stderr.write(`[ProductStore] データ取得失敗: ${e}\n`);
+      }
+    }
+
+    // ニトリ（モック or スクレイピング）は並列OK
+    await Promise.all([
+      runTask(() => fetchNitoriProducts("シェルフ", 5).then((r) => ({ products: r.products, label: "nitori-shelf" }))),
+      runTask(() => fetchNitoriProducts("カラーボックス", 5).then((r) => ({ products: r.products, label: "nitori-box" }))),
+    ]);
+
+    // 楽天API: レートリミット厳守のため1キーワードずつ順次取得
+    if (isRakutenApiConfigured()) {
+      const RAKUTEN_KEYWORDS = [
+        "収納棚",
+        "カラーボックス",
+        "本棚 シェルフ",
+        "食器棚",
+        "テレビ台 テレビボード",
+        "チェスト 収納",
+        "キャビネット",
+        "ラック 収納",
+        "クローゼット 収納",
+        "サイドボード",
+        "シューズラック 靴棚",
+        "デスク 机",
+        "ワゴン キッチン",
+        "隙間収納",
+        "壁面収納",
+        "ニトリ シェルフ",
+        "ニトリ カラーボックス",
+        "ニトリ 食器棚",
+      ];
+
+      for (const kw of RAKUTEN_KEYWORDS) {
+        await runTask(() =>
+          searchRakutenMultiPage({ keyword: kw, maxPages: 2 }).then((r) => ({
+            products: r.products,
+            label: `rakuten-${kw}`,
+          }))
+        );
+      }
+    }
+
+    // Amazon API: 順次取得（PA-APIもレートリミットあり）
+    if (isAmazonApiConfigured()) {
+      const AMAZON_KEYWORDS = [
+        "収納棚 シェルフ",
+        "カラーボックス",
+        "本棚",
+        "食器棚",
+        "テレビ台",
+        "チェスト",
+        "キャビネット",
+        "デスク 学習机",
+      ];
+      for (const kw of AMAZON_KEYWORDS) {
+        await runTask(() =>
+          searchAmazonProducts({ keyword: kw, itemCount: 10 }).then((r) => ({
+            products: r.products,
+            label: `amazon-${kw}`,
+          }))
+        );
       }
     }
 

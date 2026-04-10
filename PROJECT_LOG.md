@@ -661,6 +661,77 @@ AIエージェントが `resources/read` で以下を取得可能：
 
 ---
 
+## 2026-04-10: v3.0.0 - データ充実化 & 外部AI接続 (Phase 1-4)
+
+### 概要
+
+データソースの大幅拡充、Amazon PA-APIアダプター新規追加、
+HTTP/SSEトランスポート対応により外部AIエージェントからの接続を実現。
+
+### Phase 1: 楽天API強化
+
+- **寸法パーサー大幅改善** (`adapters/rakuten_api.ts`):
+  - 8パターン対応（括弧ラベル、サイズ:ラベル、2値パターン等追加）
+  - `extractDimensions` を export化（Amazon等でも再利用）
+  - 14テスト全パス
+- **検索キーワード拡充**: 2キーワード → 18カテゴリに拡張
+  - 収納棚/カラーボックス/本棚/食器棚/テレビ台/チェスト/キャビネット/ラック/クローゼット/サイドボード/シューズラック/デスク/ワゴン/隙間収納/壁面収納/ニトリ各種
+- **複数ページ取得** (`searchRakutenMultiPage`):
+  - 1キーワードあたり最大2ページ(60件)、重複除去付き
+- **レートリミット対策**: バッチ並列→完全順次実行に変更（429エラー防止）
+- **CLIENT_IP_NOT_ALLOWED フォールバック**: 403→モック自動切替 + ログ出力
+- **楽天API本番接続**: `.env`にキー設定済み、管理画面でIP(`112.71.5.202`)許可が必要
+
+### Phase 2: ニトリスクレイピング方針転換
+
+- ニトリ公式サイトはボット対策でタイムアウト → 楽天のニトリ公式ショップからAPI取得に切替
+- 楽天キーワードに「ニトリ シェルフ」「ニトリ カラーボックス」「ニトリ 食器棚」を追加
+
+### Phase 3: Amazon PA-APIアダプター新規追加
+
+| ファイル | 概要 |
+|---|---|
+| `adapters/amazon_api.ts` | AWS Signature V4認証、商品検索、寸法パース、モック3件 |
+| `tools/search_amazon.ts` | MCPツール `search_amazon_products` のロジック |
+
+- 認証: AMAZON_PA_ACCESS_KEY + AMAZON_PA_SECRET_KEY (AWS Sig V4)
+- モック/本番切替: `AMAZON_API_MOCK=true/false`
+- 寸法: PA-APIの`ItemDimensions`優先、なければテキストからパース（`extractDimensions`再利用）
+- `data/product_store.ts`: Amazonデータソース統合（8キーワード）
+- `.env` / `.env.example`: Amazon PA-API変数追加
+
+### Phase 4: HTTP/SSEトランスポート（外部AI接続対応）
+
+| ファイル | 概要 |
+|---|---|
+| `server_http.ts` | HTTP サーバーエントリーポイント（Streamable HTTP + SSE 互換） |
+
+- **Streamable HTTP** (`/mcp`): MCP プロトコル 2025-11-25 対応
+- **SSE** (`/sse` + `/messages`): レガシークライアント向け
+- **ヘルスチェック**: `/health`
+- **APIキー認証**: `MCP_API_KEY` 環境変数で Bearer トークン保護
+- **CORS**: 全オリジン許可（プロダクション時に制限推奨）
+- **セッション管理**: StreamableHTTPはstateful（UUID）、SSEは自動
+- `npm run start:http` / `npm run dev:http` で起動
+
+### MCPツール一覧（v3.0.0）
+
+| ツール名 | 概要 |
+|---|---|
+| `search_products` | ローカルDB（統合データ）から商品検索 |
+| `get_product_detail` | 商品IDで詳細取得 |
+| `search_rakuten_products` | 楽天APIでリアルタイム商品検索 |
+| `search_amazon_products` | Amazon PA-APIで商品検索 **NEW** |
+
+### 接続方法
+
+| 方式 | 用途 | コマンド |
+|---|---|---|
+| stdio | Cursor / ローカルAI | `npm start` |
+| HTTP | 外部AIエージェント | `npm run start:http` |
+
+---
+
 ## 次のステップ
 
 - [x] `get_product_detail` ツールの追加 ✅
@@ -669,12 +740,19 @@ AIエージェントが `resources/read` で以下を取得可能：
 - [x] 審査用LP公開 ✅ (Netlify)
 - [x] 楽天API連携 + 本番切替 ✅
 - [x] AIO: llms.txt / smithery.yaml / mcp.json ✅
+- [x] 寸法パーサー改善（8パターン14テスト全パス） ✅
+- [x] 楽天キーワード拡充（18カテゴリ） ✅
+- [x] 楽天複数ページ取得 ✅
+- [x] Amazon PA-APIアダプター追加 ✅
+- [x] HTTP/SSEトランスポート（外部AI接続） ✅
+- [ ] 楽天管理画面でIP許可設定（112.71.5.202）
+- [ ] Amazon PA-APIキー取得・設定
 - [ ] Smithery に登録（GitHub公開後）
 - [ ] Cursor の `@mcp` でサーバーに接続してE2Eテスト
 - [ ] 本業連携: 特定技能・寮セットアップ専用ツール追加
 - [ ] 多言語対応（ベトナム語・英語・中国語）
-- [ ] 実ニトリサイト接続（`SCRAPE_MOCK=false` + CSS セレクター調整）
 - [ ] `conversions.jsonl` 集計ダッシュボード
 - [ ] `logs/analytics.jsonl` 集計・可視化
 - [ ] 山崎実業（tower シリーズ）アダプター追加
 - [ ] Gap インサイトレポートの自動生成・SNS発信
+- [ ] デプロイ先検討（VPS, Railway, Cloudflare Workers等）
