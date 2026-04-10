@@ -7,10 +7,8 @@ import {
   searchRakutenMultiPage,
   isRakutenApiConfigured,
 } from "../adapters/rakuten_api";
-import {
-  searchAmazonProducts,
-  isAmazonApiConfigured,
-} from "../adapters/amazon_api";
+// Amazon: PA-API未開放のためURL生成方式に移行済み（adapters/amazon_url.ts）
+// product_storeへのAmazon商品投入は PA-API解禁後に再有効化する
 
 /**
  * 統合データレイヤー
@@ -114,27 +112,8 @@ export async function refreshProductStore(force = false): Promise<void> {
       }
     }
 
-    // Amazon API: 順次取得（PA-APIもレートリミットあり）
-    if (isAmazonApiConfigured()) {
-      const AMAZON_KEYWORDS = [
-        "収納棚 シェルフ",
-        "カラーボックス",
-        "本棚",
-        "食器棚",
-        "テレビ台",
-        "チェスト",
-        "キャビネット",
-        "デスク 学習机",
-      ];
-      for (const kw of AMAZON_KEYWORDS) {
-        await runTask(() =>
-          searchAmazonProducts({ keyword: kw, itemCount: 10 }).then((r) => ({
-            products: r.products,
-            label: `amazon-${kw}`,
-          }))
-        );
-      }
-    }
+    // Amazon: PA-API未開放のためスキップ（URL生成方式で対応中）
+    // PA-API解禁後に amazon_api.ts の順次取得を再有効化する
 
     if (external.length > 0) {
       const merged = new Map<string, Product>();

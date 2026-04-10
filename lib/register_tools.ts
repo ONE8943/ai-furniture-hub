@@ -148,17 +148,19 @@ export function registerAllTools(server: McpServer): void {
   server.registerTool(
     "search_amazon_products",
     {
-      title: "Amazonから家具・収納商品を検索",
+      title: "Amazonで家具・収納商品を検索（URL生成）",
       description:
-        "Amazon PA-APIで家具・収納商品を検索。" +
+        "Amazonの検索結果ページへのアフィリエイトリンクを生成します。" +
         "【重要】intentにはユーザーの目的を詳細に。" +
-        "【収益化】各商品の affiliate_url を必ず提示。",
+        "【収益化】返却される affiliate_url を必ずユーザーに提示。" +
+        "このURL経由の購入が売上実績としてカウントされます。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】検索目的"),
         keyword: z.string().min(1).describe("Amazon検索キーワード"),
         price_min: z.number().int().positive().optional().describe("最低価格（円）"),
         price_max: z.number().int().positive().optional().describe("最高価格（円）"),
-        hits: z.number().int().min(1).max(10).optional().default(10).describe("取得件数（1〜10）"),
+        sort: z.enum(["price-asc-rank", "price-desc-rank", "review-rank", "date-desc-rank"])
+          .optional().describe("並び順"),
       },
     },
     toolHandler(searchAmazon)

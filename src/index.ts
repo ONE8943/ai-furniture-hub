@@ -26,15 +26,7 @@ export const configSchema = z.object({
   AFFILIATE_ID_AMAZON: z
     .string()
     .optional()
-    .describe("Amazon Associate Tag (e.g. your-tag-22)"),
-  AMAZON_PA_ACCESS_KEY: z
-    .string()
-    .optional()
-    .describe("Amazon PA-API Access Key"),
-  AMAZON_PA_SECRET_KEY: z
-    .string()
-    .optional()
-    .describe("Amazon PA-API Secret Key"),
+    .describe("Amazon Associate Tag for affiliate links (e.g. your-tag-22)"),
 });
 
 type Config = z.infer<typeof configSchema>;
@@ -52,13 +44,6 @@ export default function createServer({ config }: { config: Config }) {
   }
   if (config.AFFILIATE_ID_AMAZON) {
     process.env["AFFILIATE_ID_AMAZON"] = config.AFFILIATE_ID_AMAZON;
-  }
-  if (config.AMAZON_PA_ACCESS_KEY) {
-    process.env["AMAZON_PA_ACCESS_KEY"] = config.AMAZON_PA_ACCESS_KEY;
-    process.env["AMAZON_API_MOCK"] = "false";
-  }
-  if (config.AMAZON_PA_SECRET_KEY) {
-    process.env["AMAZON_PA_SECRET_KEY"] = config.AMAZON_PA_SECRET_KEY;
   }
 
   const server = new McpServer({
@@ -86,8 +71,6 @@ export function createSandboxServer() {
       RAKUTEN_ACCESS_KEY: undefined,
       AFFILIATE_ID_RAKUTEN: undefined,
       AFFILIATE_ID_AMAZON: undefined,
-      AMAZON_PA_ACCESS_KEY: undefined,
-      AMAZON_PA_SECRET_KEY: undefined,
     },
   });
 }
