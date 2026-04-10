@@ -11,6 +11,9 @@ logs/
 # Cursor ローカル設定
 .cursor/
 
+# Smithery ビルド出力
+.smithery/
+
 # OS ファイル
 .DS_Store
 Thumbs.db

@@ -17,10 +17,15 @@
   },
   "include": [
     "index.ts",
+    "server_http.ts",
+    "src/**/*.ts",
+    "lib/**/*.ts",
     "schemas/**/*.ts",
     "data/**/*.ts",
     "utils/**/*.ts",
-    "tools/**/*.ts"
+    "tools/**/*.ts",
+    "adapters/**/*.ts",
+    "services/**/*.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

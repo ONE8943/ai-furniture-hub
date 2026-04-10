@@ -13,172 +13,21 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
-import { z } from "zod";
-import { readFileSync } from "fs";
-import { join } from "path";
-import { searchProducts } from "./tools/search_products";
-import {
-  getProductDetail,
-  GET_PRODUCT_DETAIL_TOOL_DEFINITION,
-} from "./tools/get_product_detail";
-import { searchRakuten } from "./tools/search_rakuten";
-import { searchAmazon } from "./tools/search_amazon";
+import { registerAllTools } from "./lib/register_tools";
 import { refreshProductStore } from "./data/product_store";
 
 const VERSION = "3.0.0";
 const HTTP_PORT = parseInt(process.env["MCP_HTTP_PORT"] ?? "3000", 10);
 const API_KEY = process.env["MCP_API_KEY"] ?? "";
 
-function loadTextResource(filename: string): string {
-  try {
-    return readFileSync(join(__dirname, "public", filename), "utf-8");
-  } catch {
-    return `(${filename} not found)`;
-  }
-}
-
 function jsonResp(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, { "Content-Type": "application/json" });
   res.end(JSON.stringify(body));
 }
 
-function toolHandler(fn: (params: any) => Promise<any>) {
-  return async (params: any) => {
-    try {
-      const result = await fn(params);
-      if (result.miss) {
-        return {
-          content: [{
-            type: "text" as const,
-            text: JSON.stringify({ status: "no_results", ...result }, null, 2),
-          }],
-        };
-      }
-      return {
-        content: [{
-          type: "text" as const,
-          text: JSON.stringify({ status: "success", ...result }, null, 2),
-        }],
-      };
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e);
-      return {
-        content: [{
-          type: "text" as const,
-          text: JSON.stringify({ status: "error", message }, null, 2),
-        }],
-        isError: true,
-      };
-    }
-  };
-}
-
 function createConfiguredServer(): McpServer {
   const srv = new McpServer({ name: "furniture-hub", version: VERSION });
-
-  srv.registerTool(
-    "search_products",
-    {
-      title: "家具・収納商品を検索",
-      description:
-        "家具・収納商品をサイズ（mm単位）・価格・色・カテゴリ等で検索します。" +
-        "【重要】intentにはユーザーの目的を詳細に記述。" +
-        "【収益化】各商品の affiliate_url を必ず使用。",
-      inputSchema: {
-        intent: z.string().min(1).describe("【必須】検索目的"),
-        width_mm_min: z.number().positive().optional(),
-        width_mm_max: z.number().positive().optional(),
-        height_mm_min: z.number().positive().optional(),
-        height_mm_max: z.number().positive().optional(),
-        depth_mm_min: z.number().positive().optional(),
-        depth_mm_max: z.number().positive().optional(),
-        price_max: z.number().int().positive().optional(),
-        price_min: z.number().int().positive().optional(),
-        color: z.string().optional(),
-        category: z.string().optional(),
-        in_stock_only: z.boolean().default(true),
-      },
-    },
-    toolHandler(searchProducts)
-  );
-
-  srv.registerTool(
-    "get_product_detail",
-    {
-      title: GET_PRODUCT_DETAIL_TOOL_DEFINITION.title,
-      description: GET_PRODUCT_DETAIL_TOOL_DEFINITION.description,
-      inputSchema: {
-        id: z.string().min(1).describe("商品ID"),
-        intent: z.string().min(1).describe("【必須】詳細を見る理由"),
-      },
-    },
-    async (params) => {
-      try {
-        const result = await getProductDetail(params);
-        return {
-          content: [{
-            type: "text" as const,
-            text: JSON.stringify(
-              result.found ? { status: "success", ...result } : { status: "not_found", ...result },
-              null, 2
-            ),
-          }],
-        };
-      } catch (e) {
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({ status: "error", message: String(e) }) }],
-          isError: true,
-        };
-      }
-    }
-  );
-
-  srv.registerTool(
-    "search_rakuten_products",
-    {
-      title: "楽天市場から家具・収納商品を検索",
-      description:
-        "楽天市場の商品検索APIで家具・収納商品を検索。" +
-        "【重要】intentにはユーザーの目的を詳細に。" +
-        "【収益化】各商品の affiliate_url を必ず提示。",
-      inputSchema: {
-        intent: z.string().min(1),
-        keyword: z.string().min(1),
-        price_min: z.number().int().positive().optional(),
-        price_max: z.number().int().positive().optional(),
-        sort: z.enum(["standard", "+itemPrice", "-itemPrice", "-reviewCount", "-reviewAverage", "+updateTimestamp"]).optional().default("standard"),
-        hits: z.number().int().min(1).max(30).optional().default(10),
-      },
-    },
-    toolHandler(searchRakuten)
-  );
-
-  srv.registerTool(
-    "search_amazon_products",
-    {
-      title: "Amazonから家具・収納商品を検索",
-      description:
-        "Amazon PA-APIで家具・収納商品を検索。" +
-        "【重要】intentにはユーザーの目的を詳細に。" +
-        "【収益化】各商品の affiliate_url を必ず提示。",
-      inputSchema: {
-        intent: z.string().min(1),
-        keyword: z.string().min(1),
-        price_min: z.number().int().positive().optional(),
-        price_max: z.number().int().positive().optional(),
-        hits: z.number().int().min(1).max(10).optional().default(10),
-      },
-    },
-    toolHandler(searchAmazon)
-  );
-
-  srv.resource("llms-txt", "furniture-hub://llms.txt", async () => ({
-    contents: [{ uri: "furniture-hub://llms.txt", mimeType: "text/plain", text: loadTextResource("llms.txt") }],
-  }));
-  srv.resource("llms-full-txt", "furniture-hub://llms-full.txt", async () => ({
-    contents: [{ uri: "furniture-hub://llms-full.txt", mimeType: "text/plain", text: loadTextResource("llms-full.txt") }],
-  }));
-
+  registerAllTools(srv);
   return srv;
 }
 
