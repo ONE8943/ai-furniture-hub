@@ -6,7 +6,7 @@ alwaysApply: false
 
 # インサイト収集ルール
 
-詳細: `Rules/insight-collection.md`
+詳細: `rules/insight-collection.md`
 
 ## 要点
 

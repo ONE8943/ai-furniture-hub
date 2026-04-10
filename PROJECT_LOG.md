@@ -83,8 +83,8 @@ Test 5: 全商品取得 → 5件ヒット（正常）
 
 #### ルール更新
 - `.cursorrules` → v1.3（需要ギャップ検知ルール追記）
-- `Rules/architecture.md` → v1.3（Layer 6: Gap Feedback Loop 追加）
-- `Rules/gap-detection.md` 新規作成（検知仕組み・キーワード辞書・ログスキーマ）
+- `rules/architecture.md` → v1.3（Layer 6: Gap Feedback Loop 追加）
+- `rules/gap-detection.md` 新規作成（検知仕組み・キーワード辞書・ログスキーマ）
 
 #### 新規実装ファイル
 | ファイル | 内容 |
@@ -172,7 +172,7 @@ AIが「何が足りないか」を検知・提案し、管理者が承認した
 
 | ファイル | 内容 |
 |---------|------|
-| `Rules/self-evolution.md` | 自己進化ルール・法的ガードレール |
+| `rules/self-evolution.md` | 自己進化ルール・法的ガードレール |
 | `schemas/proposal.ts` | プロポーザルのZodスキーマ |
 | `utils/demand_analyzer.ts` | gaps.jsonl を集計して需要ランキングを生成 |
 | `utils/proposal_generator.ts` | 閾値超えギャップを proposals/pending/ に自動出力 |
@@ -222,7 +222,7 @@ Gap検知テスト:         23件 PASS / 0件 FAIL ✅
 | 4 | water_resistant | 2件 | 防水・防湿 |
 | 5 | has_casters | 2件 | キャスター有無 |
 
-### 法的ガードレール（Rules/self-evolution.md）
+### 法的ガードレール（rules/self-evolution.md）
 
 - AIはコードを自動書き換えしない（管理者承認が必要）
 - スクレイピング時は robots.txt 確認必須・レートリミット3秒/req
@@ -245,7 +245,7 @@ AIエージェントが商品を選んだ瞬間に収益が発生する仕組み
 |---------|------|
 | `.env` / `.env.example` | アフィリエイトID管理（dotenv使用） |
 | `.gitignore` | .env の誤コミット防止 |
-| `Rules/affiliate.md` | アフィリエイトルール・プラットフォーム仕様 |
+| `rules/affiliate.md` | アフィリエイトルール・プラットフォーム仕様 |
 | `adapters/nitori.ts` | ニトリ用アフィリエイトURLビルダー |
 | `adapters/rakuten.ts` | 楽天アフィリエイト形式URLビルダー |
 | `adapters/amazon.ts` | Amazonアソシエイトタグ付与 |
@@ -328,7 +328,7 @@ Log Verification:
 - `parsePriceJpy(raw)`: 価格文字列を整数円に変換（"7,990円（税込）" → 7990）
 
 #### 3. `utils/robots_checker.ts`（新規）
-法的ガードレール（Rules/self-evolution.md 準拠）:
+法的ガードレール（rules/self-evolution.md 準拠）:
 - `checkRobotsTxt(url, ua)`: robots.txt を取得・解析（1時間キャッシュ）
   - User-Agent ワイルドカード対応、Allow/Disallow の優先順位制御
 - `waitForRateLimit(url, delayMs)`: ドメインごとの最低リクエスト間隔を保証

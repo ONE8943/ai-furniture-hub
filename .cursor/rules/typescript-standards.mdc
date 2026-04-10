@@ -6,7 +6,7 @@ alwaysApply: false
 
 # TypeScript 開発規約
 
-詳細: `Rules/typescript.md`
+詳細: `rules/typescript.md`
 
 ## 必須事項
 

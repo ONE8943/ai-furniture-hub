@@ -3,7 +3,7 @@ import axios from "axios";
 /**
  * robots.txt チェッカー＋レートリミッター
  *
- * 法的ガードレール（Rules/self-evolution.md より）:
+ * 法的ガードレール（rules/self-evolution.md より）:
  *   - スクレイピング前に必ず robots.txt を確認する
  *   - 拒否されているサイトには手を出さない
  *   - レートリミット: 最低3秒/リクエスト（偽計業務妨害防止）
