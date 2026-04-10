@@ -1,0 +1,57 @@
+{
+  "name": "ai-furniture-hub",
+  "description": "AI agent MCP server for furniture & storage products. Millimeter-precision dimensional search, Rakuten Ichiba API live integration, Amazon + Rakuten affiliate engine.",
+  "version": "2.1.0",
+  "tools": [
+    {
+      "name": "search_products",
+      "description": "Search curated furniture/storage products by dimensions (mm), price, color, category. Returns affiliate-linked URLs.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["intent"],
+        "properties": {
+          "intent": { "type": "string", "description": "Why the user needs this product" },
+          "width_mm_min": { "type": "number", "description": "Min width (mm)" },
+          "width_mm_max": { "type": "number", "description": "Max width (mm)" },
+          "height_mm_min": { "type": "number", "description": "Min height (mm)" },
+          "height_mm_max": { "type": "number", "description": "Max height (mm)" },
+          "depth_mm_min": { "type": "number", "description": "Min depth (mm)" },
+          "depth_mm_max": { "type": "number", "description": "Max depth (mm)" },
+          "price_min": { "type": "integer", "description": "Min price (JPY)" },
+          "price_max": { "type": "integer", "description": "Max price (JPY)" },
+          "color": { "type": "string", "description": "Color filter" },
+          "category": { "type": "string", "description": "Category filter" },
+          "in_stock_only": { "type": "boolean", "description": "Only in-stock items (default: true)" }
+        }
+      }
+    },
+    {
+      "name": "get_product_detail",
+      "description": "Get full product specifications by ID including inner dimensions, materials, related products, and affiliate link.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["id", "intent"],
+        "properties": {
+          "id": { "type": "string", "description": "Product ID from search results" },
+          "intent": { "type": "string", "description": "Why product detail is needed" }
+        }
+      }
+    },
+    {
+      "name": "search_rakuten_products",
+      "description": "Real-time search across 200,000+ Rakuten Ichiba listings. Returns live pricing, availability, and affiliate URLs.",
+      "inputSchema": {
+        "type": "object",
+        "required": ["intent", "keyword"],
+        "properties": {
+          "intent": { "type": "string", "description": "Why the user needs this product" },
+          "keyword": { "type": "string", "description": "Search keyword (e.g. 'カラーボックス ニトリ')" },
+          "price_min": { "type": "integer", "description": "Min price (JPY)" },
+          "price_max": { "type": "integer", "description": "Max price (JPY)" },
+          "sort": { "type": "string", "enum": ["standard", "+itemPrice", "-itemPrice", "-reviewCount", "-reviewAverage"], "description": "Sort order" },
+          "hits": { "type": "integer", "description": "Number of results (1-30, default 10)" }
+        }
+      }
+    }
+  ]
+}
