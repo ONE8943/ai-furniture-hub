@@ -16,6 +16,8 @@ import {
 import { searchRakuten } from "../tools/search_rakuten";
 import { searchAmazon } from "../tools/search_amazon";
 import { coordinateStorage } from "../tools/coordinate_storage";
+import { suggestBySpace } from "../tools/suggest_by_space";
+import { identifyProduct } from "../tools/identify_product";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -188,6 +190,60 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(coordinateStorage)
+  );
+
+  // ── suggest_by_space ───────────────────────────────────
+  server.registerTool(
+    "suggest_by_space",
+    {
+      title: "空きスペースに入る製品をカテゴリ横断で提案",
+      description:
+        "設置スペースの寸法（幅・奥行・高さmm）を指定すると、" +
+        "そこに入る棚・ラック・収納ボックス等をカテゴリ横断で検索し、" +
+        "サイズ余裕（マージン）付きで提案します。" +
+        "棚と収納ボックスの両方が見つかればコーディネーションプランも自動生成。" +
+        "【重要】intentには設置場所・用途を詳細に（シーン別アドバイスが付きます）。" +
+        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
+        width_mm: z.number().positive().describe("空きスペースの幅（mm）"),
+        depth_mm: z.number().positive().describe("空きスペースの奥行き（mm）"),
+        height_mm: z.number().positive().describe("空きスペースの高さ（mm）"),
+        price_max: z.number().int().positive().optional().describe("予算上限（円）"),
+        categories: z.array(z.string()).optional().describe("探したいカテゴリ（省略時は自動推定）"),
+      },
+    },
+    toolHandler(suggestBySpace)
+  );
+
+  // ── identify_product ──────────────────────────────────
+  server.registerTool(
+    "identify_product",
+    {
+      title: "写真・特徴テキストから製品を特定（型番・内寸・消耗品情報付き）",
+      description:
+        "AIが画像から抽出した特徴テキスト（ブランド、色、段数、素材、推定サイズ等）を受け取り、" +
+        "既知製品DB + 楽天検索から候補を返します。" +
+        "型番が特定できれば内寸・消耗品・互換収納ボックス情報まで提供。" +
+        "【使い方】画像をVision AIで解析し、特徴をテキスト化してこのツールに渡してください。" +
+        "【重要】intentにはなぜ特定したいかを記述。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】なぜ特定したいか"),
+        features: z.string().min(1).describe(
+          "画像から読み取った特徴テキスト（ブランド、色、段数、素材、推定サイズ、形状特徴等）"
+        ),
+        brand_hint: z.string().optional().describe("ブランド名ヒント（ロゴが見えた場合）"),
+        dimensions_hint: z.object({
+          width_mm: z.number().positive().optional(),
+          height_mm: z.number().positive().optional(),
+          depth_mm: z.number().positive().optional(),
+        }).optional().describe("推定寸法（mm）分かる範囲で"),
+        include_compatible: z.boolean().optional().default(true).describe(
+          "互換収納・消耗品情報も含めるか（デフォルト: true）"
+        ),
+      },
+    },
+    toolHandler(identifyProduct)
   );
 
   // ── Resources ─────────────────────────────────────────
