@@ -1,0 +1,15 @@
+{
+  "id": "prop_20260410_load_capacity_kg",
+  "attribute_key": "load_capacity_kg",
+  "status": "pending",
+  "created_at": "2026-04-10T03:25:47.137Z",
+  "demand_count": 3,
+  "description": "棚の耐えられる最大荷重（kg）",
+  "zod_schema_suggestion": "load_capacity_kg: z.number().positive().optional().describe('最大耐荷重（kg）')",
+  "scraping_hint": "商品仕様テーブルの「耐荷重」「最大積載量」「棚板耐荷重」を取得",
+  "sample_intents": [
+    "本棚として使いたい。耐荷重50kg以上の棚が欲しい。本をたくさん入れる予定。",
+    "本棚として使いたい。耐荷重50kg以上が必要。重い全集を入れる。",
+    "工具や工具箱を収納したい。耐荷重30kg以上の棚を探している。"
+  ]
+}

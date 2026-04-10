@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "furniture-hub": {
+      "command": "npx",
+      "args": ["ts-node", "index.ts"],
+      "cwd": ".",
+      "env": {}
+    }
+  }
+}

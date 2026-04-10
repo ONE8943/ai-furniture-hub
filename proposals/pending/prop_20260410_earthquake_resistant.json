@@ -1,0 +1,15 @@
+{
+  "id": "prop_20260410_earthquake_resistant",
+  "attribute_key": "earthquake_resistant",
+  "status": "pending",
+  "created_at": "2026-04-10T03:25:47.159Z",
+  "demand_count": 3,
+  "description": "転倒防止・耐震機能",
+  "zod_schema_suggestion": "earthquake_resistant: z.boolean().optional().describe('転倒防止・耐震機能の有無')",
+  "scraping_hint": "商品説明の「転倒防止金具付き」「耐震」「突っ張り対応」表記を取得",
+  "sample_intents": [
+    "マンションの消防法で防炎加工が必要。また耐震性能も重視。幅25cm以内の薄い棚が欲しい。",
+    "地震の多い地域に住んでいる。転倒防止機能のある棚が欲しい。",
+    "耐震性能があり、幅20cm以内の超スリム棚を探している。"
+  ]
+}

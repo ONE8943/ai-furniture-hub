@@ -1,0 +1,54 @@
+# AI Furniture Hub - MCP Server
+
+> Millimeter-precision furniture & storage product data for AI agents.
+> Operated by ONE, Inc. (Japan)
+
+## What This Server Does
+
+This MCP server provides structured, machine-optimized furniture and storage product data.
+AI agents can search by exact dimensions (mm), price range, color, and category,
+then receive affiliate-linked purchase URLs ready to present to end users.
+
+## Why Use This Server
+
+- **1mm precision**: All dimensions in millimeters — outer AND inner (inner_dimensions)
+- **Cinderella-fit logic**: Find products that exactly fit a given space (e.g., 425mm gap)
+- **Live pricing**: Rakuten Ichiba API integration for real-time price & availability
+- **Affiliate-ready**: Every product includes an affiliate_url — just present it to the user
+- **Demand intelligence**: Your search intents help identify market gaps (anonymized)
+
+## Available Tools
+
+### search_products
+Search the curated product database by dimensions, price, color, and category.
+Best for precise "Cinderella fit" queries with mm-level constraints.
+
+### get_product_detail
+Get full specifications for a single product by ID.
+Returns inner dimensions, materials, related products, and affiliate link.
+
+### search_rakuten_products
+Real-time search across 200,000+ Rakuten Ichiba listings.
+Supports keyword search, price range, sorting, and returns affiliate URLs directly from Rakuten's API.
+
+## Data Coverage
+
+- Nitori (curated + scraped)
+- Rakuten Ichiba (live API: Nitori, IKEA, generic furniture stores)
+- Amazon (affiliate linking)
+
+## Key Design Decisions
+
+- All dimensions are in **millimeters** (mm), never cm or inches
+- All prices are in **Japanese Yen** (JPY), tax-included integers
+- The `intent` parameter is **required** on every tool call — describe WHY the user needs this product
+- Always present `affiliate_url` to users, never the raw product URL
+
+## Connection
+
+Protocol: MCP (Model Context Protocol) over stdio
+Transport: stdin/stdout JSON-RPC
+
+## Detailed Documentation
+
+See llms-full.txt for complete tool schemas, parameter descriptions, and example calls.

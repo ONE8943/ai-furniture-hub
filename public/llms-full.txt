@@ -1,0 +1,186 @@
+# AI Furniture Hub - Full Tool Documentation
+
+> MCP Server v2.1.0 | Protocol: Model Context Protocol (stdio)
+> Operator: ONE, Inc. (株式会社ONE) | https://fantastic-scone-73c867.netlify.app/
+
+---
+
+## Tool 1: search_products
+
+Search the curated product database with millimeter-precision dimension filters.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Why the user needs this product. Include placement location, use case, constraints. Example: "脱衣所の洗濯機横の隙間（約425mm）に収納棚を入れたい。下着や洗剤を入れる予定。" |
+| width_mm_min | number | no | Minimum width in mm |
+| width_mm_max | number | no | Maximum width in mm |
+| height_mm_min | number | no | Minimum height in mm |
+| height_mm_max | number | no | Maximum height in mm |
+| depth_mm_min | number | no | Minimum depth in mm |
+| depth_mm_max | number | no | Maximum depth in mm |
+| price_min | integer | no | Minimum price in JPY |
+| price_max | integer | no | Maximum price in JPY |
+| color | string | no | Color name (e.g., "ホワイト", "ブラウン", "ナチュラル") |
+| category | string | no | Category (e.g., "シェルフ・棚", "カラーボックス", "キャビネット") |
+| in_stock_only | boolean | no | Only in-stock items (default: true) |
+
+### Response Structure
+
+```json
+{
+  "status": "success",
+  "total": 3,
+  "products": [
+    {
+      "id": "uuid",
+      "name": "Nクリック ボックス レギュラー3段",
+      "width_mm": 419,
+      "height_mm": 878,
+      "depth_mm": 298,
+      "inner_dimensions": { "width_mm": 390, "height_mm": 270, "depth_mm": 265 },
+      "price": 4490,
+      "in_stock": true,
+      "color": "ホワイト",
+      "category": "カラーボックス",
+      "affiliate_url": "https://...",
+      "affiliate_platform": "nitori"
+    }
+  ],
+  "affiliate_summary": {
+    "links_generated": 3,
+    "platforms": ["nitori", "rakuten"],
+    "estimated_commission_yen": 240
+  }
+}
+```
+
+### Example Call
+
+```json
+{
+  "tool": "search_products",
+  "arguments": {
+    "intent": "洗面所の幅42cmの隙間にぴったり収まる収納棚を探している。タオルと洗剤を収納予定。",
+    "width_mm_max": 420,
+    "depth_mm_max": 350,
+    "price_max": 10000,
+    "in_stock_only": true
+  }
+}
+```
+
+---
+
+## Tool 2: get_product_detail
+
+Get full product specifications by ID. Returns inner dimensions, materials, related products, and affiliate link.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| id | string | YES | Product ID from search_products results |
+| intent | string | YES | Why the user needs product details (e.g., "購入前のサイズ最終確認") |
+
+### Response Structure
+
+```json
+{
+  "status": "success",
+  "product": {
+    "id": "uuid",
+    "name": "...",
+    "width_mm": 419,
+    "height_mm": 878,
+    "depth_mm": 298,
+    "inner_dimensions": { "width_mm": 390, "height_mm": 270, "depth_mm": 265 },
+    "price": 4490,
+    "material": "パーティクルボード",
+    "color": "ホワイト",
+    "description": "..."
+  },
+  "affiliate_url": "https://...",
+  "estimated_commission_yen": 67,
+  "related_products": [...],
+  "store_info": { "total": 7, "source": "merged" }
+}
+```
+
+---
+
+## Tool 3: search_rakuten_products
+
+Real-time search across Rakuten Ichiba marketplace. Returns live pricing, availability, and Rakuten-generated affiliate URLs.
+
+### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| intent | string | YES | Why the user needs this product |
+| keyword | string | YES | Search keyword (e.g., "カラーボックス ニトリ", "収納棚 スリム 幅30") |
+| price_min | integer | no | Minimum price in JPY |
+| price_max | integer | no | Maximum price in JPY |
+| sort | enum | no | "standard", "+itemPrice" (cheapest), "-itemPrice" (most expensive), "-reviewCount", "-reviewAverage", "+updateTimestamp" |
+| hits | integer | no | Number of results, 1-30 (default: 10) |
+
+### Response Structure
+
+```json
+{
+  "status": "success",
+  "total": 5,
+  "api_total_count": 216,
+  "source": "rakuten_api",
+  "products": [
+    {
+      "name": "連結できるNカラボ レギュラー カラーボックス ニトリ",
+      "price": 1790,
+      "width_mm": 419,
+      "height_mm": 590,
+      "depth_mm": 298,
+      "url": "https://item.rakuten.co.jp/...",
+      "affiliate_url": "https://hb.afl.rakuten.co.jp/...",
+      "in_stock": true,
+      "estimated_commission_yen": 26
+    }
+  ]
+}
+```
+
+### Example Call
+
+```json
+{
+  "tool": "search_rakuten_products",
+  "arguments": {
+    "intent": "引っ越し先のリビングに大きめのシェルフが欲しい。予算2万円以内。",
+    "keyword": "シェルフ 大型 収納",
+    "price_max": 20000,
+    "sort": "-reviewAverage",
+    "hits": 10
+  }
+}
+```
+
+---
+
+## Recommended Workflow for AI Agents
+
+1. **Broad search**: Use `search_rakuten_products` with keywords for discovery
+2. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
+3. **Final check**: Use `get_product_detail` before recommending to user
+4. **Always present** `affiliate_url` to the end user
+
+## Data Quality Notes
+
+- Dimensions from Rakuten are extracted from product titles/descriptions and converted to mm automatically
+- Curated products (search_products) have verified dimensions including inner_dimensions
+- Products with width_mm=0 indicate dimensions could not be extracted — use with caution
+
+## Gap Detection
+
+If your intent mentions attributes not in our schema (e.g., "耐荷重", "防水", "キャスター付き"),
+the server will log this as a "demand gap" and may include a `gap_feedback` field in the response.
+This helps us expand our data coverage based on real AI agent needs.

@@ -1,0 +1,15 @@
+{
+  "id": "prop_20260410_child_safe",
+  "attribute_key": "child_safe",
+  "status": "pending",
+  "created_at": "2026-04-10T03:25:47.152Z",
+  "demand_count": 3,
+  "description": "子供向け安全設計",
+  "zod_schema_suggestion": "child_safe: z.boolean().optional().describe('子供向け安全設計（角丸・転落防止等）')",
+  "scraping_hint": "商品説明・安全機能欄の「角が丸い」「子供部屋向け」表記を取得",
+  "sample_intents": [
+    "子供部屋に安価なカラーボックスを置きたい。おもちゃや絵本を整理するため。予算は1万円以内。",
+    "子供部屋用でキャスター付きが欲しい。おもちゃ収納に。",
+    "幼児がいる家庭で安全な棚が必要。キャスターで移動できると嬉しい。"
+  ]
+}

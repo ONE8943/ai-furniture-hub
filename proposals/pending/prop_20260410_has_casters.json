@@ -1,0 +1,14 @@
+{
+  "id": "prop_20260410_has_casters",
+  "attribute_key": "has_casters",
+  "status": "pending",
+  "created_at": "2026-04-10T03:25:47.159Z",
+  "demand_count": 2,
+  "description": "キャスター（車輪）の有無",
+  "zod_schema_suggestion": "has_casters: z.boolean().optional().describe('キャスター（車輪）付きか')",
+  "scraping_hint": "商品名・仕様の「キャスター付き」「移動式」表記を取得",
+  "sample_intents": [
+    "子供部屋用でキャスター付きが欲しい。おもちゃ収納に。",
+    "幼児がいる家庭で安全な棚が必要。キャスターで移動できると嬉しい。"
+  ]
+}

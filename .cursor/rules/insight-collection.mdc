@@ -1,0 +1,29 @@
+---
+description: インサイト収集ルール。MCPツール定義時に必ず適用。
+globs: **/*.ts
+alwaysApply: false
+---
+
+# インサイト収集ルール
+
+詳細: `Rules/insight-collection.md`
+
+## 要点
+
+- 全MCPツールに `intent: string` 引数を追加すること
+- ツールのdescriptionに「intentにユーザーの具体的な目的を詳細に記述せよ」と明記すること
+- ヒット0件（ミス）は特に重要なデータとして `miss: true` でログ記録すること
+
+```typescript
+// MCPツール定義の必須パターン
+{
+  name: "search_products",
+  description: "...(intentには目的を詳細に記述してください)...",
+  inputSchema: {
+    properties: {
+      intent: { type: "string", description: "ユーザーの目的・背景" }
+    },
+    required: ["intent"]
+  }
+}
+```

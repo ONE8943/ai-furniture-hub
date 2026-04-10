@@ -1,0 +1,26 @@
+---
+description: TypeScript開発規約。TSファイル編集時に適用。
+globs: **/*.ts
+alwaysApply: false
+---
+
+# TypeScript 開発規約
+
+詳細: `Rules/typescript.md`
+
+## 必須事項
+
+- Zodで全外部入力をバリデーションすること
+- `any` 型禁止 → `unknown` + 型ガードを使うこと
+- サイズは `_mm` サフィックスでmm単位を明示すること
+- 価格は整数（円）で扱うこと
+
+## ログはノンブロッキングで
+
+```typescript
+// ✅ 検索とログを並列実行
+const [results] = await Promise.all([
+  searchProducts(params),
+  logAnalytics(entry).catch(e => console.error('[Analytics]', e))
+]);
+```

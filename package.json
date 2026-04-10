@@ -1,0 +1,30 @@
+{
+  "name": "mcp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "dev": "ts-node index.ts",
+    "test": "ts-node test/run_test.ts",
+    "test:phase2": "ts-node test/run_phase2_test.ts",
+    "test:all": "ts-node test/run_test.ts && ts-node test/run_gap_test.ts && ts-node test/run_evolution_test.ts && ts-node test/run_affiliate_test.ts && ts-node test/run_phase2_test.ts && ts-node test/run_rakuten_test.ts",
+    "build": "tsc",
+    "review": "ts-node scripts/review_proposals.ts",
+    "analyze": "ts-node scripts/analyze_demand.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@types/node": "^25.5.2",
+    "axios": "^1.15.0",
+    "cheerio": "^1.2.0",
+    "dotenv": "^17.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2",
+    "zod": "^4.3.6"
+  }
+}
