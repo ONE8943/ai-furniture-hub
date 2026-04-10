@@ -18,6 +18,7 @@ import { searchAmazon } from "../tools/search_amazon";
 import { coordinateStorage } from "../tools/coordinate_storage";
 import { suggestBySpace } from "../tools/suggest_by_space";
 import { identifyProduct } from "../tools/identify_product";
+import { compareProducts } from "../tools/compare_products";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -244,6 +245,29 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(identifyProduct)
+  );
+
+  // ── compare_products ──────────────────────────────────
+  server.registerTool(
+    "compare_products",
+    {
+      title: "製品比較（価格・サイズ・レビュー・耐荷重を並列比較）",
+      description:
+        "2〜5件の製品を検索キーワードで取得し、価格・サイズ・レビュー評価・耐荷重を " +
+        "並べて比較表として返します。既知製品DBに一致すれば内寸や互換収納情報も付加。" +
+        "【重要】intentにはなぜ比較したいかを記述。" +
+        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】なぜ比較したいか"),
+        keywords: z.array(z.string().min(1)).min(2).max(5).describe(
+          "比較したい製品の検索キーワード（2〜5件）"
+        ),
+        compare_aspects: z.array(z.string()).optional().describe(
+          "比較したい観点（省略時はデフォルト全項目）"
+        ),
+      },
+    },
+    toolHandler(compareProducts)
   );
 
   // ── Resources ─────────────────────────────────────────

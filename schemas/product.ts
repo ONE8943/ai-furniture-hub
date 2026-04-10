@@ -32,6 +32,9 @@ export const ProductSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()).default([]),
   description: z.string().optional(),
+  image_url: z.string().url().optional().describe("商品画像URL"),
+  review_count: z.number().int().nonnegative().optional().describe("レビュー件数"),
+  review_average: z.number().min(0).max(5).optional().describe("レビュー平均点（0〜5）"),
 
   // URL（複数プラットフォーム対応）
   url: z.string().url().optional(),

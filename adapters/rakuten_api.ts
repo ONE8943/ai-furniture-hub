@@ -309,6 +309,14 @@ const CATEGORY_RULES: Array<{ keywords: string[]; category: string }> = [
   { keywords: ["ラック", "シェルフ", "棚"], category: "ラック・シェルフ" },
 ];
 
+function extractImageUrl(images: RakutenItem["mediumImageUrls"]): string | undefined {
+  if (!images || images.length === 0) return undefined;
+  const first = images[0];
+  if (typeof first === "string") return first;
+  if (first && typeof first === "object" && "imageUrl" in first) return first.imageUrl;
+  return undefined;
+}
+
 function detectCategory(text: string): string {
   const lower = text.normalize("NFKC").toLowerCase();
   for (const rule of CATEGORY_RULES) {
@@ -334,6 +342,9 @@ function rakutenItemToProduct(item: RakutenItem, index: number): Product {
     category: detectCategory(combinedText),
     tags: ["楽天API取得", item.shopName].filter(Boolean),
     description: item.catchcopy || item.itemCaption.slice(0, 200) || undefined,
+    image_url: extractImageUrl(item.mediumImageUrls),
+    review_count: item.reviewCount,
+    review_average: item.reviewAverage,
     url: item.itemUrl,
     affiliate_url: item.affiliateUrl || undefined,
     platform_urls: {
