@@ -15,6 +15,7 @@ import {
 } from "../tools/get_product_detail";
 import { searchRakuten } from "../tools/search_rakuten";
 import { searchAmazon } from "../tools/search_amazon";
+import { coordinateStorage } from "../tools/coordinate_storage";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -164,6 +165,29 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(searchAmazon)
+  );
+
+  // ── coordinate_storage ─────────────────────────────────
+  server.registerTool(
+    "coordinate_storage",
+    {
+      title: "棚＋収納ボックスのコーディネート提案（個数計算付き）",
+      description:
+        "棚（カラーボックス・スチールラック等）を検索し、その内寸に合う収納ボックスを " +
+        "個数計算付きでセット提案します。1段に何個入るか、全段で何個必要か、合計金額まで算出。" +
+        "【重要】intentには設置場所（押入れ、洗面所、キッチン等）と用途を詳細に記述。" +
+        "場所に応じたコーディネートのコツも提供します。" +
+        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
+        keyword: z.string().min(1).describe("棚の検索キーワード（例: 'カラーボックス 3段'）"),
+        price_max: z.number().int().positive().optional().describe("棚の予算上限（円）"),
+        storage_keyword: z.string().optional().describe("収納ボックスの検索キーワード（省略時は自動推定）"),
+        scene: z.string().optional().describe("設置場所ヒント（'押入れ','洗面所','キッチン'等）"),
+        shelf_count: z.number().int().min(1).max(5).optional().default(3).describe("提案する棚の件数（1〜5）"),
+      },
+    },
+    toolHandler(coordinateStorage)
   );
 
   // ── Resources ─────────────────────────────────────────

@@ -292,6 +292,31 @@ async function waitForRateLimit(): Promise<void> {
   lastRequestTime = Date.now();
 }
 
+const CATEGORY_RULES: Array<{ keywords: string[]; category: string }> = [
+  { keywords: ["カラーボックス", "カラーbox"], category: "カラーボックス" },
+  { keywords: ["スチールラック", "メタルラック", "ワイヤーラック"], category: "スチールラック" },
+  { keywords: ["食器棚", "カップボード"], category: "食器棚" },
+  { keywords: ["本棚", "ブックシェルフ"], category: "本棚" },
+  { keywords: ["テレビ台", "テレビボード", "tvボード", "tv台"], category: "テレビ台" },
+  { keywords: ["チェスト"], category: "チェスト" },
+  { keywords: ["キャビネット"], category: "キャビネット" },
+  { keywords: ["シューズラック", "靴棚", "シューズボックス"], category: "シューズラック" },
+  { keywords: ["デスク", "学習机", "パソコンデスク", "pcデスク"], category: "デスク" },
+  { keywords: ["ワゴン", "キッチンワゴン"], category: "ワゴン" },
+  { keywords: ["隙間収納", "スリムラック", "スリム収納"], category: "隙間収納" },
+  { keywords: ["壁面収納"], category: "壁面収納" },
+  { keywords: ["収納ボックス", "収納ケース", "インナーケース", "インボックス", "インナーボックス"], category: "収納ボックス" },
+  { keywords: ["ラック", "シェルフ", "棚"], category: "ラック・シェルフ" },
+];
+
+function detectCategory(text: string): string {
+  const lower = text.normalize("NFKC").toLowerCase();
+  for (const rule of CATEGORY_RULES) {
+    if (rule.keywords.some((kw) => lower.includes(kw))) return rule.category;
+  }
+  return "家具・収納";
+}
+
 function rakutenItemToProduct(item: RakutenItem, index: number): Product {
   const combinedText = `${item.itemName} ${item.catchcopy} ${item.itemCaption}`;
   const dims = extractDimensions(combinedText);
@@ -306,7 +331,7 @@ function rakutenItemToProduct(item: RakutenItem, index: number): Product {
     in_stock: item.availability === 1,
     stock_count: item.availability === 1,
     color: undefined,
-    category: "家具・収納",
+    category: detectCategory(combinedText),
     tags: ["楽天API取得", item.shopName].filter(Boolean),
     description: item.catchcopy || item.itemCaption.slice(0, 200) || undefined,
     url: item.itemUrl,
