@@ -7,7 +7,7 @@
  * 写真 → AIが解析 → テキスト特徴 → このツール → 型番・スペック候補
  */
 import { z } from "zod";
-import { findMatchingProducts, ProductMatch, KnownProduct } from "../shared/catalog/known_products";
+import { findMatchingProducts, ProductMatch, KnownProduct, getProductRelatedItems } from "../shared/catalog/known_products";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, logRequirementGap, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
@@ -64,6 +64,12 @@ interface CandidateResult {
   product_url: string;
   consumables: KnownProduct["consumables"];
   compatible_storage: KnownProduct["compatible_storage"];
+  related_items_hint?: {
+    total: number;
+    required: Array<{ name: string; why: string }>;
+    recommended_count: number;
+    note: string;
+  };
 }
 
 interface RakutenFallback {
@@ -153,6 +159,18 @@ export async function identifyProduct(rawInput: unknown): Promise<IdentifyProduc
       product_url: url,
       consumables: params.include_compatible ? p.consumables : [],
       compatible_storage: params.include_compatible ? p.compatible_storage : [],
+      related_items_hint: (() => {
+        if (!params.include_compatible) return undefined;
+        const ri = getProductRelatedItems(p.id);
+        if (ri.length === 0) return undefined;
+        const req = ri.filter((r) => r.required);
+        return {
+          total: ri.length,
+          required: req.map((r) => ({ name: r.name, why: r.why })),
+          recommended_count: ri.length - req.length,
+          note: "get_related_items ツールで詳細取得可能",
+        };
+      })(),
     };
   });
 

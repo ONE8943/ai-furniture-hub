@@ -6,6 +6,7 @@ import { attachAffiliateUrls, logConversions, estimateCommission, ProductWithAff
 import { detectGaps, logRequirementGap, buildGapFeedback } from "../utils/gap_detector";
 import { RequirementGap } from "../schemas/requirement_gap";
 import { parseOrThrow } from "../utils/validation";
+import { findMatchingProducts, getProductRelatedItems, RelatedItem } from "../shared/catalog/known_products";
 
 // -----------------------------------------------------------------------
 // 入力スキーマ
@@ -46,6 +47,12 @@ export interface ProductDetailResult {
     price: number;
     affiliate_url?: string;
   }[];
+  related_items_hint?: {
+    total: number;
+    required: Array<{ name: string; why: string; search_keywords: string[] }>;
+    recommended: Array<{ name: string; why: string; search_keywords: string[] }>;
+    note: string;
+  };
   store_info?: {
     total_products: number;
     source: string;
@@ -214,6 +221,21 @@ export async function getProductDetail(
 
   const allProducts = getAllProducts();
 
+  // known_products DBから関連アイテム情報を検索
+  const knownMatches = findMatchingProducts(enrichedProduct.name, 1);
+  const knownProduct = knownMatches.length > 0 && knownMatches[0]!.confidence >= 20
+    ? knownMatches[0]!.product : undefined;
+  const relatedItems = knownProduct ? getProductRelatedItems(knownProduct.id) : [];
+  const requiredItems = relatedItems.filter((ri) => ri.required);
+  const recommendedItems = relatedItems.filter((ri) => !ri.required);
+
+  const relatedItemsHint = relatedItems.length > 0 ? {
+    total: relatedItems.length,
+    required: requiredItems.map((ri) => ({ name: ri.name, why: ri.why, search_keywords: ri.search_keywords })),
+    recommended: recommendedItems.slice(0, 5).map((ri) => ({ name: ri.name, why: ri.why, search_keywords: ri.search_keywords })),
+    note: "詳細は get_related_items ツールで取得可能（楽天検索結果付き）",
+  } : undefined;
+
   return {
     product: enrichedProduct,
     found: true,
@@ -221,6 +243,7 @@ export async function getProductDetail(
     estimated_commission_yen: estimatedCommission,
     ...(relatedWithAffiliate.length > 0 && { related_products: relatedWithAffiliate }),
     ...(gapFeedback && { gap_feedback: gapFeedback }),
+    ...(relatedItemsHint && { related_items_hint: relatedItemsHint }),
     store_info: {
       total_products: allProducts.length,
       source: "product_store",

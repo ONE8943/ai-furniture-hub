@@ -7,6 +7,28 @@
  * identify_product ツールのバックエンド。
  */
 
+export type ProductCategory =
+  | "シェルフ・棚" | "カラーボックス" | "収納ケース" | "ワゴン・可動収納"
+  | "衣装ケース" | "スチールラック" | "デスク" | "キッチン収納"
+  | "ランドリー収納" | "バス・洗面収納" | "玄関収納" | "テレビ台"
+  | "本棚" | "クローゼット収納" | "ファイル収納" | "ベビー・安全対策"
+  | "突っ張り棒・つっぱり" | "保護・補修材" | "パーツ・アクセサリ" | "その他";
+
+export type RelationType =
+  | "requires" | "protects_with" | "fits_inside"
+  | "coordinates_with" | "enhances_with" | "alternative";
+
+export interface RelatedItem {
+  relation: RelationType;
+  name: string;
+  category: string;
+  why: string;
+  product_id?: string;
+  search_keywords: string[];
+  price_range?: { min: number; max: number };
+  required: boolean;
+}
+
 export interface KnownProduct {
   id: string;
   brand: string;
@@ -29,6 +51,8 @@ export interface KnownProduct {
   consumables: Consumable[];
   compatible_storage: CompatibleStorage[];
   url_template: string;
+  category?: ProductCategory;
+  related_items?: RelatedItem[];
   /** 廃番・旧型のとき true（後継は successors を参照） */
   discontinued?: boolean;
   /** 公式・実務上の後継候補（型番は目安。購入前にメーカー公式で要確認） */
@@ -107,6 +131,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "カラーボックス",
+    related_items: [
+      { relation: "fits_inside", name: "Nインボックス レギュラー", category: "収納ケース", why: "内寸380×260mmに対しNインボックス(389×266×236mm)がシンデレラフィット。ニトリ公式セット推奨", search_keywords: ["ニトリ Nインボックス レギュラー", "Nインボックス 収納ケース"], price_range: { min: 679, max: 899 }, required: false },
+      { relation: "enhances_with", name: "Nクリック用 追加棚板 レギュラー", category: "パーツ・アクセサリ", why: "25mmピッチで段数・間隔を増やせる。棚板1枚耐荷重10kgで日用品収納に十分", search_keywords: ["ニトリ Nクリック 追加棚板", "Nクリック 棚板 レギュラー"], price_range: { min: 799, max: 1290 }, required: false },
+      { relation: "enhances_with", name: "Nクリック用 別売りキャスター 4個入", category: "パーツ・アクセサリ", why: "脚に取り付けて移動式に変身。掃除や模様替え時に便利。補強キャスターと組み合わせ推奨", search_keywords: ["ニトリ Nクリック キャスター", "Nクリック キャスター 4個"], price_range: { min: 999, max: 999 }, required: false },
+    ],
   },
   {
     id: "nitori-nclick-regular-2",
@@ -143,6 +173,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "カラーボックス",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "Nインボックス レギュラー",
+        category: "収納ケース",
+        why: "内寸幅380×奥行260mmに対し本体389×266×236mmが収まり、公式でもカラーボックス系インナーとして案内されている組み合わせ",
+        search_keywords: ["ニトリ Nインボックス レギュラー","Nインボックス 収納ケース"],
+        price_range: { min: 679, max: 899 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "Nクリック用 追加棚板 レギュラー",
+        category: "パーツ・アクセサリ",
+        why: "25mmピッチのはめ込み式で段数や間隔を増やせる。標準カラボ棚板より高耐荷重設計のラインで拡張性が高い",
+        search_keywords: ["ニトリ Nクリック 追加棚板","Nクリック 棚板 レギュラー"],
+        price_range: { min: 799, max: 1290 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "Nクリック用 別売りキャスター 4個入",
+        category: "パーツ・アクセサリ",
+        why: "脚に取り付けて移動式にでき、掃除や模様替え時の移動が楽。高さ約40mm前後の嵩上げで床との隙間も確保しやすい",
+        search_keywords: ["ニトリ Nクリック キャスター","Nクリック キャスター 4個"],
+        price_range: { min: 999, max: 1290 },
+        required: false,
+      },
+    ],
   },
   {
     id: "nitori-nclick-wide-3",
@@ -187,6 +247,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "カラーボックス",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "Nインボックス レギュラー",
+        category: "収納ケース",
+        why: "各段内寸幅815×奥行260mmにレギュラー389×266×236mmを横2列で収容でき、ワイド列の定番レイアウト",
+        search_keywords: ["ニトリ Nインボックス レギュラー","ワイド Nクリック インナー"],
+        price_range: { min: 679, max: 899 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "Nインボックス ハーフ",
+        category: "収納ケース",
+        why: "幅192mmのハーフを1段に4個並べ、小物単位で仕切れる。奥行266mmは内寸260mmに近接しシリーズ整合",
+        search_keywords: ["ニトリ Nインボックス ハーフ","Nインボックス ハーフ ニトリ"],
+        price_range: { min: 499, max: 599 },
+        required: false,
+      },
+      {
+        relation: "protects_with",
+        name: "家具転倒防止ベルト・金具",
+        category: "保護・補修材",
+        why: "外寸高さ878mm・幅872mmで質量も大きく、地震時の転倒リスクを下げるため壁面固定が推奨されるクラス",
+        search_keywords: ["家具転倒防止ベルト","テレビ台 転倒防止 金具"],
+        price_range: { min: 480, max: 2280 },
+        required: false,
+      },
+    ],
   },
 
   // ===== IKEA KALLAX =====
@@ -234,6 +324,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.ikea.com/jp/ja/p/-{model_number}/",
+    category: "シェルフ・棚",
+    related_items: [
+      { relation: "fits_inside", name: "DRÖNA ドローナ ボックス 33×38×33cm", category: "収納ケース", why: "KALLAX 1マス内寸330×380mmにドローナ(330×380×330mm)が完璧フィット。399円で8000件超レビュー平均4.7/5", search_keywords: ["IKEA ドローナ DRÖNA 33", "KALLAX 収納ボックス"], price_range: { min: 399, max: 399 }, required: false },
+      { relation: "enhances_with", name: "KALLAX インサート 扉", category: "パーツ・アクセサリ", why: "オープン棚の一部に扉を付けて見せる/隠す収納のメリハリ。KALLAX専用設計で工具不要", search_keywords: ["IKEA KALLAX インサート 扉", "カラックス 扉"], price_range: { min: 2000, max: 4500 }, required: false },
+      { relation: "requires", name: "家具転倒防止金具・ストラップ", category: "保護・補修材", why: "高さ770mmで上段荷重時の転倒リスクあり。壁面固定を推奨", search_keywords: ["IKEA 転倒防止 金具", "家具 転倒防止 ストラップ"], price_range: { min: 200, max: 1500 }, required: true },
+    ],
   },
   {
     id: "ikea-kallax-1x4",
@@ -270,6 +366,45 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.ikea.com/jp/ja/p/-{model_number}/",
+    category: "シェルフ・棚",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "DRÖNA ドローナ ボックス 33×38×33cm",
+        category: "収納ケース",
+        why: "KALLAX 1マス内寸約330×380mmに対しドローナ外寸330×380×330mmがジャスト。布製で軽く角が当たりにくい",
+        search_keywords: ["IKEA ドローナ DRÖNA","KALLAX 収納ボックス 楽天"],
+        price_range: { min: 399, max: 499 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "KALLAX インサート 扉（1マス用）",
+        category: "パーツ・アクセサリ",
+        why: "開口330×330mm前後のマスを扉付きにでき生活感を遮断。KALLAX専用でネジ位置が合う",
+        search_keywords: ["IKEA KALLAX 扉 インサート","カラックス 扉 楽天"],
+        price_range: { min: 2000, max: 4500 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "BRANÄS ブラネス バスケット 32×35×32cm",
+        category: "収納ケース",
+        why: "籐製で約320×350×320mm級。KALLAX内寸幅330mmに収まりやすく見せる収納の質感が上がる",
+        search_keywords: ["IKEA BRANÄS バスケット","IKEA 籐 かご 楽天"],
+        price_range: { min: 1999, max: 2999 },
+        required: false,
+      },
+      {
+        relation: "requires",
+        name: "家具転倒防止金具・ストラップ",
+        category: "保護・補修材",
+        why: "縦長1470mmで上段荷重時の転倒リスクがある。壁面に固定し高さ2360mm未満の天井下でも安全余裕を確保",
+        search_keywords: ["IKEA 転倒防止 金具","家具 転倒防止 ストラップ 楽天"],
+        price_range: { min: 200, max: 1500 },
+        required: true,
+      },
+    ],
   },
 
   // ===== アイリスオーヤマ メタルラック =====
@@ -323,6 +458,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID={model_number}",
+    category: "スチールラック",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "メタルラック用 ワイヤーバスケット 幅90cm",
+        category: "収納ケース",
+        why: "棚板間のデッドスペースにバスケットを吊り下げて収納力を高められる。ポール径25mm向け純正品の確認がおすすめ",
+        search_keywords: ["アイリスオーヤマ メタルラック バスケット 幅90","メタルラック ワイヤーバスケット MR"],
+        price_range: { min: 1500, max: 2800 },
+        required: false,
+      },
+      {
+        relation: "protects_with",
+        name: "ダイソー PPシート 460×910mm",
+        category: "その他",
+        why: "ワイヤー棚板の隙間から小物が落ちるのを防ぎ、平面にして収納しやすくする。100円ショップで手に入りやすい",
+        search_keywords: ["ダイソー PPシート メタルラック","100均 メタルラック シート"],
+        price_range: { min: 110, max: 110 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "メタルラック用 キャスター 4個セット",
+        category: "パーツ・アクセサリ",
+        why: "掃除やレイアウト変更のため本体を移動しやすくする。耐荷重とロック付きを選ぶと安心",
+        search_keywords: ["アイリスオーヤマ メタルラック キャスター","メタルラック キャスター 25mm"],
+        price_range: { min: 1200, max: 3500 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 無印良品 スタッキングシェルフ =====
@@ -370,6 +535,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.muji.com/jp/ja/store/cmdty/detail/{model_number}",
+    category: "シェルフ・棚",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "スタッキングシェルフ用トレー オーク材",
+        category: "収納ケース",
+        why: "棚板の上にトレーを載せて小物を引き出し感覚で取り出せる。オーク材で本体と木目トーンを揃えやすい",
+        search_keywords: ["無印良品 スタッキングシェルフ トレー オーク","無印 スタッキング トレー"],
+        price_range: { min: 3490, max: 3490 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "重なるラタン長方形バスケット 中",
+        category: "収納ケース",
+        why: "1マス内に収まりやすいサイズ感で見せる収納に向く。積み重ね可能で縦方向の収納効率も上げられる",
+        search_keywords: ["無印良品 ラタン バスケット 長方形 中","無印 ラタン 収納"],
+        price_range: { min: 1990, max: 2990 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "ポリプロピレン収納ボックス・ワイド",
+        category: "収納ケース",
+        why: "無印が想定するワイド寸法でシェルフ1段に収まりやすい。半透明で中身が判別しやすく積み重ねもしやすい",
+        search_keywords: ["無印良品 ポリプロピレン 収納ボックス ワイド","無印 PP ワイド 深型"],
+        price_range: { min: 790, max: 1290 },
+        required: false,
+      },
+    ],
   },
 
   // ===== ニトリ カラーボックス（標準） =====
@@ -408,6 +603,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "カラーボックス",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "カラーボックス用収納ボックス レギュラー",
+        category: "収納ケース",
+        why: "内寸幅390×段高さ270×奥行260mmに対し約385×225×265mmの純正ボックスが収まる公式組み合わせ",
+        search_keywords: ["ニトリ カラーボックス用収納ボックス","カラーボックス インナー ニトリ"],
+        price_range: { min: 290, max: 790 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "Nインボックス レギュラー",
+        category: "収納ケース",
+        why: "389×236×266mmは内寸390×270×260mmに実用上収まりやすく、引き出し式で生活感を抑えられる定番オプション",
+        search_keywords: ["ニトリ Nインボックス レギュラー","カラーボックス Nインボックス"],
+        price_range: { min: 679, max: 899 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "平安伸銅 強力突っ張り棒",
+        category: "その他",
+        why: "上枠と天井の間に113〜193cm級の突っ張り棒を渡し、転倒補助や上段のズレ止めに使える（設置高さは部屋で要調整）",
+        search_keywords: ["平安伸銅 突っ張り棒 強力","突っ張り棒 家具 転倒防止"],
+        price_range: { min: 1280, max: 2480 },
+        required: false,
+      },
+    ],
   },
 
   // ===== ニトリ Nクリック スリム =====
@@ -446,6 +671,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "カラーボックス",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "Nクリック用 別売りキャスター 4個入",
+        category: "パーツ・アクセサリ",
+        why: "スリム列もNクリックシリーズのため同系キャスターで移動式化しやすい。隙間収納の掃除出し入れが楽になる",
+        search_keywords: ["ニトリ Nクリック キャスター","Nクリック キャスター"],
+        price_range: { min: 999, max: 1290 },
+        required: false,
+      },
+      {
+        relation: "protects_with",
+        name: "家具転倒防止伸縮棒",
+        category: "保護・補修材",
+        why: "外寸高さ1808mmの細身ラックは重心が高く、天井〜本体上端の突っ張り棒で転倒抑制を図れる（設置幅は商品寸法に合わせて選定）",
+        search_keywords: ["家具転倒防止伸縮棒","転倒防止棒 天井"],
+        price_range: { min: 1280, max: 2980 },
+        required: false,
+      },
+      {
+        relation: "alternative",
+        name: "幅約17cm スリム収納ケース（深型）",
+        category: "収納ケース",
+        why: "内寸幅170mmは市販の大型インナーより狭いため、幅170mm前後のスリムケースを別調達すると段内整理しやすい（メーカー横断で要実測）",
+        search_keywords: ["スリム収納ケース 17cm","隙間収納ボックス スリム"],
+        price_range: { min: 890, max: 2490 },
+        required: false,
+      },
+    ],
   },
 
   // ===== ニトリ Nフラッテ =====
@@ -474,6 +729,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "収納ケース",
+    related_items: [
+      {
+        relation: "coordinates_with",
+        name: "Nクリック レギュラー2段",
+        category: "その他",
+        why: "Nフラッテ内寸約240×220×350mmは衣類小物向きで、同シリーズのNクリック419×298mm奥行ラック上に積み重ねてランドリー動線を作りやすい",
+        search_keywords: ["ニトリ Nクリック レギュラー 2段","Nフラッテ ニトリ"],
+        price_range: { min: 2490, max: 2990 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "カラーボックス 3段（標準）",
+        category: "収納ケース",
+        why: "本体幅260×奥行375mmはカラボ内寸幅390×奥行260mm前後の段にインナーとして収まりやすく、カタログでもカラーボックス併用が想定されている",
+        search_keywords: ["ニトリ カラーボックス 3段","カラーボックス インナー ニトリ"],
+        price_range: { min: 1190, max: 1490 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "Nフラッテ（同色追加）",
+        category: "その他",
+        why: "積み重ね可能設計のため同色を足して縦スタックでき、高さ240mm単位でボリュームを伸ばせる",
+        search_keywords: ["ニトリ Nフラッテ","Nフラッテ レギュラー"],
+        price_range: { min: 599, max: 799 },
+        required: false,
+      },
+    ],
   },
 
   // ===== ニトリ 押入れ収納ケース =====
@@ -502,6 +787,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.nitori-net.jp/ec/product/{model_number}/",
+    category: "衣装ケース",
+    related_items: [
+      {
+        relation: "alternative",
+        name: "Fits 押入れ収納ケース",
+        category: "収納ケース",
+        why: "外寸幅390×奥行740mm級は天馬Fitsのワイド浅型・深型ラインと用途が近く、引き出し収納の代替比較に向く",
+        search_keywords: ["天馬 Fits 押入れ","Fits ケース ワイド"],
+        price_range: { min: 1980, max: 2980 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "不織布 衣類収納ケース",
+        category: "収納ケース",
+        why: "深型ケース内の衣類を季節単位で袋分けすると引き出し時の崩れが減り、高さ300mm前後のケースと相性が良い",
+        search_keywords: ["不織布 衣類収納ケース","押入れ 衣類ケース"],
+        price_range: { min: 480, max: 1580 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "除湿剤 クローゼット用",
+        category: "その他",
+        why: "半透明ボディで通気はあるが押入れ環境では湿度管理と併用するとカビ対策になりやすい",
+        search_keywords: ["クローゼット 除湿剤","押入れ 除湿シート"],
+        price_range: { min: 298, max: 1280 },
+        required: false,
+      },
+    ],
   },
 
   // ===== IKEA KALLAX 3x4 =====
@@ -540,6 +855,45 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.ikea.com/jp/ja/p/-{model_number}/",
+    category: "シェルフ・棚",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "DRÖNA ドローナ（12マス分の追加購入セット想定）",
+        category: "その他",
+        why: "各マス内寸330×380mmにドローナ330×380mmが一致。12マスそろえると統一感と出し入れ動線が最適化",
+        search_keywords: ["IKEA ドローナ まとめ買い","KALLAX 3x4 収納 楽天"],
+        price_range: { min: 399, max: 499 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "KALLAX インサート 引き出し2段",
+        category: "パーツ・アクセサリ",
+        why: "330mm角マスに専用引き出しを入れ小物を段別に分類。深さ380mmに沿った浅型収納で文房具向き",
+        search_keywords: ["IKEA KALLAX 引き出し インサート","カラックス 引き出し 楽天"],
+        price_range: { min: 3500, max: 5500 },
+        required: false,
+      },
+      {
+        relation: "requires",
+        name: "大型ユニット用 転倒防止固定",
+        category: "保護・補修材",
+        why: "外形1120×1470×390mm・重量級のため地震時の滑り出しが危険。複数点で壁に分散固定が推奨",
+        search_keywords: ["IKEA 転倒防止 大型","本棚 壁固定 金具 楽天"],
+        price_range: { min: 500, max: 2500 },
+        required: true,
+      },
+      {
+        relation: "coordinates_with",
+        name: "キャスター付き脚（ユニット底面保護）",
+        category: "保護・補修材",
+        why: "床との摩擦を減らし掃除時の微移動がしやすい。390mm奥行ユニット下に低床キャスターを入れる事例あり",
+        search_keywords: ["家具 キャスター 低床","収納棚 移動 キャスター 楽天"],
+        price_range: { min: 800, max: 3500 },
+        required: false,
+      },
+    ],
   },
 
   // ===== IKEA BILLY =====
@@ -578,6 +932,45 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.ikea.com/jp/ja/p/-{model_number}/",
+    category: "本棚",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "OXBERG オクスベリ 扉（ガラス/板）",
+        category: "その他",
+        why: "幅800mm BILLYに後付け扉でホコリを遮断。棚内奥行260mm前後の本列を前扉で保護",
+        search_keywords: ["IKEA BILLY OXBERG 扉","ビリー 本棚 扉 楽天"],
+        price_range: { min: 5000, max: 12000 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "BILLY 追加棚板",
+        category: "パーツ・アクセサリ",
+        why: "可動ピッチで段数を増やし1段あたりの高さ350mm前後を細かく分割。厚みのある図鑑も安定棚受けで",
+        search_keywords: ["IKEA BILLY 追加棚板","ビリー 棚板 楽天"],
+        price_range: { min: 1500, max: 3500 },
+        required: false,
+      },
+      {
+        relation: "requires",
+        name: "本棚用 転倒防止金具セット",
+        category: "保護・補修材",
+        why: "高さ2020mmの背高シェルフは空振りで転倒しやすい。壁面アンカーとベルトで760mm幅全体を拘束",
+        search_keywords: ["本棚 転倒防止 金具","IKEA ビリー 転倒防止 楽天"],
+        price_range: { min: 300, max: 2000 },
+        required: true,
+      },
+      {
+        relation: "coordinates_with",
+        name: "スチール製ブックエンド（大）",
+        category: "パーツ・アクセサリ",
+        why: "棚板幅760mmで文庫本を立て並べる際、端部の倒れ込みを防ぐ。奥行260mmに薄型エンドが収まる",
+        search_keywords: ["ブックエンド 大 金属","本棚 ブックエンド 楽天"],
+        price_range: { min: 400, max: 2500 },
+        required: false,
+      },
+    ],
   },
 
   // ===== IKEA TROFAST =====
@@ -625,6 +1018,45 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.ikea.com/jp/ja/p/-{model_number}/",
+    category: "ベビー・安全対策",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "TROFAST 収納ボックス 浅型 42×30×10cm",
+        category: "収納ケース",
+        why: "フレームレール内寸幅420×奥行290mmに合わせた専用浅型ボックス。子ども玩具の仕分けに最適",
+        search_keywords: ["IKEA TROFAST ボックス 浅型","トロファスト 収納ボックス 楽天"],
+        price_range: { min: 300, max: 600 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "TROFAST 収納ボックス 深型 42×30×23cm",
+        category: "収納ケース",
+        why: "同レールに深型を差し替え可能で高さ方向220mm級のおもちゃ・衣類も一気に収納",
+        search_keywords: ["IKEA TROFAST 深型","トロファスト 深型 ボックス 楽天"],
+        price_range: { min: 500, max: 900 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "TROFAST フタ（ボックス用）",
+        category: "パーツ・アクセサリ",
+        why: "浅型・深型ボックス上にフタを載せ積み上げ安定とホコリ軽減。幅420mmユニット幅に揃う",
+        search_keywords: ["IKEA TROFAST フタ","トロファスト ふた 楽天"],
+        price_range: { min: 200, max: 500 },
+        required: false,
+      },
+      {
+        relation: "requires",
+        name: "壁面固定用 転倒防止キット",
+        category: "保護・補修材",
+        why: "高さ940mmでも子どもが登って転倒するリスクあり。フレーム背面から壁へテンション固定を推奨",
+        search_keywords: ["子供 収納 転倒防止","おもちゃ箱 壁固定 楽天"],
+        price_range: { min: 400, max: 2000 },
+        required: true,
+      },
+    ],
   },
 
   // ===== 無印良品 PP収納ケース =====
@@ -653,6 +1085,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.muji.com/jp/ja/store/cmdty/detail/{model_number}",
+    category: "収納ケース",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "ポリプロピレン仕切スタンド",
+        category: "その他",
+        why: "引出し内を縦仕切りで分類でき、衣類やタオルの倒れを抑えられる。PP素材でケースと質感も揃いやすい",
+        search_keywords: ["無印良品 ポリプロピレン 仕切スタンド","無印 PP 仕切り"],
+        price_range: { min: 290, max: 490 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "ラベルステッカー（収納用）",
+        category: "その他",
+        why: "引出し前面や側面に貼り季節物・家族別の管理がしやすい。中身の取り違えを減らせる",
+        search_keywords: ["無印良品 ラベル 収納","無印 ラベルシール"],
+        price_range: { min: 190, max: 390 },
+        required: false,
+      },
+      {
+        relation: "alternative",
+        name: "ポリプロピレン衣装ケース 引出式 浅型",
+        category: "収納ケース",
+        why: "同系統のPP引出しで深さだけ変えたい場合の選択肢。クローゼット段数に合わせてミックスしやすい",
+        search_keywords: ["無印良品 衣装ケース 引出 浅型","無印 PP 引出式"],
+        price_range: { min: 1490, max: 2490 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 無印良品 ステンレスユニットシェルフ =====
@@ -691,6 +1153,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.muji.com/jp/ja/store/cmdty/detail/{model_number}",
+    category: "シェルフ・棚",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "ステンレスユニットシェルフ 追加棚板 オーク材",
+        category: "パーツ・アクセサリ",
+        why: "システム収納として段数や間隔を増やせる。オーク棚板で既存の木目と揃えた拡張がしやすい",
+        search_keywords: ["無印良品 ステンレスユニットシェルフ 追加棚板","無印 SUS ユニット 棚板"],
+        price_range: { min: 1990, max: 3990 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "ステンレスワイヤーバスケット4",
+        category: "収納ケース",
+        why: "棚上に載せて通気の良い収納にできる。ステンレス同士でトーンを合わせやすい",
+        search_keywords: ["無印良品 ステンレス ワイヤーバスケット","無印 ワイヤーバスケット4"],
+        price_range: { min: 1990, max: 2290 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "ステンレス S字フック 小 5個入",
+        category: "パーツ・アクセサリ",
+        why: "ポール径に合えば側面やバーに吊してツールや小物袋を掛けられる。錆びにくい素材でキッチン向き",
+        search_keywords: ["無印良品 S字フック ステンレス 小","無印 Sフック 5個"],
+        price_range: { min: 350, max: 490 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 無印良品 パイン材ユニットシェルフ =====
@@ -729,6 +1221,45 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.muji.com/jp/ja/store/cmdty/detail/{model_number}",
+    category: "シェルフ・棚",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "ポリエステル綿麻混 帆布バスケット",
+        category: "収納ケース",
+        why: "パイン棚の奥行に合わせた布バスケットで軽いものや子ども用品をまとめやすい。ナチュラルな風合いが木と調和する",
+        search_keywords: ["無印良品 帆布 バスケット","無印 綿麻混 バスケット"],
+        price_range: { min: 790, max: 1990 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "パイン材ユニットシェルフ 追加棚板",
+        category: "パーツ・アクセサリ",
+        why: "可動棚タイプの利点を活かして段数や棚位置を増やせる。パイン材で見た目の統一が取りやすい",
+        search_keywords: ["無印良品 パイン材 ユニットシェルフ 棚板","無印 パイン 追加棚板"],
+        price_range: { min: 1990, max: 3990 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "重なるラタン長方形バスケット 大",
+        category: "収納ケース",
+        why: "木の棚とラタンの組み合わせが人気の見せる収納。深めのマスには大サイズでボリュームを活かせる",
+        search_keywords: ["無印良品 ラタン バスケット 大","無印 重なるラタン"],
+        price_range: { min: 2490, max: 3990 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "ブックエンド スチール",
+        category: "パーツ・アクセサリ",
+        why: "オープン棚で本の倒れを防ぎ、見た目もすっきりさせられる。木棚とのコントラストも楽しめる",
+        search_keywords: ["無印良品 ブックエンド","無印 本立て スチール"],
+        price_range: { min: 490, max: 990 },
+        required: false,
+      },
+    ],
   },
 
   // ===== アイリスオーヤマ カラーボックス =====
@@ -767,6 +1298,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID={model_number}",
+    category: "カラーボックス",
+    related_items: [
+      { relation: "fits_inside", name: "CBボックス用 収納ボックス", category: "収納ケース", why: "アイリス純正のカラーボックス用インナーボックス。内寸390×265mmにジャストフィット", search_keywords: ["アイリスオーヤマ カラーボックス インナー", "CX-3 収納ボックス"], price_range: { min: 398, max: 798 }, required: false },
+      { relation: "enhances_with", name: "カラーボックス用 追加棚板", category: "パーツ・アクセサリ", why: "段数を増やして収納効率UP。ダボ穴式で高さ調整可能", search_keywords: ["アイリスオーヤマ カラーボックス 追加棚板", "CX-3 棚板"], price_range: { min: 298, max: 598 }, required: false },
+      { relation: "protects_with", name: "耐震ジェルマット", category: "保護・補修材", why: "軽量カラーボックスは地震で滑りやすい。底面に貼って転倒・滑り防止", search_keywords: ["耐震ジェルマット 家具", "カラーボックス 転倒防止"], price_range: { min: 398, max: 1280 }, required: false },
+    ],
   },
 
   // ===== アイリスオーヤマ スタックボックス =====
@@ -795,6 +1332,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID={model_number}",
+    category: "収納ケース",
+    related_items: [
+      {
+        relation: "coordinates_with",
+        name: "スタックボックス 浅型・ハーフサイズ",
+        category: "収納ケース",
+        why: "同シリーズでサイズ違いを組み合わせると引き出し口や段の使い分けがしやすくなる",
+        search_keywords: ["アイリスオーヤマ スタックボックス 浅型","スタックボックス ハーフ"],
+        price_range: { min: 400, max: 1200 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "ラベルシール 無地",
+        category: "その他",
+        why: "中身の把握が速くなり、家族で使う収納でも取り違えが減る。湿気に強い素材がおすすめ",
+        search_keywords: ["収納 ラベルシール 無地","布テープ ラベル"],
+        price_range: { min: 200, max: 800 },
+        required: false,
+      },
+      {
+        relation: "alternative",
+        name: "スタックボックス専用フタ",
+        category: "パーツ・アクセサリ",
+        why: "ホコリを抑えたい場所ではフタ付き構成に切り替えやすい。既存ボックスとの互換を商品ページで要確認",
+        search_keywords: ["アイリスオーヤマ スタックボックス フタ","スタックボックス 蓋"],
+        price_range: { min: 300, max: 900 },
+        required: false,
+      },
+    ],
   },
 
   // ===== アイリスオーヤマ チェスト =====
@@ -823,6 +1390,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID={model_number}",
+    category: "衣装ケース",
+    related_items: [
+      {
+        relation: "fits_inside",
+        name: "衣類収納ケース 不織布",
+        category: "収納ケース",
+        why: "引き出し内を仕切り、衣類の崩れや取り出し時の手間を減らせる。奥行に合うサイズ選びが重要",
+        search_keywords: ["衣類収納ケース チェスト用","不織布 収納ボックス ワイド"],
+        price_range: { min: 500, max: 2000 },
+        required: false,
+      },
+      {
+        relation: "requires",
+        name: "家具転倒防止金具 ベルト式",
+        category: "保護・補修材",
+        why: "子どもやペットがいる環境では引き出しを足場にされやすく、転倒リスク低減に有効",
+        search_keywords: ["家具転倒防止 ベルト","チェスト 転倒防止"],
+        price_range: { min: 800, max: 3500 },
+        required: true,
+      },
+      {
+        relation: "enhances_with",
+        name: "引き出し仕切りトレー",
+        category: "収納ケース",
+        why: "小物や下着を段ごとに整理し、奥の物も取り出しやすくなる",
+        search_keywords: ["引き出し 仕切り トレー","チェスト 仕切り アクリル"],
+        price_range: { min: 400, max: 1800 },
+        required: false,
+      },
+    ],
   },
 
   // ===== アイリスオーヤマ メタルラック 幅120cm =====
@@ -869,6 +1466,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
       },
     ],
     url_template: "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID={model_number}",
+    category: "スチールラック",
+    related_items: [
+      { relation: "fits_inside", name: "メタルラック用 ワイヤーバスケット 幅120cm", category: "収納ケース", why: "棚板間のデッドスペースにバスケットを吊り下げ。ポール径25mm対応のアイリス純正品", search_keywords: ["アイリスオーヤマ メタルラック バスケット", "メタルラック ワイヤーバスケット"], price_range: { min: 1500, max: 3000 }, required: false },
+      { relation: "protects_with", name: "PPシート 棚板マット", category: "保護・補修材", why: "ワイヤー棚板の隙間から小物落下を防止。ハサミでカットしてサイズ調整", search_keywords: ["メタルラック PPシート", "100均 メタルラック シート"], price_range: { min: 110, max: 500 }, required: false },
+      { relation: "enhances_with", name: "メタルラック用 キャスター 4個セット", category: "パーツ・アクセサリ", why: "段あたり250kg耐荷重のまま移動可能に。掃除時の移動が楽になる", search_keywords: ["アイリスオーヤマ メタルラック キャスター", "メタルラック キャスター 25mm"], price_range: { min: 800, max: 1500 }, required: false },
+    ],
   },
 
   // ===== 山善 スチールラック =====
@@ -897,6 +1500,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://book.yamazen.co.jp/product/{model_number}/",
+    category: "スチールラック",
+    related_items: [
+      {
+        relation: "protects_with",
+        name: "スチールラック用 棚板シート 透明",
+        category: "パーツ・アクセサリ",
+        why: "メッシュ棚の隙間から落ちる小物を防ぎ、文房具やキッチン用品の収納が楽になる",
+        search_keywords: ["スチールラック 棚板シート","メタルラック 透明シート"],
+        price_range: { min: 600, max: 2400 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "ワイヤーバスケット ラック用",
+        category: "収納ケース",
+        why: "棚下スペースを吊り下げ収納に変え、定位置管理がしやすい",
+        search_keywords: ["山善 スチールラック バスケット","メタルラック 吊り下げカゴ"],
+        price_range: { min: 1200, max: 3800 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "スチールラック用 キャスター",
+        category: "パーツ・アクセサリ",
+        why: "掃除や模様替えの移動が楽になり、ロック付きで停止も安心",
+        search_keywords: ["スチールラック キャスター","山善 ラック キャスター"],
+        price_range: { min: 1500, max: 4000 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 山善 隙間ラック =====
@@ -925,6 +1558,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://book.yamazen.co.jp/product/{model_number}/",
+    category: "シェルフ・棚",
+    related_items: [
+      { relation: "fits_inside", name: "隙間収納用 スリムボックス", category: "収納ケース", why: "幅20cmの隙間ラックに合うスリムサイズの収納ボックス。洗剤や小物の整理に", search_keywords: ["隙間収納 スリムボックス", "幅20cm 収納ケース"], price_range: { min: 398, max: 998 }, required: false },
+      { relation: "enhances_with", name: "キャスター 取替用 4個セット", category: "パーツ・アクセサリ", why: "キャスター付きモデルの交換用。ストッパー付きに交換すれば固定も可能", search_keywords: ["山善 スリムラック キャスター", "隙間ラック キャスター 交換"], price_range: { min: 598, max: 998 }, required: false },
+      { relation: "protects_with", name: "滑り止めシート 30×180cm", category: "保護・補修材", why: "スチール棚板が滑りやすいため敷くと小物が安定。ハサミでカットして幅20cmに調整", search_keywords: ["食器棚 滑り止めシート", "スリムラック 滑り止め"], price_range: { min: 298, max: 598 }, required: false },
+    ],
   },
 
   // ===== 山善 キッチンワゴン =====
@@ -953,6 +1592,12 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://book.yamazen.co.jp/product/{model_number}/",
+    category: "ワゴン・可動収納",
+    related_items: [
+      { relation: "fits_inside", name: "バスケットトローリー用 仕切りケース", category: "収納ケース", why: "メッシュバスケット内を仕切って小物を分類。100均のケースでも代用可能", search_keywords: ["バスケットトローリー 仕切り", "キッチンワゴン 収納ケース"], price_range: { min: 110, max: 598 }, required: false },
+      { relation: "enhances_with", name: "キャスターストッパー", category: "パーツ・アクセサリ", why: "移動式ワゴンを定位置で固定。キッチンや洗面所での使用時に安定", search_keywords: ["キャスターストッパー", "ワゴン キャスター 固定"], price_range: { min: 298, max: 698 }, required: false },
+      { relation: "coordinates_with", name: "マグネット式小物入れ", category: "パーツ・アクセサリ", why: "スチール製ワゴン側面にマグネットで取り付け。調味料やキッチンツールの追加収納", search_keywords: ["マグネット 小物入れ キッチン", "ワゴン マグネット収納"], price_range: { min: 298, max: 998 }, required: false },
+    ],
   },
 
   // ===== 天馬 Fitケース =====
@@ -982,6 +1627,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.tenmafitsworld.com/products/detail/{model_number}",
+    category: "衣装ケース",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "天馬 Fits 仕切り板（深型用）",
+        category: "パーツ・アクセサリ",
+        why: "衣類や布団を縦に立てるときに倒れを防ぎ、引き出し内を家族別・季節別に区切って取り出しやすくできる",
+        search_keywords: ["天馬 Fits 仕切り板","Fitsケース 仕切り 深型"],
+        price_range: { min: 280, max: 880 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "衣類用防虫剤・除湿剤（クローゼット向け）",
+        category: "その他",
+        why: "長期保管の衣類にカビや衣類害虫のリスクがあり、ケース外に置くタイプと併用すると押入れ全体の環境を整えやすい",
+        search_keywords: ["クローゼット 防虫剤 衣類","押入れ 除湿剤 おすすめ"],
+        price_range: { min: 398, max: 1980 },
+        required: false,
+      },
+      {
+        relation: "protects_with",
+        name: "押入れ用すのこ・プラすのこ",
+        category: "その他",
+        why: "床付近の湿気でケース底面が曇りやすいため、すのこで底面を浮かせて通気を確保しカビ付きを抑えられる",
+        search_keywords: ["押入れ すのこ プラスチック","クローゼット 床 すのこ"],
+        price_range: { min: 798, max: 3980 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 天馬 Fitケース 押入れ用 =====
@@ -1010,6 +1685,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.tenmafitsworld.com/products/detail/{model_number}",
+    category: "衣装ケース",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "天馬 Fits 仕切り板（押入れサイズ向け）",
+        category: "パーツ・アクセサリ",
+        why: "定番奥行に合わせた仕切りでタオルや子ども服を前後に分け、引き出しを開けたときに一目で区画が分かる",
+        search_keywords: ["天馬 Fits 仕切り","押入れ Fits 仕切り板"],
+        price_range: { min: 280, max: 880 },
+        required: false,
+      },
+      {
+        relation: "coordinates_with",
+        name: "天然樟脳・防虫ハーブサシェ",
+        category: "その他",
+        why: "羊毛やカシミヤなど虫食いリスクのある衣類と併用しやすく、香りで季節物の管理意識も上がる",
+        search_keywords: ["衣類 防虫 サシェ","樟脳 クローゼット 使い方"],
+        price_range: { min: 480, max: 2480 },
+        required: false,
+      },
+      {
+        relation: "protects_with",
+        name: "シリカゲル除湿剤（衣類ケース用）",
+        category: "収納ケース",
+        why: "湿気の多い時期に引き出し内の結露やカビ臭さを抑え、衣類の手触りを長く保てる",
+        search_keywords: ["衣類ケース 除湿剤","シリカゲル 衣類 収納"],
+        price_range: { min: 198, max: 1280 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 天馬 カバコ =====
@@ -1039,6 +1744,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.tenmafitsworld.com/products/detail/{model_number}",
+    category: "衣装ケース",
+    related_items: [
+      {
+        relation: "enhances_with",
+        name: "天馬 カバコ 積み重ね連結パーツ",
+        category: "その他",
+        why: "フラップ式のまま縦積みの安定感を高め、子ども部屋でも倒れにくいタワー収納にしやすい",
+        search_keywords: ["カバコ 連結パーツ","天馬 カバコ 積み重ね"],
+        price_range: { min: 380, max: 980 },
+        required: false,
+      },
+      {
+        relation: "enhances_with",
+        name: "収納ケース用キャスター（底面取付タイプ）",
+        category: "パーツ・アクセサリ",
+        why: "掃除のときにまとめて動かせるようになり、リビングのおもちゃ棚として運用しやすくなる",
+        search_keywords: ["収納ケース キャスター 取り付け","カバコ キャスター"],
+        price_range: { min: 480, max: 1980 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "不織布仕切りケース（小物用）",
+        category: "収納ケース",
+        why: "前面が大きく開く内部を細かく分け、レゴや文房具を種類別に立てて収納できる",
+        search_keywords: ["カバコ 仕切り 収納","不織布 仕切りケース 小物"],
+        price_range: { min: 300, max: 1500 },
+        required: false,
+      },
+    ],
   },
 
   // ===== 旧型サンプル（後継検索ツール用・型番は目安） =====
@@ -1066,6 +1801,36 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
     consumables: [],
     compatible_storage: [],
     url_template: "https://www.nitori-net.jp/ec/search/?q=N%E3%82%AB%E3%83%A9%E3%83%9C",
+    category: "カラーボックス",
+    related_items: [
+      {
+        relation: "alternative",
+        name: "Nクリック レギュラー2段",
+        category: "その他",
+        why: "後継としてはめ込み式のNクリック419×298mmが現行ライン。旧ネジ式からの置き換えで工具レス組立に移行しやすい",
+        search_keywords: ["ニトリ Nクリック レギュラー 2段","Nクリック ニトリ"],
+        price_range: { min: 2490, max: 2990 },
+        required: false,
+      },
+      {
+        relation: "fits_inside",
+        name: "Nインボックス レギュラー",
+        category: "収納ケース",
+        why: "旧型内寸幅390×奥260mm前後でもレギュラー389×266mmは同系サイズ感で移行時のインナー再利用がしやすい",
+        search_keywords: ["ニトリ Nインボックス レギュラー","Nインボックス"],
+        price_range: { min: 679, max: 899 },
+        required: false,
+      },
+      {
+        relation: "alternative",
+        name: "ニトリ カラーボックス 3段（標準）",
+        category: "収納ケース",
+        why: "コスト優先なら現行ネジ式カラボ415×295mmが入手しやすく、安価に段数を増やせる",
+        search_keywords: ["ニトリ カラーボックス 3段","カラーボックス ニトリ"],
+        price_range: { min: 1190, max: 1490 },
+        required: false,
+      },
+    ],
     discontinued: true,
     successors: [
       {
@@ -1203,5 +1968,58 @@ export function findByDimensions(
       p.outer_width_mm <= maxWidth &&
       p.outer_depth_mm <= maxDepth &&
       p.outer_height_mm <= maxHeight
+  );
+}
+
+// -----------------------------------------------------------------------
+// カテゴリ・関連アイテム系ヘルパー
+// -----------------------------------------------------------------------
+
+export function getProductCategory(product: KnownProduct): ProductCategory {
+  return product.category || "その他";
+}
+
+export function getProductRelatedItems(productId: string): RelatedItem[] {
+  const product = KNOWN_PRODUCTS_DB.find((p) => p.id === productId);
+  return product?.related_items || [];
+}
+
+export function getRelatedChainDeep(
+  productId: string,
+  depth: number = 2,
+): Array<{ item: RelatedItem; sub_items: RelatedItem[] }> {
+  const items = getProductRelatedItems(productId);
+  if (depth <= 1) return items.map((item) => ({ item, sub_items: [] }));
+  return items.map((item) => ({
+    item,
+    sub_items: item.product_id
+      ? getProductRelatedItems(item.product_id)
+      : [],
+  }));
+}
+
+export function getCategoryStats(): Array<{
+  category: ProductCategory;
+  count: number;
+  brands: string[];
+}> {
+  const map = new Map<string, { count: number; brands: Set<string> }>();
+  for (const p of KNOWN_PRODUCTS_DB) {
+    const cat = p.category || "その他";
+    if (!map.has(cat)) map.set(cat, { count: 0, brands: new Set() });
+    const entry = map.get(cat)!;
+    entry.count++;
+    entry.brands.add(p.brand);
+  }
+  return [...map.entries()].map(([category, { count, brands }]) => ({
+    category: category as ProductCategory,
+    count,
+    brands: [...brands],
+  }));
+}
+
+export function findByCategory(category: ProductCategory): KnownProduct[] {
+  return KNOWN_PRODUCTS_DB.filter(
+    (p) => (p.category || "その他") === category,
   );
 }
