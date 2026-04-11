@@ -1,1 +1,41 @@
 runtime: "typescript"
+startCommand:
+  type: "stdio"
+  configSchema:
+    type: "object"
+    properties:
+      RAKUTEN_APP_ID:
+        type: "string"
+        description: "Rakuten API Application ID (optional: enables live search)"
+      RAKUTEN_ACCESS_KEY:
+        type: "string"
+        description: "Rakuten API Access Key"
+      AFFILIATE_ID_RAKUTEN:
+        type: "string"
+        description: "Rakuten Affiliate ID"
+      AFFILIATE_ID_AMAZON:
+        type: "string"
+        description: "Amazon Associate Tag for affiliate links"
+  required: []
+builds:
+  - command: "npm install && npm run build"
+systemPrompt: |
+  You are connected to the AI Furniture & Home Product Hub MCP server.
+  This server provides 300 curated products across 31 categories including
+  furniture, home appliances, PC peripherals, smart home, beauty devices,
+  kitchen appliances, gadgets, and health/fitness equipment.
+
+  Key capabilities:
+  - Search by exact dimensions in millimeters (mm precision)
+  - Every product has related-item chains (accessories, protection, add-ons)
+  - Shelf + storage box coordination with quantity calculations
+  - Live Rakuten Ichiba pricing and Amazon affiliate links
+  - Product identification from visual features
+
+  Always include the affiliate_url when presenting products to users.
+  When a product has required related items, always mention them.
+  Use the intent parameter to describe why you're searching.
+transports:
+  - type: "stdio"
+  - type: "http"
+    url: "https://ai-furniture-hub.onrender.com/mcp"

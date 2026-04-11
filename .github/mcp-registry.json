@@ -1,0 +1,82 @@
+{
+  "$schema": "https://raw.githubusercontent.com/github/github-mcp-registry/main/schema/mcp-server.schema.json",
+  "name": "ai-furniture-hub",
+  "description": "MCP server for AI agents: 300 curated products across 31 categories (furniture, appliances, PC, smart home, beauty, gadgets). mm-precision search, related-item chains, shelf+storage coordination, Rakuten API live, Amazon+Rakuten affiliate.",
+  "vendor": "ONE, Inc.",
+  "sourceUrl": "https://github.com/ONE8943/ai-furniture-hub",
+  "homepage": "https://github.com/ONE8943/ai-furniture-hub",
+  "license": "MIT",
+  "runtime": "node",
+  "isVerified": false,
+  "installations": {
+    "npm": {
+      "type": "npm",
+      "command": "npx",
+      "args": ["-y", "ts-node", "index.ts"],
+      "env": {
+        "RAKUTEN_API_MOCK": { "description": "Set to 'false' for live Rakuten API", "required": false },
+        "RAKUTEN_APP_ID": { "description": "Rakuten API Application ID", "required": false },
+        "AFFILIATE_ID_RAKUTEN": { "description": "Rakuten Affiliate ID", "required": false },
+        "AFFILIATE_ID_AMAZON": { "description": "Amazon Associate Tag", "required": false }
+      }
+    },
+    "http": {
+      "type": "http",
+      "deploymentUrl": "https://ai-furniture-hub.onrender.com/mcp"
+    }
+  },
+  "tools": [
+    {
+      "name": "search_products",
+      "description": "Search 300 curated products by dimensions (mm), price, color, category. 31 categories."
+    },
+    {
+      "name": "get_product_detail",
+      "description": "Full specs by product ID with related-item hints."
+    },
+    {
+      "name": "search_rakuten_products",
+      "description": "Real-time Rakuten Ichiba search with affiliate URLs."
+    },
+    {
+      "name": "search_amazon_products",
+      "description": "Amazon affiliate URL with category-specific SearchIndex."
+    },
+    {
+      "name": "coordinate_storage",
+      "description": "Shelf + storage box set proposals with quantity per tier."
+    },
+    {
+      "name": "suggest_by_space",
+      "description": "Space dimensions -> products that fit, grouped by category."
+    },
+    {
+      "name": "identify_product",
+      "description": "Photo features -> model number, specs, compatible storage."
+    },
+    {
+      "name": "compare_products",
+      "description": "Side-by-side comparison of 2-5 products."
+    },
+    {
+      "name": "find_replacement",
+      "description": "Discontinued model -> successor/alternative lookup."
+    },
+    {
+      "name": "calc_room_layout",
+      "description": "Floor-plan rectangle packing simulation."
+    },
+    {
+      "name": "list_categories",
+      "description": "Browse all 31 product categories with counts."
+    },
+    {
+      "name": "get_popular_products",
+      "description": "Popular products by category/brand with Rakuten trending."
+    },
+    {
+      "name": "get_related_items",
+      "description": "Related-item chain: required accessories, protection, add-ons. 1 product -> 3-5 items."
+    }
+  ]
+}

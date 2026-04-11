@@ -85,6 +85,7 @@ async function main(): Promise<void> {
       "/robots.txt": { file: "public/robots.txt", mime: "text/plain; charset=utf-8" },
       "/.well-known/mcp/server-card.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
       "/.well-known/mcp.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
+      "/.well-known/mcp-server": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
     };
 
     const staticRoute = STATIC_ROUTES[url];

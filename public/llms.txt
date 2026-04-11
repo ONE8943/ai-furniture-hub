@@ -159,11 +159,22 @@ Standing desk (FlexiSpot E7)
 - Related items marked `required: true` should always be mentioned to users
 - Amazon SearchIndex dynamically selected by product category
 
+## Documentation & Resources
+
+- [Full Tool Documentation](https://ai-furniture-hub.onrender.com/llms-full.txt): Complete tool schemas, all parameters, and example JSON calls for all 13 tools
+- [MCP Server Card](https://ai-furniture-hub.onrender.com/.well-known/mcp/server-card.json): Machine-readable server metadata (JSON)
+- [AI Agent Context](https://ai-furniture-hub.onrender.com/context.md): Structured context document for AI agents
+- [GitHub Repository](https://github.com/ONE8943/ai-furniture-hub): Source code, issues, and setup instructions
+- [Smithery Listing](https://smithery.ai/server/j2c214c/ai-furniture-hub): One-click install via Smithery
+
 ## Connection
 
-Protocol: MCP (Model Context Protocol)
-Transport: stdio (JSON-RPC) or Streamable HTTP
+- **MCP over stdio**: `npx ts-node index.ts` (local, for Cursor/VS Code)
+- **MCP over HTTP**: `https://ai-furniture-hub.onrender.com/mcp` (remote, for ChatGPT/Claude/Perplexity)
+- **Smithery**: `j2c214c/ai-furniture-hub` (managed install)
+- **GitHub MCP Registry**: `ONE8943/ai-furniture-hub`
 
-## Detailed Documentation
+## Optional
 
-See llms-full.txt for complete tool schemas, parameter descriptions, and example calls.
+- [Rakuten Ichiba API Docs](https://webservice.rakuten.co.jp/documentation/ichiba-item-search): For understanding live search capabilities
+- [MCP Protocol Spec](https://modelcontextprotocol.io): Model Context Protocol specification
