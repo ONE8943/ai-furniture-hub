@@ -52,6 +52,7 @@
     "url": "https://github.com/ONE8943/ai-furniture-hub"
   },
   "homepage": "https://github.com/ONE8943/ai-furniture-hub#readme",
+  "mcpName": "io.github.one8943/ai-furniture-hub",
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
