@@ -18,9 +18,23 @@ export function cmToMm(cm: number): number {
   return Math.round(cm * 10);
 }
 
+/** inch を mm に変換 */
+export function inchToMm(inch: number): number {
+  return Math.round(inch * 25.4);
+}
+
 /** mm をそのまま返す（型安全のためのパススルー） */
 export function mmToMm(mm: number): number {
   return Math.round(mm);
+}
+
+/** 任意の単位から mm に正規化 */
+export function normalizeDimension(value: number, from: "mm" | "cm" | "inch"): number {
+  switch (from) {
+    case "inch": return inchToMm(value);
+    case "cm": return cmToMm(value);
+    case "mm": return mmToMm(value);
+  }
 }
 
 /**
@@ -40,6 +54,12 @@ export function parseToMm(raw: string): number | null {
   const mmMatch = trimmed.match(/^(\d+(?:\.\d+)?)\s*(?:mm|ｍｍ|ミリ)$/i);
   if (mmMatch) {
     return mmToMm(parseFloat(mmMatch[1]!));
+  }
+
+  // "24in" / "24inch" / "24inches" / "24\""
+  const inchMatch = trimmed.match(/^(\d+(?:\.\d+)?)\s*(?:in(?:ch(?:es)?)?|"|″|インチ)$/i);
+  if (inchMatch) {
+    return inchToMm(parseFloat(inchMatch[1]!));
   }
 
   // 数字のみ（mm とみなす）
@@ -101,6 +121,18 @@ export function parseDimensionString(raw: string): ParsedDimensions | null {
       width_mm: convert(parseFloat(pattern2[1]!)),
       depth_mm: convert(parseFloat(pattern2[2]!)),
       height_mm: convert(parseFloat(pattern2[3]!)),
+    };
+  }
+
+  // ── パターン2.5: "24 x 12 x 36 inches" / "24" x 12" x 36"" 系（海外製品） ──
+  const patternInch = normalized.match(
+    /(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*[×xX*]\s*(\d+(?:\.\d+)?)\s*(?:in(?:ch(?:es)?)?|"|″)/i
+  );
+  if (patternInch) {
+    return {
+      width_mm: inchToMm(parseFloat(patternInch[1]!)),
+      depth_mm: inchToMm(parseFloat(patternInch[2]!)),
+      height_mm: inchToMm(parseFloat(patternInch[3]!)),
     };
   }
 

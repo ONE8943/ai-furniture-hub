@@ -1,7 +1,8 @@
 # AI Furniture & Home Product Hub — MCP Server
 
 > Millimeter-precision product data for AI agents: furniture, home appliances, gadgets, beauty devices, smart home, and more.
-> 13 MCP tools + 3 prompt workflows across 31 categories and 80+ brands.
+> 15 MCP tools + 3 prompt workflows across 31 categories and 80+ brands.
+> NEW: Curated sets (bundles, room presets, influencer picks), dimension-compatible replacement search, AI visibility diagnosis.
 > Operated by ONE, Inc. (Japan).
 
 ## Contact
@@ -34,8 +35,17 @@ Visual feature text (from photo/vision AI) → candidate products with model num
 ### Product Comparison
 Side-by-side comparison of 2–5 products on price, dimensions, load capacity, material, and running cost.
 
-### Replacement Finder
+### Replacement Finder (Enhanced)
 Discontinued/old model → successor and alternative products from catalog + Rakuten live search.
+NEW: Dimension-compatible alternatives with fit_score (0-100). Products with high fit_score can replace the original in the same physical space.
+
+### Curated Sets & Expert Picks
+Curated bundles (e.g., "New Life Starter Kit"), room presets (IKEA-style room sets), influencer picks (YouTuber/magazine recommendations), and hack sets (budget alternatives).
+Each product links back to full catalog data via product IDs.
+
+### AI Visibility Diagnosis (AIO)
+Diagnose any website's AI visibility: checks llms.txt, robots.txt (AI crawler access), structured data (JSON-LD), OGP tags, dimension format, and cross-border readiness.
+Returns 0-100 score with A-F grade. Useful for "How does AI see your products?" consulting.
 
 ### Room Layout Simulation
 Floor-plan grid packing: given room dimensions and furniture list, returns placement coordinates.
@@ -57,7 +67,7 @@ Rakuten Ichiba API (live search with prices and reviews) and Amazon affiliate UR
 - **No real-time Amazon data**: Amazon integration generates search URLs only; no live product data is returned.
 - **No warranty/support**: Product warranty and after-sales support are handled by the respective manufacturers/retailers.
 
-## Available Tools (13)
+## Available Tools (15)
 
 ### search_products
 Search curated catalog by keyword, dimensions (mm), price, color, category, brand. Returns `related_items_hint` linking to `get_related_items`.
@@ -84,7 +94,7 @@ Visual feature text → product candidates with confidence, specs, related items
 Side-by-side comparison of 2–5 products on multiple dimensions.
 
 ### find_replacement
-Discontinued model → successor/alternative lookup from catalog and Rakuten.
+Discontinued model → successor/alternative lookup from catalog and Rakuten. Enhanced with `compatible_alternatives` showing dimension-compatible products with fit_score.
 
 ### calc_room_layout
 Rectangle packing simulation for room floor plans.
@@ -97,6 +107,12 @@ Recommended products by category/brand with Rakuten trending.
 
 ### get_related_items
 Related-item chain traversal: required accessories, protection, add-ons, compatible storage. Depth 1–2.
+
+### get_curated_sets
+Curated collections: bundles (occasion-based), room presets (scene-based), influencer picks (expert/YouTuber recommendations), hack sets (budget alternatives). Filter by type, scene, occasion, budget, or keyword.
+
+### diagnose_ai_visibility
+AI visibility audit for any URL. Checks llms.txt, robots.txt (AI crawler), JSON-LD/Schema.org, OGP, dimension format, cross-border readiness. Returns score (0-100), grade (A-F), detailed checks, and recommendations.
 
 ## Prompt Workflows (3)
 
@@ -161,7 +177,7 @@ Related-item chain traversal: required accessories, protection, add-ons, compati
 
 ## AI Discovery Files
 
-- [Full Tool Documentation](https://ai-furniture-hub.onrender.com/llms-full.txt): Complete schemas and example calls for all 13 tools
+- [Full Tool Documentation](https://ai-furniture-hub.onrender.com/llms-full.txt): Complete schemas and example calls for all 15 tools
 - [AGENTS.md](https://ai-furniture-hub.onrender.com/AGENTS.md): How AI agents should use this server
 - [MCP Server Card](https://ai-furniture-hub.onrender.com/.well-known/mcp/server-card.json): Machine-readable metadata (JSON)
 - [AI Agent Context](https://ai-furniture-hub.onrender.com/context.md): Structured context for AI

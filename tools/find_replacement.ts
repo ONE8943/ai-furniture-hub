@@ -8,12 +8,14 @@ import {
   findProductByModelNumber,
   findMatchingProducts,
   KnownProduct,
+  KNOWN_PRODUCTS_DB,
 } from "../shared/catalog/known_products";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { buildAffiliateUrl } from "../services/affiliate";
 import { parseOrThrow } from "../utils/validation";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
+import { findDimensionCompatible, COMPATIBILITY_DB, type DimensionMatchLevel } from "../data/compatibility";
 
 export const FindReplacementParamsSchema = z.object({
   intent: z.string().min(1).describe("【必須】なぜ代替が必要か（廃番・故障・リニューアル等）"),
@@ -32,6 +34,15 @@ interface RakutenHit {
   image_url: string;
 }
 
+interface CompatibleAlternative {
+  product_id: string;
+  name: string;
+  brand: string;
+  fit_score: number;
+  dimension_match: DimensionMatchLevel;
+  dimension_diff_mm: { width: number; height: number; depth: number };
+}
+
 export interface FindReplacementResult {
   matched_known: {
     name: string;
@@ -46,6 +57,7 @@ export interface FindReplacementResult {
     note: string;
     known_specs_url_hint: string;
   }>;
+  compatible_alternatives: CompatibleAlternative[];
   rakuten_alternatives: RakutenHit[];
   tip: string;
   miss: boolean;
@@ -103,6 +115,7 @@ export async function findReplacement(rawInput: unknown): Promise<FindReplacemen
     return {
       matched_known: null,
       db_successors_detail: [],
+      compatible_alternatives: [],
       rakuten_alternatives: rakuten_alternatives.slice(0, 8),
       tip:
         "既知製品DBに該当がありませんでした。楽天の候補を参考にし、購入前にメーカー公式で型番・寸法を確認してください。",
@@ -124,11 +137,45 @@ export async function findReplacement(rawInput: unknown): Promise<FindReplacemen
     };
   });
 
+  // 寸法近似検索: 手動マッピング + 自動計算
+  const manualCompatRaw = COMPATIBILITY_DB
+    .filter((c) => c.discontinued_id === primary.id);
+
+  const manualCompat: CompatibleAlternative[] = [];
+  for (const c of manualCompatRaw) {
+    const rp = KNOWN_PRODUCTS_DB.find((p) => p.id === c.replacement_id);
+    if (rp) {
+      manualCompat.push({
+        product_id: rp.id,
+        name: rp.name,
+        brand: rp.brand,
+        fit_score: c.fit_score,
+        dimension_match: c.dimension_match,
+        dimension_diff_mm: c.dimension_diff_mm ?? { width: 0, height: 0, depth: 0 },
+      });
+    }
+  }
+
+  const autoCompat: CompatibleAlternative[] = findDimensionCompatible(primary, KNOWN_PRODUCTS_DB, 50, 5)
+    .filter((r) => !manualCompat.some((m) => m.product_id === r.product.id))
+    .map((r) => ({
+      product_id: r.product.id,
+      name: r.product.name,
+      brand: r.product.brand,
+      fit_score: r.fit_score,
+      dimension_match: r.dimension_match,
+      dimension_diff_mm: r.dimension_diff_mm,
+    }));
+
+  const compatible_alternatives = [...manualCompat, ...autoCompat]
+    .sort((a, b) => b.fit_score - a.fit_score)
+    .slice(0, 8);
+
   const hitLog = buildHitLog(
     "find_replacement",
     { query: params.query, model: primary.model_number },
     params.intent,
-    successors.length + rakuten_alternatives.length,
+    successors.length + rakuten_alternatives.length + compatible_alternatives.length,
   );
   logAnalytics(hitLog).catch(() => {});
 
@@ -141,12 +188,13 @@ export async function findReplacement(rawInput: unknown): Promise<FindReplacemen
       successors: primary.successors,
     },
     db_successors_detail,
+    compatible_alternatives,
     rakuten_alternatives: rakuten_alternatives.slice(0, 8),
     tip:
       primary.discontinued || successors.length > 0
-        ? "DBに登録された後継候補と楽天検索結果を併せて確認してください。最終判断は公式サイトの現行品番で。"
-        : "既知DBに後継エントリはありません。楽天候補と同シリーズの現行ページを公式で確認してください。",
-    miss: successors.length === 0 && rakuten_alternatives.length === 0,
+        ? "DBに登録された後継候補・寸法互換品・楽天検索結果を併せて確認してください。compatible_alternativesのfit_scoreが高いものは同じ場所にそのまま置ける可能性が高いです。"
+        : "既知DBに後継エントリはありません。寸法が近い互換品と楽天候補を確認してください。",
+    miss: successors.length === 0 && rakuten_alternatives.length === 0 && compatible_alternatives.length === 0,
     ...(gapFeedback && { gap_feedback: gapFeedback }),
   };
 }

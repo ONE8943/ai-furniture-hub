@@ -24,6 +24,8 @@ import { calcRoomLayout } from "../tools/calc_room_layout";
 import { listCategories } from "../tools/list_categories";
 import { getPopularProducts } from "../tools/get_popular_products";
 import { getRelatedItems } from "../tools/get_related_items";
+import { getCuratedSets, GET_CURATED_SETS_SCHEMA } from "../tools/get_curated_sets";
+import { diagnoseAiVisibility, DIAGNOSE_AI_VISIBILITY_SCHEMA } from "../tools/diagnose_ai_visibility";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -99,6 +101,8 @@ export function registerAllTools(server: McpServer): void {
         "ユーザーが「棚が欲しい」「Dysonのドライヤー」「幅40cmに入るもの」と言ったときに呼ぶ。" +
         "31カテゴリ・80+ブランドのカタログをキーワード・サイズ(mm)・価格・色・ブランドで横断検索。" +
         "結果にrelated_items_hintがある場合はget_related_itemsで付属品チェーンを取得できる。" +
+        "buy_guideがある場合はbest_for/avoid_ifをユーザーに伝えて購入判断を助けること。" +
+        "seasonal_hints/active_salesがある場合はセール情報を伝えること。" +
         "色はエイリアス対応（白→ホワイト/アイボリー等）。" +
         "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
@@ -206,7 +210,8 @@ export function registerAllTools(server: McpServer): void {
       description:
         "「この棚に合うボックスは？」「カラーボックスの整理方法」のときに呼ぶ。" +
         "棚の内寸から収納ボックスの入り数を計算し、1段あたり何個×全段＝合計個数・合計金額を算出。" +
-        "設置場所(押入れ/洗面所/キッチン等)に応じたコーディネートのコツも提供。" +
+        "設置場所(押入れ/洗面所/キッチン等)に応じたコーディネートのコツ+ペルソナ別推薦(persona_hints)も提供。" +
+        "persona_hintsには予算・おすすめブランド・タイプ別アドバイスが含まれるのでユーザーに合った提案に活用。" +
         "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
@@ -277,7 +282,8 @@ export function registerAllTools(server: McpServer): void {
       title: "製品比較（価格・サイズ・レビュー・耐荷重を並列比較）",
       description:
         "「NクリックとKALLAXどっちがいい？」のように2〜5製品を比較するときに呼ぶ。" +
-        "価格・サイズ・レビュー・耐荷重を並列比較表で返す。カタログ一致時は内寸・互換収納も付加。" +
+        "価格・サイズ・レビュー・耐荷重を並列比較表で返す。カタログ一致時は内寸・互換収納・buy_guide(best_for/avoid_if)も付加。" +
+        "buy_guideのdecision_hintは比較recommendationにも反映済み。" +
         "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】なぜ比較したいか"),
@@ -392,6 +398,36 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(getRelatedItems)
+  );
+
+  // ── diagnose_ai_visibility ────────────────────────────
+  server.registerTool(
+    "diagnose_ai_visibility",
+    {
+      title: "AI可視性診断（AIO診断）",
+      description:
+        "URLを指定すると、そのサイトがAIエージェント（GPT/Claude/Gemini等）からどの程度「見えている」かを診断する。" +
+        "llms.txt、robots.txt(AIクローラー許可)、構造化データ(JSON-LD)、OGPメタタグ、寸法データ表記、越境対応度をチェックし、" +
+        "0-100のスコアとA-Fグレードを返す。越境対応度(cross_border_readiness)は海外AIエージェントへの可視性を評価。" +
+        "AIOエージェンシーのデモとして「御社の商品、AIからこう見えています」と提示できる。",
+      inputSchema: DIAGNOSE_AI_VISIBILITY_SCHEMA,
+    },
+    toolHandler(diagnoseAiVisibility)
+  );
+
+  // ── get_curated_sets ──────────────────────────────────
+  server.registerTool(
+    "get_curated_sets",
+    {
+      title: "キュレーション済みセット提案（バンドル/ルームプリセット/インフルエンサーPick/ハックセット）",
+      description:
+        "「新生活に必要なもの一式」「YouTuberのデスクツアーで紹介された商品」「予算5万で書斎を作りたい」のような" +
+        "セット提案・キュレーション情報を返す。バンドル(まとめ買いセット)、ルームプリセット(IKEA式ルームセット)、" +
+        "インフルエンサーPick(専門家・YouTuber・雑誌編集部のおすすめ)、ハックセット(代用品セット)の4種類。" +
+        "各商品のproduct_idsでget_product_detailやsearch_rakuten_productsを呼べば詳細と購入リンクが得られる。",
+      inputSchema: GET_CURATED_SETS_SCHEMA,
+    },
+    toolHandler(getCuratedSets)
   );
 
   // ── Resources ─────────────────────────────────────────

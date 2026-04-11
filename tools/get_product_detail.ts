@@ -7,6 +7,7 @@ import { detectGaps, logRequirementGap, buildGapFeedback } from "../utils/gap_de
 import { RequirementGap } from "../schemas/requirement_gap";
 import { parseOrThrow } from "../utils/validation";
 import { findMatchingProducts, getProductRelatedItems, RelatedItem } from "../shared/catalog/known_products";
+import { findCurationsForProduct } from "../data/curation";
 
 // -----------------------------------------------------------------------
 // 入力スキーマ
@@ -53,6 +54,7 @@ export interface ProductDetailResult {
     recommended: Array<{ name: string; why: string; search_keywords: string[] }>;
     note: string;
   };
+  curated_in?: Array<{ type: string; id: string; title: string }>;
   store_info?: {
     total_products: number;
     source: string;
@@ -244,6 +246,7 @@ export async function getProductDetail(
     ...(relatedWithAffiliate.length > 0 && { related_products: relatedWithAffiliate }),
     ...(gapFeedback && { gap_feedback: gapFeedback }),
     ...(relatedItemsHint && { related_items_hint: relatedItemsHint }),
+    curated_in: knownProduct ? findCurationsForProduct(knownProduct.id) : [],
     store_info: {
       total_products: allProducts.length,
       source: "product_store",

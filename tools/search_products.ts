@@ -17,7 +17,9 @@ import {
   ProductWithAffiliate,
   estimateCommission,
 } from "../services/affiliate";
-import { getProductRelatedItems } from "../shared/catalog/known_products";
+import { getProductRelatedItems, getProductBuyGuide } from "../shared/catalog/known_products";
+import { getSeasonalHints, getActiveSales } from "../data/seasonal_hints";
+import { findCurationsForProduct } from "../data/curation";
 
 export interface GapFeedback {
   message: string;
@@ -37,6 +39,8 @@ export interface SearchResult {
     platforms: string[];
     estimated_commission_yen: number;
   };
+  seasonal_hints?: string[];
+  active_sales?: Array<{ event: string; tip: string }>;
 }
 
 /**
@@ -148,17 +152,28 @@ export async function searchProducts(rawInput: unknown): Promise<SearchResult> {
     if (!knownIdTag) return p;
     const knownId = knownIdTag.replace("known_id:", "");
     const related = getProductRelatedItems(knownId);
-    if (related.length === 0) return p;
-    return {
-      ...p,
-      related_items_hint: {
+    const buyGuide = getProductBuyGuide(knownId);
+    const hints: Record<string, unknown> = {};
+    if (related.length > 0) {
+      hints.related_items_hint = {
         known_product_id: knownId,
         count: related.length,
         summary: related.slice(0, 3).map((r) => `${r.name} (${r.relation})`).join(", "),
         tip: `Use get_related_items with product_id="${knownId}" for full related-item chain`,
-      },
-    };
+      };
+    }
+    if (buyGuide) {
+      hints.buy_guide = buyGuide;
+    }
+    const curations = findCurationsForProduct(knownId);
+    if (curations.length > 0) {
+      hints.curated_in = curations;
+    }
+    return Object.keys(hints).length > 0 ? { ...p, ...hints } : p;
   });
+
+  const seasonalHints = getSeasonalHints();
+  const activeSales = getActiveSales();
 
   return {
     products: productsWithHints,
@@ -170,5 +185,7 @@ export async function searchProducts(rawInput: unknown): Promise<SearchResult> {
       estimated_commission_yen: estimatedCommission,
     },
     ...(gapFeedback && { gap_feedback: gapFeedback }),
+    ...(seasonalHints.length > 0 && { seasonal_hints: seasonalHints }),
+    ...(activeSales.length > 0 && { active_sales: activeSales }),
   };
 }
