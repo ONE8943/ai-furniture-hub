@@ -1,7 +1,11 @@
-# AI Furniture & Home Product Hub
+# AI Furniture & Home Product Hub - MCP Server
+# 300 curated products, 31 categories, 80+ brands, 13 AI tools
 # Allow AI crawlers to index our product data and documentation
 
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
@@ -22,19 +26,38 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
+User-agent: Googlebot
+Allow: /
+
 User-agent: Applebot-Extended
 Allow: /
 
 User-agent: cohere-ai
 Allow: /
 
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
 User-agent: *
 Disallow: /messages
 Disallow: /sse
 
-# Discovery endpoints
-# /llms.txt - Server overview for AI agents
-# /llms-full.txt - Full tool documentation
-# /context.md - Structured context for AI
-# /.well-known/mcp/server-card.json - MCP server metadata
+Sitemap: https://ai-furniture-hub.onrender.com/sitemap.xml
+
+# Discovery endpoints for AI agents
+# /llms.txt - Server overview for AI agents (llms.txt spec)
+# /llms-full.txt - Full tool documentation with example calls
+# /context.md - Structured context for AI agents
+# /sitemap.xml - XML sitemap for crawlers
+# /.well-known/mcp/server-card.json - MCP server metadata (JSON)
 # /.well-known/mcp.json - MCP server metadata (alias)
+# /.well-known/mcp-server - IETF draft endpoint

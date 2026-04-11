@@ -77,12 +77,15 @@ async function main(): Promise<void> {
       return;
     }
 
-    // Static files for AI discoverability
+    // Static files for AI discoverability & GEO
     const STATIC_ROUTES: Record<string, { file: string; mime: string }> = {
+      "/": { file: "public/index.html", mime: "text/html; charset=utf-8" },
+      "/index.html": { file: "public/index.html", mime: "text/html; charset=utf-8" },
       "/llms.txt": { file: "public/llms.txt", mime: "text/plain; charset=utf-8" },
       "/llms-full.txt": { file: "public/llms-full.txt", mime: "text/plain; charset=utf-8" },
       "/context.md": { file: "public/context.md", mime: "text/markdown; charset=utf-8" },
       "/robots.txt": { file: "public/robots.txt", mime: "text/plain; charset=utf-8" },
+      "/sitemap.xml": { file: "public/sitemap.xml", mime: "application/xml; charset=utf-8" },
       "/.well-known/mcp/server-card.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
       "/.well-known/mcp.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
       "/.well-known/mcp-server": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
