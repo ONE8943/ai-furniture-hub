@@ -79,7 +79,8 @@ function extractJsonObject(raw: string): unknown {
 
 async function main(): Promise<void> {
   const apiKey = process.env["GEMINI_API_KEY"] ?? "";
-  const modelName = process.env["GEMINI_MODEL"] ?? "gemini-2.0-flash";
+  // 新規APIキーでは gemini-2.0-flash が 404 になる場合あり。未設定時は 2.5 Flash を既定に。
+  const modelName = process.env["GEMINI_MODEL"] ?? "gemini-2.5-flash";
 
   if (!apiKey) {
     console.error(
