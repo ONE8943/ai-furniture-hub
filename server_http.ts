@@ -9,6 +9,8 @@
 import "dotenv/config";
 import { randomUUID } from "node:crypto";
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
@@ -72,6 +74,36 @@ async function main(): Promise<void> {
 
     if (url === "/health" && req.method === "GET") {
       jsonResp(res, 200, { status: "ok", version: VERSION });
+      return;
+    }
+
+    // Static files for AI discoverability
+    const STATIC_ROUTES: Record<string, { file: string; mime: string }> = {
+      "/llms.txt": { file: "public/llms.txt", mime: "text/plain; charset=utf-8" },
+      "/llms-full.txt": { file: "public/llms-full.txt", mime: "text/plain; charset=utf-8" },
+      "/context.md": { file: "public/context.md", mime: "text/markdown; charset=utf-8" },
+      "/.well-known/mcp/server-card.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
+      "/.well-known/mcp.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
+    };
+
+    const staticRoute = STATIC_ROUTES[url];
+    if (staticRoute && req.method === "GET") {
+      const candidates = [
+        join(__dirname, "..", staticRoute.file),
+        join(process.cwd(), staticRoute.file),
+      ];
+      for (const fp of candidates) {
+        if (existsSync(fp)) {
+          const content = readFileSync(fp, "utf-8");
+          res.writeHead(200, {
+            "Content-Type": staticRoute.mime,
+            "Cache-Control": "public, max-age=3600",
+          });
+          res.end(content);
+          return;
+        }
+      }
+      jsonResp(res, 404, { error: `${url} not found` });
       return;
     }
 
