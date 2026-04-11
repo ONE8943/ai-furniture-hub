@@ -1,57 +1,42 @@
 {
   "name": "ai-furniture-hub",
-  "description": "AI agent MCP server for furniture & storage products. Millimeter-precision dimensional search, Rakuten Ichiba API live integration, Amazon + Rakuten affiliate engine.",
-  "version": "2.1.0",
+  "description": "AI agent MCP server for furniture, home appliances, PC peripherals, smart home, beauty devices, gadgets & more. 13 tools, 300 curated products across 31 categories. Related-item chains: every product links to required accessories, protection materials, consumables, and add-ons. 1 search = 3-5 views. Rakuten API live, Amazon + Rakuten affiliate engine.",
+  "version": "5.1.0",
+  "homepage": "https://github.com/ONE8943/ai-furniture-hub",
+  "deployment": {
+    "render": "https://ai-furniture-hub.onrender.com/mcp",
+    "smithery": "https://smithery.ai/server/j2c214c/ai-furniture-hub"
+  },
   "tools": [
-    {
-      "name": "search_products",
-      "description": "Search curated furniture/storage products by dimensions (mm), price, color, category. Returns affiliate-linked URLs.",
-      "inputSchema": {
-        "type": "object",
-        "required": ["intent"],
-        "properties": {
-          "intent": { "type": "string", "description": "Why the user needs this product" },
-          "width_mm_min": { "type": "number", "description": "Min width (mm)" },
-          "width_mm_max": { "type": "number", "description": "Max width (mm)" },
-          "height_mm_min": { "type": "number", "description": "Min height (mm)" },
-          "height_mm_max": { "type": "number", "description": "Max height (mm)" },
-          "depth_mm_min": { "type": "number", "description": "Min depth (mm)" },
-          "depth_mm_max": { "type": "number", "description": "Max depth (mm)" },
-          "price_min": { "type": "integer", "description": "Min price (JPY)" },
-          "price_max": { "type": "integer", "description": "Max price (JPY)" },
-          "color": { "type": "string", "description": "Color filter" },
-          "category": { "type": "string", "description": "Category filter" },
-          "in_stock_only": { "type": "boolean", "description": "Only in-stock items (default: true)" }
-        }
-      }
-    },
-    {
-      "name": "get_product_detail",
-      "description": "Get full product specifications by ID including inner dimensions, materials, related products, and affiliate link.",
-      "inputSchema": {
-        "type": "object",
-        "required": ["id", "intent"],
-        "properties": {
-          "id": { "type": "string", "description": "Product ID from search results" },
-          "intent": { "type": "string", "description": "Why product detail is needed" }
-        }
-      }
-    },
-    {
-      "name": "search_rakuten_products",
-      "description": "Real-time search across 200,000+ Rakuten Ichiba listings. Returns live pricing, availability, and affiliate URLs.",
-      "inputSchema": {
-        "type": "object",
-        "required": ["intent", "keyword"],
-        "properties": {
-          "intent": { "type": "string", "description": "Why the user needs this product" },
-          "keyword": { "type": "string", "description": "Search keyword (e.g. 'カラーボックス ニトリ')" },
-          "price_min": { "type": "integer", "description": "Min price (JPY)" },
-          "price_max": { "type": "integer", "description": "Max price (JPY)" },
-          "sort": { "type": "string", "enum": ["standard", "+itemPrice", "-itemPrice", "-reviewCount", "-reviewAverage"], "description": "Sort order" },
-          "hits": { "type": "integer", "description": "Number of results (1-30, default 10)" }
-        }
-      }
-    }
-  ]
+    { "name": "search_products", "description": "Search 300 curated products by dimensions (mm), price, color, category. 31 categories from furniture to gadgets." },
+    { "name": "get_product_detail", "description": "Full specs by product ID, with related-item hints for accessories and add-ons." },
+    { "name": "search_rakuten_products", "description": "Real-time Rakuten Ichiba search with affiliate URLs." },
+    { "name": "search_amazon_products", "description": "Amazon affiliate URL generation with category-specific SearchIndex." },
+    { "name": "coordinate_storage", "description": "Shelf + storage box set proposals with quantity per tier." },
+    { "name": "suggest_by_space", "description": "Space dimensions -> products that fit, grouped by category." },
+    { "name": "identify_product", "description": "Photo features -> model number, specs, compatible storage, related items." },
+    { "name": "compare_products", "description": "Side-by-side comparison of 2-5 products." },
+    { "name": "find_replacement", "description": "Discontinued model -> successor/alternative lookup." },
+    { "name": "calc_room_layout", "description": "Floor-plan rectangle packing simulation with recommended products." },
+    { "name": "list_categories", "description": "Browse all 31 product categories with counts and sample products." },
+    { "name": "get_popular_products", "description": "Popular/recommended products by category or brand, with Rakuten trending." },
+    { "name": "get_related_items", "description": "Related-item chain: required accessories, protection materials, consumables, recommended add-ons. 1 product -> 3-5 related items with affiliate URLs. depth=2 for chains of chains." }
+  ],
+  "categories": [
+    "シェルフ・棚", "カラーボックス", "収納ケース", "ワゴン・可動収納",
+    "衣装ケース", "スチールラック", "デスク", "キッチン収納",
+    "ランドリー収納", "バス・洗面収納", "玄関収納", "テレビ台",
+    "本棚", "クローゼット収納", "ファイル収納", "ベビー・安全対策",
+    "突っ張り棒・つっぱり", "保護・補修材", "パーツ・アクセサリ",
+    "家電・照明", "寝具・マットレス", "ソファ・チェア", "ダイニング家具",
+    "カーテン・ブラインド", "PC周辺・デスク環境", "スマートホーム",
+    "美容家電", "空気環境家電", "キッチン家電", "ガジェット・モバイル",
+    "健康・フィットネス"
+  ],
+  "stats": {
+    "products": 300,
+    "categories": 31,
+    "brands": 80,
+    "related_items": 850
+  }
 }
