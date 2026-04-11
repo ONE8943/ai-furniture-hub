@@ -5,13 +5,45 @@ alwaysApply: true
 
 # MCP Hub コアルール
 
-このプロジェクトは家具・収納商品のAIエージェント向けMCPハブ。
+このプロジェクトは家具・家電・ガジェット等のAIエージェント向けMCPハブ。
 詳細ルールは必ず `rules/` フォルダの各MDファイルを参照すること。
 
-## 絶対に守ること
+## コンプライアンス（最優先）
+
+以下は全作業に優先する。違反はリリースブロッカーとして扱う。
+
+### アフィリエイト規約
+- Amazon: 「Amazonアソシエイト・プログラムの参加者」開示をindex.htmlフッターに維持すること
+- Amazon: 検索リンク生成のみ（URL生成）。「リアルタイム在庫連携」等、実態と異なる表現を使わないこと
+- Amazon: 価格表示する場合は「最新の価格はAmazon.co.jpでご確認ください」の注記を付けること
+- 楽天: 「楽天アフィリエイトプログラムに参加」開示をindex.htmlフッターに維持すること
+- 楽天: APIで取得した価格は変動する旨を明記すること
+
+### 構造化データ（JSON-LD）
+- 実データに基づかないaggregateRating, reviewCount等を絶対に記載しないこと（Google Spammy Structured Data違反）
+- JSON-LDの内容はページ上に可視テキストとしても存在すること（コンテンツパリティ）
+- 検証不能な固定数値（「300商品」「850リンク」等）をJSON-LDやメタデータに入れないこと
+
+### プライバシー
+- intentフィールドはユーザー入力を含む可能性がある。「個人情報を一切収集しない」と断言しないこと
+- ログ種別（analytics.jsonl, conversions.jsonl, requirement_gaps.jsonl）をプライバシーポリシーに反映すること
+- ホスティング（Render.com等）のインフラログにIPが残る旨をポリシーに含めること
+
+### ドキュメントの正確性
+- ツール説明は実装と一致させること（例: Amazon=URL生成のみ、楽天=APIキー設定が必要）
+- カタログ件数・関連リンク数等は断定的な固定値で書かず、コードから動的に検証できる表現にすること
+- 全公開ファイル（llms.txt, llms-full.txt, context.md, server-card.json, index.html）で表現を統一すること
+
+## 開発ルール
 
 1. 全MCPツールに `intent` 引数を含めること → `rules/insight-collection.md`
 2. 全検索結果を `logs/analytics.jsonl` に記録すること → `rules/logging.md`
-3. 個人情報を一切記録しないこと → `rules/privacy.md`
+3. 個人情報を意図的に記録しないこと → `rules/privacy.md`
 4. サイズはmm単位、価格は円（整数）で統一 → `rules/typescript.md`
 5. 外部入力は必ずZodでバリデーションすること → `rules/typescript.md`
+
+## モード別ルール
+
+- **実装モード**: 上記5項を遵守してコーディング
+- **情報収集モード**: `.cursor/rules/research-mode.mdc` を使用（コード変更不可）
+- **役割分担**: `rules/model-routing.md` を参照
