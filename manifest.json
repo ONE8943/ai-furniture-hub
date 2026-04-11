@@ -1,0 +1,83 @@
+{
+  "manifest_version": "0.3",
+  "name": "ai-furniture-hub",
+  "display_name": "AI Furniture & Home Product Hub",
+  "version": "5.2.0",
+  "description": "Furniture, home appliances, gadgets & smart home product data with mm-precision dimensions, related-item chains, and Rakuten/Amazon affiliate links. 31 categories, 80+ brands, 13 tools.",
+  "long_description": "MCP server that provides structured product data for furniture, home appliances, PC peripherals, smart home devices, beauty devices, kitchen gadgets, and health/fitness equipment.\n\nKey features:\n- **mm-precision search**: All dimensions in millimeters for exact space-fit calculations\n- **Related-item chains**: Every product links to required accessories, protection materials, and add-ons\n- **Shelf + storage coordination**: Auto-calculate how many boxes fit per shelf tier\n- **Space-fit suggestions**: Give dimensions, get everything that fits\n- **Rakuten Ichiba API**: Real-time product search (requires API key)\n- **Amazon affiliate links**: Search URL generation with category-specific SearchIndex\n- **31 categories**: From furniture to smart home to beauty devices\n- **80+ brands**: Nitori, IKEA, Muji, Dyson, Panasonic, Sony, and more",
+  "author": {
+    "name": "ONE8943",
+    "url": "https://github.com/ONE8943"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ONE8943/ai-furniture-hub.git"
+  },
+  "homepage": "https://github.com/ONE8943/ai-furniture-hub",
+  "documentation": "https://ai-furniture-hub.onrender.com/llms-full.txt",
+  "support": "https://github.com/ONE8943/ai-furniture-hub/issues",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/bundle.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/bundle.js"],
+      "env": {
+        "RAKUTEN_APP_ID": "${user_config.rakuten_app_id}",
+        "RAKUTEN_ACCESS_KEY": "${user_config.rakuten_access_key}",
+        "AFFILIATE_ID_RAKUTEN": "${user_config.affiliate_id_rakuten}",
+        "AFFILIATE_ID_AMAZON": "${user_config.affiliate_id_amazon}"
+      }
+    }
+  },
+  "tools": [
+    { "name": "search_products", "description": "Search curated product catalog by dimensions (mm), price, color, category" },
+    { "name": "get_product_detail", "description": "Full specs by product ID with related-item hints" },
+    { "name": "search_rakuten_products", "description": "Rakuten Ichiba product search with affiliate URLs" },
+    { "name": "search_amazon_products", "description": "Amazon affiliate search link generation" },
+    { "name": "coordinate_storage", "description": "Shelf + storage box set proposals with quantity calculations" },
+    { "name": "suggest_by_space", "description": "Space dimensions to fitting products, grouped by category" },
+    { "name": "identify_product", "description": "Photo features to model number, specs, related items" },
+    { "name": "compare_products", "description": "Side-by-side comparison of 2-5 products" },
+    { "name": "find_replacement", "description": "Discontinued model to successor/alternative lookup" },
+    { "name": "calc_room_layout", "description": "Floor-plan rectangle packing simulation" },
+    { "name": "list_categories", "description": "Browse all 31 product categories with counts" },
+    { "name": "get_popular_products", "description": "Popular products by category or brand" },
+    { "name": "get_related_items", "description": "Related-item chain: accessories, protection, consumables, add-ons" }
+  ],
+  "keywords": ["furniture", "home", "appliances", "smart-home", "product-search", "affiliate", "rakuten", "amazon", "dimensions"],
+  "license": "MIT",
+  "privacy_policies": ["https://ai-furniture-hub.onrender.com/#privacy"],
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  },
+  "user_config": {
+    "rakuten_app_id": {
+      "type": "string",
+      "title": "Rakuten API Application ID",
+      "description": "Optional: enables real-time Rakuten Ichiba product search. Get one at https://webservice.rakuten.co.jp/",
+      "required": false
+    },
+    "rakuten_access_key": {
+      "type": "string",
+      "title": "Rakuten API Access Key",
+      "description": "Optional: required together with Rakuten App ID",
+      "required": false
+    },
+    "affiliate_id_rakuten": {
+      "type": "string",
+      "title": "Rakuten Affiliate ID",
+      "description": "Optional: your Rakuten affiliate ID for earning commissions (e.g. 12345678.abcdef01.12345678.abcdef02)",
+      "required": false
+    },
+    "affiliate_id_amazon": {
+      "type": "string",
+      "title": "Amazon Associate Tag",
+      "description": "Optional: your Amazon Associate tag for affiliate links (e.g. your-tag-22)",
+      "required": false
+    }
+  }
+}
