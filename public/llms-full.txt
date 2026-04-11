@@ -1,13 +1,15 @@
-# AI Furniture Hub - Full Tool Documentation
+# AI Furniture & Home Product Hub - Full Tool Documentation
 
-> MCP Server v3.1.0 | Protocol: Model Context Protocol (stdio + HTTP)
-> Operator: ONE, Inc. (株式会社ONE) | https://fantastic-scone-73c867.netlify.app/
+> MCP Server v5.2.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
+> Operator: ONE, Inc. (株式会社ONE)
+> 300 curated products | 31 categories | 80+ brands | 13 tools
 
 ---
 
 ## Tool 1: search_products
 
 Search the curated product database with millimeter-precision dimension filters.
+Covers 300 products across 31 categories: furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health & fitness.
 
 ### Parameters
 
@@ -23,7 +25,7 @@ Search the curated product database with millimeter-precision dimension filters.
 | price_min | integer | no | Minimum price in JPY |
 | price_max | integer | no | Maximum price in JPY |
 | color | string | no | Color name (e.g., "ホワイト", "ブラウン", "ナチュラル") |
-| category | string | no | Category (e.g., "シェルフ・棚", "カラーボックス", "キャビネット") |
+| category | string | no | Category (31 available - see list below) |
 | in_stock_only | boolean | no | Only in-stock items (default: true) |
 
 ### Example Call
@@ -45,7 +47,7 @@ Search the curated product database with millimeter-precision dimension filters.
 
 ## Tool 2: get_product_detail
 
-Get full product specifications by ID. Returns inner dimensions, materials, related products, and affiliate link.
+Get full product specifications by ID. Returns dimensions, materials, related items, and affiliate link.
 
 ### Parameters
 
@@ -65,7 +67,7 @@ Real-time search across Rakuten Ichiba marketplace with auto-categorization and 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | intent | string | YES | Why the user needs this product |
-| keyword | string | YES | Search keyword (e.g., "カラーボックス 3段", "収納棚 スリム 幅30") |
+| keyword | string | YES | Search keyword (e.g., "カラーボックス 3段", "Dyson 空気清浄機") |
 | price_min | integer | no | Minimum price in JPY |
 | price_max | integer | no | Maximum price in JPY |
 | sort | enum | no | "standard", "+itemPrice", "-itemPrice", "-reviewCount", "-reviewAverage", "+updateTimestamp" |
@@ -77,9 +79,9 @@ Real-time search across Rakuten Ichiba marketplace with auto-categorization and 
 {
   "tool": "search_rakuten_products",
   "arguments": {
-    "intent": "引っ越し先のリビングに大きめのシェルフが欲しい。予算2万円以内。",
-    "keyword": "シェルフ 大型 収納",
-    "price_max": 20000,
+    "intent": "リモートワーク用のモニターアームを探している。予算1万円以内。",
+    "keyword": "モニターアーム ガスシリンダー",
+    "price_max": 10000,
     "sort": "-reviewAverage",
     "hits": 10
   }
@@ -90,7 +92,7 @@ Real-time search across Rakuten Ichiba marketplace with auto-categorization and 
 
 ## Tool 4: search_amazon_products
 
-Generates Amazon search URLs with affiliate tags for product discovery on Amazon.
+Generates Amazon search URLs with affiliate tags. SearchIndex automatically selected by product category.
 
 ### Parameters
 
@@ -102,187 +104,55 @@ Generates Amazon search URLs with affiliate tags for product discovery on Amazon
 | price_max | integer | no | Maximum price in JPY |
 | sort | enum | no | "price-asc-rank", "price-desc-rank", "review-rank", "date-desc-rank" |
 
-### Response
-
-Returns an affiliate-tagged Amazon search URL. Present this URL directly to the user.
-
 ---
 
 ## Tool 5: coordinate_storage ★ Unique Feature
 
 **Shelf + storage box coordination with quantity calculation.**
 
-Searches for shelves, estimates their inner dimensions, then finds storage boxes
-that fit inside. Returns how many boxes fit per tier, total quantity needed,
-and the combined set price.
-
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| intent | string | YES | Placement location, use case, room type. Triggers scene-based tips. |
-| keyword | string | YES | Shelf search keyword (e.g., "カラーボックス 3段", "スチールラック 幅90") |
+| intent | string | YES | Placement location, use case, room type |
+| keyword | string | YES | Shelf search keyword |
 | price_max | integer | no | Budget cap for the shelf (JPY) |
-| storage_keyword | string | no | Storage box keyword (auto-detected from scene if omitted) |
+| storage_keyword | string | no | Storage box keyword |
 | scene | string | no | Room hint ("押入れ", "洗面所", "キッチン", etc.) |
 | shelf_count | integer | no | How many shelf candidates to return (1-5, default: 3) |
-
-### Response Highlights
-
-```json
-{
-  "shelves": [
-    {
-      "shelf": { "name": "...", "price": 2990, "affiliate_url": "..." },
-      "estimated_inner": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
-      "fitting_storage": [
-        {
-          "storage": { "name": "Nインボックス", "price": 499, "affiliate_url": "..." },
-          "per_tier": 1,
-          "total": 3,
-          "set_price": 4487,
-          "fit_detail": "横1個 x 奥1個 x 3段 = 3個"
-        }
-      ]
-    }
-  ],
-  "scene_tips": ["カラーボックスは横置きでも使え、ベンチ兼収納になる", ...],
-  "scene_name": "リビング",
-  "total_combinations": 5
-}
-```
-
-### Example Call
-
-```json
-{
-  "tool": "coordinate_storage",
-  "arguments": {
-    "intent": "子供部屋のおもちゃ整理。カラーボックスを買って、中に入る収納ボックスも一緒に揃えたい。",
-    "keyword": "カラーボックス 3段",
-    "price_max": 5000,
-    "scene": "子供部屋"
-  }
-}
-```
 
 ---
 
 ## Tool 6: suggest_by_space
 
-**Space-first product discovery.** Give a space's dimensions and get everything that fits,
-grouped by category. If both shelves and storage boxes are found, an automatic coordination plan is generated.
+**Space-first product discovery.** Give dimensions and get everything that fits.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| intent | string | YES | Placement location, use case. Triggers scene-based tips. |
+| intent | string | YES | Placement location, use case |
 | width_mm | number | YES | Available space width in mm |
 | depth_mm | number | YES | Available space depth in mm |
 | height_mm | number | YES | Available space height in mm |
 | price_max | integer | no | Budget cap (JPY) |
-| categories | string[] | no | Desired categories (auto-detected if omitted) |
-
-### Response Highlights
-
-```json
-{
-  "space": { "width_mm": 450, "depth_mm": 350, "height_mm": 900 },
-  "categories": [
-    {
-      "category": "カラーボックス",
-      "products": [
-        {
-          "name": "...", "price": 1190,
-          "margin_width_mm": 31, "margin_depth_mm": 52, "margin_height_mm": 22,
-          "affiliate_url": "..."
-        }
-      ]
-    }
-  ],
-  "coordination_plan": {
-    "shelf": { "...": "..." },
-    "shelf_inner": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
-    "fitting_items": [{ "total": 3, "set_price": 4487, "fit_detail": "横1個 x 奥1個 x 3段 = 3個" }]
-  },
-  "scene_tips": ["洗濯機横の隙間は15-30cmが多い。スリムタイプを選ぶ", ...]
-}
-```
-
-### Example Call
-
-```json
-{
-  "tool": "suggest_by_space",
-  "arguments": {
-    "intent": "洗面所の洗濯機横にある幅25cm、奥行35cm、高さ90cmの隙間に入る収納を探している。",
-    "width_mm": 250,
-    "depth_mm": 350,
-    "height_mm": 900
-  }
-}
-```
+| categories | string[] | no | Desired categories |
 
 ---
 
 ## Tool 7: identify_product
 
-**Photo-to-spec product identification.** Pass visual features extracted from a photo
-(by Vision AI) and get product candidates with confidence scores.
-High-confidence matches return model numbers, inner dimensions, consumables,
-and compatible storage information.
+**Photo-to-spec product identification.** Pass visual features and get product candidates with confidence scores.
 
 ### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | intent | string | YES | Why you need to identify this product |
-| features | string | YES | Visual features: brand, color, tiers, material, size estimate, shape details |
+| features | string | YES | Visual features: brand, color, tiers, material, size estimate |
 | brand_hint | string | no | Brand name if logo is visible |
 | dimensions_hint | object | no | Estimated dimensions `{ width_mm?, height_mm?, depth_mm? }` |
 | include_compatible | boolean | no | Include compatible storage/consumable info (default: true) |
-
-### Response Highlights
-
-```json
-{
-  "identification_status": "exact",
-  "best_match_confidence": 85,
-  "candidates": [
-    {
-      "confidence": 85,
-      "match_reasons": ["ブランド「ニトリ」一致", "シリーズ「Nクリック」一致", "段数「3段」一致"],
-      "brand": "ニトリ",
-      "model_number": "8841424",
-      "name": "Nクリック レギュラー3段",
-      "outer_dimensions": { "width_mm": 419, "height_mm": 878, "depth_mm": 298 },
-      "inner_dimensions": { "width_mm": 380, "height_per_tier_mm": 270, "depth_mm": 260, "tiers": 3 },
-      "compatible_storage": [
-        { "name": "Nインボックス レギュラー", "model_number": "8422031", "fits_per_tier": 1 }
-      ],
-      "consumables": [
-        { "name": "Nクリック用キャスター4個セット", "model_number": "8841518" }
-      ]
-    }
-  ],
-  "tip": "高信頼度で「Nクリック レギュラー3段」と特定しました。型番: 8841424"
-}
-```
-
-### Example Call
-
-```json
-{
-  "tool": "identify_product",
-  "arguments": {
-    "intent": "写真の棚の型番を知りたい。中に入る収納ボックスも教えて。",
-    "features": "白いカラーボックス、3段、工具不要のはめ込み式、前面に丸い穴が見える",
-    "brand_hint": "ニトリ",
-    "dimensions_hint": { "width_mm": 420, "height_mm": 880 }
-  }
-}
-```
 
 ---
 
@@ -291,10 +161,8 @@ and compatible storage information.
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | intent | string | YES | Why you compare |
-| keywords | string[] | YES | 2–5 Rakuten search keywords (one top hit each) |
+| keywords | string[] | YES | 2-5 Rakuten search keywords (one top hit each) |
 | compare_aspects | string[] | no | Optional focus aspects |
-
-Returns side-by-side price, size, reviews, load capacity (when known DB match), and compatible-storage hints.
 
 ---
 
@@ -304,8 +172,6 @@ Returns side-by-side price, size, reviews, load capacity (when known DB match), 
 |-----------|------|----------|-------------|
 | intent | string | YES | Why a replacement is needed |
 | query | string | YES | Model number or product description |
-
-Returns `matched_known` with `successors` from `shared/catalog/known_products` when registered, plus Rakuten hits for 「後継」「新型」. Verify on the manufacturer site before purchase.
 
 ---
 
@@ -321,40 +187,129 @@ Returns `matched_known` with `successors` from `shared/catalog/known_products` w
 | wall_clearance_mm | int | no | Inset from walls (default 0) |
 | grid_step_mm | int | no | Search grid step (default 50) |
 
-Returns `placements` with `x_mm`, `y_mm`, `rotated`. Does not model doors or walking paths.
+---
+
+## Tool 11: list_categories
+
+Browse all 31 product categories with product counts and sample products.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why listing categories |
+
+---
+
+## Tool 12: get_popular_products
+
+Popular/recommended products by category or brand, with Rakuten trending data.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why checking popular products |
+| category | string | no | Filter by category |
+| brand | string | no | Filter by brand |
+| limit | integer | no | Max results (default: 10) |
+
+---
+
+## Tool 13: get_related_items ★ Core Tool
+
+**Related-item chain: 1 product -> 3-5 related items with affiliate URLs.**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why looking for related items |
+| product_id | string | no | Product ID to get related items for |
+| keyword | string | no | Search keyword if no product_id |
+| depth | integer | no | Chain depth: 1 = direct, 2 = related-of-related (default: 1) |
+
+### Relation Types
+
+- **requires**: Must-have (e.g., HEPA filter for air purifier)
+- **protects_with**: Protection (floor mats, earthquake gel, cases)
+- **enhances_with**: Upgrades (casters, extra shelves, monitor arms)
+- **coordinates_with**: Complementary (cable trays, stands, baskets)
+- **fits_inside**: Storage that fits inside
+
+---
+
+## Product Categories (31)
+
+| Category | Products | Key Brands |
+|----------|----------|------------|
+| シェルフ・棚 | Shelves, open shelves | Nitori, IKEA, Muji |
+| カラーボックス | Color boxes | Nitori N-Click, IKEA KALLAX |
+| 収納ケース | Storage boxes | Nitori N-InBox, Muji PP, Daiso |
+| ワゴン・可動収納 | Trolleys, wagons | IKEA RÅSKOG, tower |
+| 衣装ケース | Clothing storage | Tenma Fits, Iris Ohyama |
+| スチールラック | Steel racks | Luminous, Iris Ohyama |
+| デスク | Desks | FlexiSpot, IKEA, Nitori, LOWYA |
+| キッチン収納 | Kitchen storage | tower, Nitori, Yamazen |
+| ランドリー収納 | Laundry storage | tower, Iris Ohyama, Yamazen |
+| バス・洗面収納 | Bath/vanity | tower, Nitori, Muji |
+| 玄関収納 | Entrance/shoe | Nitori, IKEA, tower |
+| テレビ台 | TV stands | IKEA BESTÅ, Nitori, LOWYA |
+| 本棚 | Bookshelves | IKEA BILLY, Nitori, Yamazen |
+| クローゼット収納 | Closet organizers | IKEA PAX, Nitori, Muji |
+| ファイル収納 | File storage | Muji PP, King Jim, Seria |
+| ベビー・安全対策 | Baby safety | Combi, Nihon Ikuji, Richell |
+| 突っ張り棒・つっぱり | Tension rods/shelves | Heian Shindo, Iris Ohyama |
+| 保護・補修材 | Protection materials | Earthquake gel, wall pads, floor mats |
+| パーツ・アクセサリ | Parts/accessories | Luminous, Sanwa, tower |
+| 家電・照明 | Appliances/lighting | Panasonic, iRobot, Dyson |
+| 寝具・マットレス | Bedding/mattresses | Nitori N-Sleep, Muji, Koala, Emma |
+| ソファ・チェア | Sofas/chairs | IKEA, Nitori, LOWYA, Ergohuman |
+| ダイニング家具 | Dining furniture | Nitori, IKEA, LOWYA |
+| カーテン・ブラインド | Curtains/blinds | Nitori, IKEA, TOSO |
+| PC周辺・デスク環境 | PC peripherals | Ergotron, Logitech, BenQ, HHKB |
+| スマートホーム | Smart home | SwitchBot, Echo, Philips Hue |
+| 美容家電 | Beauty devices | Dyson, Panasonic, ReFa, YA-MAN |
+| 空気環境家電 | Air quality | Sharp, Dyson, Daikin, Balmuda |
+| キッチン家電 | Kitchen appliances | Balmuda, DeLonghi, Sharp |
+| ガジェット・モバイル | Gadgets | AirPods, Sony, Anker, Kindle |
+| 健康・フィットネス | Health/fitness | Tanita, Fitbit, Therabody |
 
 ---
 
 ## Recommended Workflow for AI Agents
 
-1. **Photo identification**: User has a photo → use `identify_product` to get model number and specs
-2. **Space discovery**: User has dimensions → use `suggest_by_space` for everything that fits
-3. **Coordination**: User wants shelf + storage → use `coordinate_storage` for set proposals
-4. **Compare**: User hesitates between products → `compare_products`
-5. **Replacement**: Discontinued model → `find_replacement`
-6. **Layout**: “Does it all fit on the floor?” → `calc_room_layout`
-7. **Broad search**: Use `search_rakuten_products` with keywords for discovery
-8. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
-9. **Final check**: Use `get_product_detail` before recommending to user
-10. **Always present** `affiliate_url` to the end user
+1. **Photo identification**: User has a photo -> `identify_product`
+2. **Space discovery**: User has dimensions -> `suggest_by_space`
+3. **Related items**: Found a product -> `get_related_items` for accessories
+4. **Coordination**: Shelf + storage -> `coordinate_storage`
+5. **Compare**: Hesitating -> `compare_products`
+6. **Replacement**: Discontinued model -> `find_replacement`
+7. **Layout**: "Does it all fit?" -> `calc_room_layout`
+8. **Browse**: Categories -> `list_categories` then `search_products`
+9. **Trending**: What's popular -> `get_popular_products`
+10. **Broad search**: Use `search_rakuten_products` for discovery
+11. **Final check**: `get_product_detail` before recommending
+12. **Always present** `affiliate_url` to the end user
 
 ## Scene Intelligence
 
 Mention a room in the `intent` and get tailored tips:
-- **押入れ・クローゼット**:奥行80cm活用、キャスター付き推奨
+- **押入れ・クローゼット**: 奥行80cm活用、キャスター付き推奨
 - **洗面所**: 湿気に強い素材、15-30cmスリム収納
 - **キッチン**: シンク下ラック、ファイルボックス活用
-- **リビング**: カラーボックス横置き、見せる/隠す収納のバランス
+- **リビング**: カラーボックス横置き、見せる/隠す収納
 - **子供部屋**: 子供の目線の高さ、ラベル付け、角丸収納
 - **玄関**: 縦型シューズラック、鍵・印鑑まとめ収納
-- **トイレ**: 幅14-20cmスリム、壁面収納
+- **書斎・デスク**: モニターアーム、ケーブル整理、デスクマット
+- **寝室**: ベッドサイド収納、間接照明、加湿器
 
-## Known Products DB (`shared/catalog/known_products.ts`)
+## Key Design Decisions
 
-Single source for MCP and optional personal apps. High-confidence identification covers Nitori, IKEA, Muji, Iris Ohyama, Yamazen, Tenma, and more; some entries include `discontinued` and `successors` for `find_replacement`.
+- All dimensions in **millimeters** (mm)
+- All prices in **Japanese Yen** (JPY), tax-included integers
+- `intent` parameter **required** on every tool call
+- Always present `affiliate_url` to users
+- Related items marked `required: true` should always be mentioned
+- Amazon SearchIndex dynamically selected by product category
+- External input validated with Zod
 
-## Gap Detection
+## Connection
 
-If your intent mentions attributes not in our schema (e.g., "耐荷重", "防水", "キャスター付き"),
-the server will log this as a "demand gap" and may include a `gap_feedback` field in the response.
-This helps us expand our data coverage based on real AI agent needs.
+- **MCP over stdio**: `npx ts-node index.ts`
+- **MCP over HTTP**: `https://ai-furniture-hub.onrender.com/mcp`
+- **Smithery**: `j2c214c/ai-furniture-hub`

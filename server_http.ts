@@ -18,7 +18,7 @@ import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { registerAllTools } from "./lib/register_tools";
 import { refreshProductStore } from "./data/product_store";
 
-const VERSION = "3.0.0";
+const VERSION = "5.2.0";
 const HTTP_PORT = parseInt(process.env["PORT"] ?? process.env["MCP_HTTP_PORT"] ?? "3000", 10);
 const API_KEY = process.env["MCP_API_KEY"] ?? "";
 
@@ -82,6 +82,7 @@ async function main(): Promise<void> {
       "/llms.txt": { file: "public/llms.txt", mime: "text/plain; charset=utf-8" },
       "/llms-full.txt": { file: "public/llms-full.txt", mime: "text/plain; charset=utf-8" },
       "/context.md": { file: "public/context.md", mime: "text/markdown; charset=utf-8" },
+      "/robots.txt": { file: "public/robots.txt", mime: "text/plain; charset=utf-8" },
       "/.well-known/mcp/server-card.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
       "/.well-known/mcp.json": { file: ".well-known/mcp/server-card.json", mime: "application/json; charset=utf-8" },
     };

@@ -1,8 +1,17 @@
 {
-  "name": "mcp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@one-inc/ai-furniture-hub",
+  "version": "5.2.0",
+  "description": "MCP server for AI agents: 13 tools, 300 curated products across 31 categories (furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health). Related-item chains, mm-precision search, Rakuten API live, Amazon+Rakuten affiliate engine.",
+  "main": "dist/index.js",
+  "bin": {
+    "ai-furniture-hub": "dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "public/",
+    "shared/",
+    ".well-known/"
+  ],
   "scripts": {
     "start": "ts-node index.ts",
     "start:http": "ts-node server_http.ts",
@@ -11,15 +20,38 @@
     "test": "ts-node test/run_test.ts",
     "test:phase2": "ts-node test/run_phase2_test.ts",
     "test:all": "ts-node test/run_test.ts && ts-node test/run_gap_test.ts && ts-node test/run_evolution_test.ts && ts-node test/run_affiliate_test.ts && ts-node test/run_phase2_test.ts && ts-node test/run_rakuten_test.ts",
+    "test:ci": "vitest run",
+    "test:watch": "vitest",
     "build": "tsc",
     "start:render": "node dist/server_http.js",
-    "review": "ts-node scripts/review_proposals.ts",
+    "review:proposals": "ts-node scripts/review_proposals.ts",
+    "review:research": "ts-node scripts/review_research.ts",
+    "review:approve": "ts-node scripts/review_research.ts --approve",
+    "review:stats": "ts-node scripts/review_research.ts --stats",
     "analyze": "ts-node scripts/analyze_demand.ts",
-    "sync-log": "ts-node scripts/sync_log.ts"
+    "sync-log": "ts-node scripts/sync_log.ts",
+    "report": "ts-node scripts/report_conversions.ts",
+    "enrich": "ts-node scripts/enrich_catalog.ts",
+    "research": "ts-node scripts/research.ts",
+    "research:context": "ts-node scripts/research.ts --context",
+    "review:coord": "ts-node scripts/review_coordination.ts",
+    "review:coord:approve": "ts-node scripts/review_coordination.ts --approve",
+    "review:coord:stats": "ts-node scripts/review_coordination.ts --stats",
+    "review:coord:sample": "ts-node scripts/review_coordination.ts --sample",
+    "enrich:gaps": "ts-node scripts/review_enrichment.ts --gaps",
+    "enrich:review": "ts-node scripts/review_enrichment.ts",
+    "enrich:approve": "ts-node scripts/review_enrichment.ts --approve",
+    "enrich:stats": "ts-node scripts/review_enrichment.ts --stats",
+    "enrich:sample": "ts-node scripts/review_enrichment.ts --sample"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["mcp", "furniture", "ai", "agent", "rakuten", "amazon", "storage", "dimensions", "affiliate", "smart-home", "appliances", "beauty", "gadgets", "llms-txt", "model-context-protocol"],
+  "author": "ONE, Inc.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ONE8943/ai-furniture-hub"
+  },
+  "homepage": "https://github.com/ONE8943/ai-furniture-hub#readme",
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -37,6 +69,7 @@
   },
   "devDependencies": {
     "@smithery/cli": "^4.7.4",
-    "esbuild": "^0.28.0"
+    "esbuild": "^0.28.0",
+    "vitest": "^4.1.4"
   }
 }

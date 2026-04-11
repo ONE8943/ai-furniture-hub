@@ -2,7 +2,7 @@
 
 > Auto-generated at 2026-04-11
 
-## Project: @one-inc/ai-furniture-hub v5.1.0
+## Project: @one-inc/ai-furniture-hub v5.2.0
 
 MCP server for AI agents: 13 tools, 300 curated products, 31 categories, 80+ brands. mm-precision search, shelf+storage coordination, related-item chains, category discovery, popular rankings. Rakuten API live, Amazon + Rakuten affiliate engine. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
 
