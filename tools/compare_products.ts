@@ -6,7 +6,7 @@
  */
 import { z } from "zod";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
-import { findMatchingProducts } from "../shared/catalog/known_products";
+import { findMatchingProducts, getProductBuyGuide } from "../shared/catalog/known_products";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { buildAffiliateUrl } from "../services/affiliate";
@@ -58,6 +58,11 @@ interface CompareItem {
     load_capacity_per_tier_kg: number;
     compatible_storage_count: number;
   } | null;
+  buy_guide?: {
+    best_for: string[];
+    avoid_if: string[];
+    decision_hint?: string;
+  };
 }
 
 interface ComparisonNote {
@@ -103,6 +108,8 @@ export async function compareProducts(rawInput: unknown): Promise<CompareResult>
         ? knownMatches[0]!.product
         : null;
 
+      const buyGuide = knownMatch ? getProductBuyGuide(knownMatch.id) : undefined;
+
       items.push({
         keyword,
         name: p.name,
@@ -127,6 +134,7 @@ export async function compareProducts(rawInput: unknown): Promise<CompareResult>
           load_capacity_per_tier_kg: knownMatch.load_capacity_per_tier_kg,
           compatible_storage_count: knownMatch.compatible_storage.length,
         } : null,
+        ...(buyGuide && { buy_guide: buyGuide }),
       });
     } catch {
       // 検索失敗は握りつぶして次へ
@@ -221,6 +229,13 @@ export async function compareProducts(rawInput: unknown): Promise<CompareResult>
   } else if (itemsWithReview.length > 0) {
     const bestReview = itemsWithReview.reduce((a, b) => a.review_average > b.review_average ? a : b);
     recommendation = `品質重視なら「${bestReview.name}」(レビュー${bestReview.review_average}点/${bestReview.review_count}件)がおすすめ。`;
+  }
+
+  const guideHints = items
+    .filter((i) => i.buy_guide?.decision_hint)
+    .map((i) => `【${i.name}】${i.buy_guide!.decision_hint}`);
+  if (guideHints.length > 0) {
+    recommendation += " " + guideHints.join(" / ");
   }
 
   const hitLog = buildHitLog("compare_products", { keywords: params.keywords }, params.intent, items.length);

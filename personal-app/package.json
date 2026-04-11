@@ -1,12 +1,18 @@
 {
   "name": "personal-home-inventory",
   "private": true,
-  "version": "0.0.0",
-  "description": "個人向け（自宅寸法・消耗品等）。MCP本体と分離。shared/ のカタログのみ参照。",
+  "version": "0.1.0",
+  "description": "個人向け自宅寸法・家具・消耗品管理アプリ。shared/catalog を参照。",
   "scripts": {
+    "cli": "npx ts-node --project tsconfig.json src/cli.ts",
     "demo": "npx ts-node --project tsconfig.json src/demo.ts"
   },
+  "dependencies": {
+    "better-sqlite3": "^11.9.1",
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.14",
     "typescript": "^6.0.2",
     "ts-node": "^10.9.2"
   }

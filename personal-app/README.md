@@ -1,23 +1,38 @@
-# 個人向けアプリ（別プロジェクト枠）
+# Personal Home Inventory
 
-MCP家具ハブ本体とは**混在させない**。在庫・自宅寸法・消耗品管理などのUIはこのディレクトリ（または別リポジトリ）で開発する。
+自宅の寸法・家具・消耗品を管理するCLIアプリ（MVP）。
+MCP家具ハブの `shared/catalog/known_products.ts` を参照し、型番から寸法を自動補完。
 
-## 共通データの参照
+## Quick Start
 
-製品マスタ・型番・内寸などはリポジトリ直下の **`shared/`** を単一ソースとする。
-
-```typescript
-import {
-  KNOWN_PRODUCTS_DB,
-  findByDimensions,
-  findProductByModelNumber,
-  findMatchingProducts,
-} from "../shared/catalog/known_products";
+```bash
+cd personal-app
+npm install
 ```
 
-MCPサーバー（`tools/`・`identify_product` 等）も同じモジュールを参照する。
+## Commands
 
-## 次のステップ（実装時）
+```bash
+# 部屋の登録
+npm run cli -- room add "リビング" 3600 2700 2400
+npm run cli -- room list
 
-- ここに `package.json` / フレームワークを置き、`shared` への相対 import でビルドする
-- 認証・DB・写真アップロードは MCP 側に置かず、このアプリのみで完結させる
+# 家具の登録（型番指定で寸法自動補完）
+npm run cli -- furniture add 1 "Nクリック3段" --model 8841424 --brand ニトリ
+npm run cli -- furniture list
+
+# 消耗品の登録
+npm run cli -- consumable add 1 "キャスター" --model 8841518 --months 12 --last-replaced 2025-01-01
+npm run cli -- consumable overdue
+
+# カタログ検索
+npm run cli -- lookup 8841424
+
+# 統計
+npm run cli -- stats
+```
+
+## Data
+
+- SQLite DB: `data/inventory.db` (gitignore対象)
+- 共有カタログ: `../shared/catalog/known_products.ts`

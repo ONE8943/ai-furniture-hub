@@ -5,6 +5,14 @@
  * そのシーンに最適な棚+収納の検索キーワードとコツを返す。
  */
 
+export interface PersonaHint {
+  persona: string;
+  priority: string;
+  budget_range: string;
+  recommended_brands: string[];
+  tip: string;
+}
+
 export interface SceneCoordinate {
   scene: string;
   aliases: string[];
@@ -12,6 +20,7 @@ export interface SceneCoordinate {
   recommended_shelf_keywords: string[];
   recommended_storage_keywords: string[];
   tips: string[];
+  personas?: PersonaHint[];
 }
 
 export const SCENE_DB: SceneCoordinate[] = [
@@ -36,6 +45,10 @@ export const SCENE_DB: SceneCoordinate[] = [
       "IKEA SKUBBシリーズはPAXワードローブにシンデレラフィット（SNSで定番の組み合わせ）",
       "Tenma Fitsケースは押入れ奥行きに合わせた専用サイズが豊富",
     ],
+    personas: [
+      { persona: "一人暮らし・賃貸", priority: "省スペース・原状回復可能", budget_range: "3,000〜10,000円", recommended_brands: ["ニトリ", "無印良品", "天馬"], tip: "突っ張り棒で棚を作ると穴開け不要" },
+      { persona: "ファミリー・持ち家", priority: "大容量・季節物整理", budget_range: "10,000〜30,000円", recommended_brands: ["IKEA", "天馬", "ニトリ"], tip: "PAX+SKUBBの組み合わせが大容量で定番" },
+    ],
   },
   {
     scene: "洗面所・脱衣所",
@@ -58,6 +71,10 @@ export const SCENE_DB: SceneCoordinate[] = [
       "タオルは丸めて立てて収納すると取り出しやすい",
       "tower（山崎実業）のマグネット収納は洗濯機側面に直付けでき場所を取らない",
       "突っ張り棒で洗濯機上のデッドスペースに棚を作るのが定番テクニック",
+    ],
+    personas: [
+      { persona: "一人暮らし・賃貸", priority: "隙間活用・マグネット/突っ張り式", budget_range: "2,000〜8,000円", recommended_brands: ["山崎実業(tower)", "ニトリ"], tip: "洗濯機マグネット収納が穴開け不要で最適" },
+      { persona: "ファミリー", priority: "大容量・耐水", budget_range: "5,000〜20,000円", recommended_brands: ["ニトリ", "IKEA", "アイリスオーヤマ"], tip: "ランドリーラック+バスケット3段で家族全員分を仕分け" },
     ],
   },
   {
@@ -105,6 +122,10 @@ export const SCENE_DB: SceneCoordinate[] = [
       "[中国/小红书] シンク下の分層置物架（スライド式段ラック）で不規則スペースを有効活用が鉄板",
       "[海外] TikTokで'House Purse'（家の中の持ち歩きバッグ）がバイラル。キッチン-洗面所間の移動に便利",
     ],
+    personas: [
+      { persona: "自炊初心者・一人暮らし", priority: "コンパクト・レンジ台兼用", budget_range: "3,000〜15,000円", recommended_brands: ["ニトリ", "アイリスオーヤマ"], tip: "レンジ台とトースター台を兼ねるコンパクトラックが1台で済む" },
+      { persona: "料理好き・まとめ買い派", priority: "大容量・パントリー収納", budget_range: "10,000〜40,000円", recommended_brands: ["山崎実業(tower)", "IKEA", "ルミナス"], tip: "セカンド冷凍庫+パントリーラックの組み合わせが最強" },
+    ],
   },
   {
     scene: "リビング",
@@ -130,6 +151,11 @@ export const SCENE_DB: SceneCoordinate[] = [
       "セリアのアクリルウォールラックで推し活ディスプレイも人気（2025年RoomClipセレクション）",
       "[海外] クリア収納＋統一ラベル＋ソフトLEDの「Aesthetic Organization」がTikTokでバイラル",
       "[海外] KALLAXを部屋の仕切りとして使うのが欧米の狭小アパートの定番（両面アクセス可能）",
+    ],
+    personas: [
+      { persona: "ミニマリスト", priority: "見た目スッキリ・隠す収納", budget_range: "5,000〜20,000円", recommended_brands: ["無印良品", "IKEA"], tip: "扉付きカラーボックスかBESTÅで中身を隠すのが鍵" },
+      { persona: "収納たっぷり派", priority: "大容量・壁面収納", budget_range: "15,000〜50,000円", recommended_brands: ["IKEA", "ニトリ"], tip: "KALLAX 4x4+ドローナで最大16区画の大容量壁面収納" },
+      { persona: "子育て世帯", priority: "安全・子供が自分で片付けられる", budget_range: "5,000〜25,000円", recommended_brands: ["ニトリ", "IKEA"], tip: "Nクリック+Nインボックス(色分け)で子供の自主片付けを促進" },
     ],
   },
   {
@@ -203,6 +229,11 @@ export const SCENE_DB: SceneCoordinate[] = [
       "[海外] 2026年はRGB卒業→暖色LED(2700-3500K)+天然木の「Scandi-Gaming」スタイルが主流",
       "[中国/小红书] 洞洞板（ペグボード）+フックのデスク壁面収納が中国で大人気",
     ],
+    personas: [
+      { persona: "在宅ワーカー(初級)", priority: "コスパ・省スペース", budget_range: "15,000〜40,000円", recommended_brands: ["ニトリ", "サンワダイレクト"], tip: "まずデスク+チェア+モニター台の3点。ケーブルトレーは後からでOK" },
+      { persona: "在宅ワーカー(本格)", priority: "生産性最大化・腰痛対策", budget_range: "50,000〜150,000円", recommended_brands: ["FlexiSpot", "Ergotron", "Herman Miller"], tip: "電動昇降デスク+エルゴノミクスチェア+モニターアームが三種の神器" },
+      { persona: "ゲーマー", priority: "デュアルモニター・配線・LED", budget_range: "30,000〜100,000円", recommended_brands: ["FlexiSpot", "BenQ", "Anker"], tip: "ワイドデスク(140cm以上)+デュアルモニターアーム+ケーブルトレーが基本構成" },
+    ],
   },
   {
     scene: "寝室",
@@ -247,6 +278,10 @@ export const SCENE_DB: SceneCoordinate[] = [
       "最初は最小限で始めて、実際に住んでから「必要」と感じたものだけ追加するのが失敗しないコツ",
       "2年以内の短期なら家具サブスク（CLAS等）も選択肢",
       "[中国/小红书] 購入前に必ず採寸し「先規劃後購買（まず計画、後で購入）」が鉄則。衝動買い防止",
+    ],
+    personas: [
+      { persona: "学生・予算最小", priority: "最安・最小構成", budget_range: "30,000〜80,000円(家具家電計)", recommended_brands: ["アイリスオーヤマ", "ニトリ", "ダイソー"], tip: "冷蔵庫+洗濯機+レンジのセット買い+カラーボックス2個で最低限OK" },
+      { persona: "社会人・快適重視", priority: "見た目+機能性", budget_range: "100,000〜250,000円(家具家電計)", recommended_brands: ["ニトリ", "IKEA", "無印良品"], tip: "余裕があればドラム式洗濯機で時短。家具は最初少なめで住みながら追加" },
     ],
   },
   {

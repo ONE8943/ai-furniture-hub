@@ -9,7 +9,7 @@
 import { z } from "zod";
 import { searchRakutenProducts, RakutenSearchResult, extractDimensions } from "../adapters/rakuten_api";
 import { estimateInnerSize, calcFittingCount, EstimatedInner, FitResult } from "../utils/inner_size_estimator";
-import { detectScene, SceneCoordinate } from "../data/scene_coordinates";
+import { detectScene, SceneCoordinate, PersonaHint } from "../data/scene_coordinates";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, logRequirementGap, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { RequirementGap } from "../schemas/requirement_gap";
@@ -80,6 +80,7 @@ export interface CoordinateResult {
   shelves: ShelfProposal[];
   scene_tips: string[];
   scene_name: string | null;
+  persona_hints?: PersonaHint[];
   total_combinations: number;
   source: string;
   miss: boolean;
@@ -146,6 +147,7 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
       shelves: [],
       scene_tips: scene?.tips ?? [],
       scene_name: scene?.scene ?? null,
+      ...(scene?.personas && { persona_hints: scene.personas }),
       total_combinations: 0,
       source: shelfResult.source,
       miss: true,
@@ -261,6 +263,7 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
     shelves,
     scene_tips: scene?.tips ?? [],
     scene_name: scene?.scene ?? null,
+    ...(scene?.personas && { persona_hints: scene.personas }),
     total_combinations: totalCombinations,
     source: shelfResult.source,
     miss: totalCombinations === 0,

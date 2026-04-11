@@ -44,7 +44,7 @@ async function runTests(): Promise<void> {
     assert("ID未設定時は元URLがそのまま返る", u1.affiliate_url === "https://example.nitori.co.jp/products/shelf-40");
   }
 
-  // Test U2: Amazon URLの変換（本番ID: one20260410-22）
+  // Test U2: Amazon URLの変換
   process.stdout.write("\n[U2] Amazon URLにアソシエイトタグが付与される\n");
   const u2 = buildAffiliateUrl("https://www.amazon.co.jp/dp/B0DUMMY001");
   process.stdout.write(`  結果: ${u2.affiliate_url}\n`);

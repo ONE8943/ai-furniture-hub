@@ -23,3 +23,9 @@ test/verify_*.ts
 
 # sync-log 生成ドラフト（任意でコミットしない場合）
 public/llms-tools.sync-draft.md
+
+# personal-app local data
+personal-app/data/
+
+# 機密情報隔離（絶対にコミットしない）
+.secrets_backup/

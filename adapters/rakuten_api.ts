@@ -411,31 +411,53 @@ export async function searchRakutenProducts(
   if (params.maxPrice) queryParams["maxPrice"] = params.maxPrice;
   if (params.sort) queryParams["sort"] = params.sort;
 
+  const MAX_RETRIES = 3;
   let resp;
-  try {
-    resp = await axios.get(API_ENDPOINT, {
-      params: queryParams,
-      timeout: 10000,
-    });
-  } catch (e: any) {
-    const status = e?.response?.status;
-    const errorBody = e?.response?.data;
-    if (status === 403 && errorBody?.errors?.errorMessage === "CLIENT_IP_NOT_ALLOWED") {
-      process.stderr.write(
-        `[RakutenAPI] CLIENT_IP_NOT_ALLOWED: 楽天管理画面でこのサーバーのIPを許可してください。モックにフォールバックします。\n`
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      resp = await axios.get(API_ENDPOINT, {
+        params: queryParams,
+        timeout: 10000,
+      });
+      break;
+    } catch (e: any) {
+      lastError = e;
+      const status = e?.response?.status;
+      const errorBody = e?.response?.data;
+
+      if (status === 403 && errorBody?.errors?.errorMessage === "CLIENT_IP_NOT_ALLOWED") {
+        process.stderr.write(
+          `[RakutenAPI] CLIENT_IP_NOT_ALLOWED: 楽天管理画面でこのサーバーのIPを許可してください。モックにフォールバックします。\n`
+        );
+        return fallbackToMock(params, fetchedAt);
+      }
+
+      if (status === 429 || status === 503 || !status) {
+        const backoffMs = Math.min(1000 * Math.pow(2, attempt), 16000);
+        if (attempt < MAX_RETRIES) {
+          process.stderr.write(
+            `[RakutenAPI] ${status ?? "network error"} - retry ${attempt + 1}/${MAX_RETRIES} in ${backoffMs}ms\n`
+          );
+          await new Promise((r) => setTimeout(r, backoffMs));
+          continue;
+        }
+        process.stderr.write(
+          `[RakutenAPI] ${MAX_RETRIES} retries exhausted (${status ?? "network"}). Falling back to mock.\n`
+        );
+        return fallbackToMock(params, fetchedAt);
+      }
+
+      throw new Error(
+        `楽天APIリクエスト失敗 (HTTP ${status ?? "unknown"}): ${errorBody?.errors?.errorMessage ?? e.message}`
       );
-      return fallbackToMock(params, fetchedAt);
     }
-    if (status === 429) {
-      process.stderr.write(
-        `[RakutenAPI] レートリミット(429)。5秒待機後にモックにフォールバック。\n`
-      );
-      await new Promise((r) => setTimeout(r, 5000));
-      return fallbackToMock(params, fetchedAt);
-    }
-    throw new Error(
-      `楽天APIリクエスト失敗 (HTTP ${status ?? "unknown"}): ${errorBody?.errors?.errorMessage ?? e.message}`
-    );
+  }
+
+  if (!resp) {
+    process.stderr.write(`[RakutenAPI] Unexpected: no response after retries. Falling back to mock.\n`);
+    return fallbackToMock(params, fetchedAt);
   }
 
   const parsed = RakutenSearchResponseSchema.safeParse(resp.data);
