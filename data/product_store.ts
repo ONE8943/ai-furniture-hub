@@ -1,41 +1,86 @@
 import "dotenv/config";
 import { Product } from "../schemas/product";
 import { PRODUCTS as DUMMY_PRODUCTS } from "./products";
+import {
+  KNOWN_PRODUCTS_DB,
+  KnownProduct,
+} from "../shared/catalog/known_products";
 import { fetchNitoriProducts } from "../adapters/nitori_scraper";
 import {
   searchRakutenProducts,
   searchRakutenMultiPage,
   isRakutenApiConfigured,
 } from "../adapters/rakuten_api";
-// Amazon: PA-API未開放のためURL生成方式に移行済み（adapters/amazon_url.ts）
-// product_storeへのAmazon商品投入は PA-API解禁後に再有効化する
+import { randomUUID } from "node:crypto";
 
 /**
  * 統合データレイヤー
  *
- * ダミーデータ（data/products.ts）とスクレイピングデータを統合して提供する。
- * 同一 id が存在する場合はスクレイピング取得データが優先される。
+ * known_products.ts（カタログDB）をベースラインとし、
+ * 楽天APIからのリアルタイムデータをマージして提供する。
  *
  * 設計:
- *   - 常に利用可能なダミーデータをベースラインとして使用
- *   - スクレイピングデータは非同期で取得・マージする
- *   - スクレイピング失敗時もダミーデータで応答可能（フォールバック）
+ *   - known_products.ts のカタログデータが常にベースライン（300件+）
+ *   - 楽天API取得データを追加でマージ（重複はIDで排除）
+ *   - API取得失敗時もカタログデータで応答可能
  */
 
 // -----------------------------------------------------------------------
-// スクレイピングキャッシュ（サーバープロセス内で保持）
+// KnownProduct → Product 変換
+// -----------------------------------------------------------------------
+
+function knownToProduct(kp: KnownProduct): Product {
+  const urlFromTemplate = kp.url_template.replace("{model_number}", kp.model_number);
+  return {
+    id: randomUUID(),
+    name: kp.name,
+    series_id: kp.series || undefined,
+    width_mm: kp.outer_width_mm,
+    height_mm: kp.outer_height_mm,
+    depth_mm: kp.outer_depth_mm,
+    inner_dimensions:
+      kp.inner_width_mm > 0
+        ? {
+            width_mm: kp.inner_width_mm,
+            height_mm: kp.inner_height_per_tier_mm,
+            depth_mm: kp.inner_depth_mm,
+          }
+        : undefined,
+    price: Math.round((kp.price_range.min + kp.price_range.max) / 2),
+    in_stock: !kp.discontinued,
+    color: kp.colors[0] || undefined,
+    material: kp.material,
+    category: kp.category || "その他",
+    tags: [
+      kp.brand,
+      kp.series,
+      ...(kp.visual_features || []),
+      `known_id:${kp.id}`,
+    ].filter(Boolean) as string[],
+    description: `${kp.brand} ${kp.name}。${kp.visual_features?.slice(0, 2).join("、") || ""}`,
+    url: urlFromTemplate.startsWith("http") ? urlFromTemplate : undefined,
+    platform_urls: urlFromTemplate.startsWith("http")
+      ? { rakuten: urlFromTemplate }
+      : undefined,
+  };
+}
+
+const CATALOG_PRODUCTS: Product[] = KNOWN_PRODUCTS_DB.map(knownToProduct);
+
+// -----------------------------------------------------------------------
+// キャッシュ
 // -----------------------------------------------------------------------
 
 interface StoreCache {
   products: Product[];
   lastRefreshed: Date | null;
-  source: "dummy_only" | "merged";
+  source: "catalog_only" | "merged";
 }
 
 const cache: StoreCache = {
-  products: [...DUMMY_PRODUCTS],
+  products: [...CATALOG_PRODUCTS],
   lastRefreshed: null,
-  source: "dummy_only",
+  source: "catalog_only",
 };
 
 // キャッシュの有効期間（30分）
@@ -117,7 +162,7 @@ export async function refreshProductStore(force = false): Promise<void> {
 
     if (external.length > 0) {
       const merged = new Map<string, Product>();
-      for (const p of DUMMY_PRODUCTS) merged.set(p.id, p);
+      for (const p of CATALOG_PRODUCTS) merged.set(p.id, p);
       for (const p of external) merged.set(p.id, p);
 
       cache.products = Array.from(merged.values());
@@ -168,19 +213,18 @@ export function getScrapedProducts(): Product[] {
 /** キャッシュの状態を返す（デバッグ・管理用） */
 export function getStoreStatus(): {
   total: number;
-  dummy: number;
-  scraped: number;
+  catalog: number;
+  api_fetched: number;
   source: string;
   lastRefreshed: string | null;
 } {
-  const dummyIds = new Set(DUMMY_PRODUCTS.map((p) => p.id));
-  const dummyCount = cache.products.filter((p) => dummyIds.has(p.id)).length;
-  const scrapedCount = cache.products.length - dummyCount;
+  const catalogCount = CATALOG_PRODUCTS.length;
+  const apiFetchedCount = cache.products.length - catalogCount;
 
   return {
     total: cache.products.length,
-    dummy: dummyCount,
-    scraped: scrapedCount,
+    catalog: catalogCount,
+    api_fetched: Math.max(0, apiFetchedCount),
     source: cache.source,
     lastRefreshed: cache.lastRefreshed?.toISOString() ?? null,
   };
