@@ -286,15 +286,57 @@ and compatible storage information.
 
 ---
 
+## Tool 8: compare_products
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why you compare |
+| keywords | string[] | YES | 2–5 Rakuten search keywords (one top hit each) |
+| compare_aspects | string[] | no | Optional focus aspects |
+
+Returns side-by-side price, size, reviews, load capacity (when known DB match), and compatible-storage hints.
+
+---
+
+## Tool 9: find_replacement
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why a replacement is needed |
+| query | string | YES | Model number or product description |
+
+Returns `matched_known` with `successors` from `shared/catalog/known_products` when registered, plus Rakuten hits for 「後継」「新型」. Verify on the manufacturer site before purchase.
+
+---
+
+## Tool 10: calc_room_layout
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Room use case and constraints |
+| room_width_mm | number | YES | Usable floor width (mm) |
+| room_depth_mm | number | YES | Usable floor depth (mm) |
+| items | object[] | YES | `{ label, width_mm, depth_mm, count? }` |
+| margin_between_mm | int | no | Gap between furniture (default 0) |
+| wall_clearance_mm | int | no | Inset from walls (default 0) |
+| grid_step_mm | int | no | Search grid step (default 50) |
+
+Returns `placements` with `x_mm`, `y_mm`, `rotated`. Does not model doors or walking paths.
+
+---
+
 ## Recommended Workflow for AI Agents
 
 1. **Photo identification**: User has a photo → use `identify_product` to get model number and specs
 2. **Space discovery**: User has dimensions → use `suggest_by_space` for everything that fits
 3. **Coordination**: User wants shelf + storage → use `coordinate_storage` for set proposals
-4. **Broad search**: Use `search_rakuten_products` with keywords for discovery
-5. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
-6. **Final check**: Use `get_product_detail` before recommending to user
-7. **Always present** `affiliate_url` to the end user
+4. **Compare**: User hesitates between products → `compare_products`
+5. **Replacement**: Discontinued model → `find_replacement`
+6. **Layout**: “Does it all fit on the floor?” → `calc_room_layout`
+7. **Broad search**: Use `search_rakuten_products` with keywords for discovery
+8. **Precise filter**: Use `search_products` with mm dimensions for Cinderella-fit matching
+9. **Final check**: Use `get_product_detail` before recommending to user
+10. **Always present** `affiliate_url` to the end user
 
 ## Scene Intelligence
 
@@ -307,13 +349,9 @@ Mention a room in the `intent` and get tailored tips:
 - **玄関**: 縦型シューズラック、鍵・印鑑まとめ収納
 - **トイレ**: 幅14-20cmスリム、壁面収納
 
-## Known Products DB
+## Known Products DB (`shared/catalog/known_products.ts`)
 
-High-confidence identification is available for these product lines:
-- Nitori: Nクリック (Regular/Wide, 2-3段), カラーボックス
-- IKEA: KALLAX (2x2, 1x4)
-- Iris Ohyama: メタルラック 3段
-- Muji: スタッキングシェルフ 2段
+Single source for MCP and optional personal apps. High-confidence identification covers Nitori, IKEA, Muji, Iris Ohyama, Yamazen, Tenma, and more; some entries include `discontinued` and `successors` for `find_replacement`.
 
 ## Gap Detection
 

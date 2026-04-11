@@ -7,8 +7,8 @@
  * 写真 → AIが解析 → テキスト特徴 → このツール → 型番・スペック候補
  */
 import { z } from "zod";
-import { findMatchingProducts, ProductMatch, KnownProduct } from "../data/known_products";
-import { searchRakutenProducts, extractDimensions } from "../adapters/rakuten_api";
+import { findMatchingProducts, ProductMatch, KnownProduct } from "../shared/catalog/known_products";
+import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, logRequirementGap, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { RequirementGap } from "../schemas/requirement_gap";

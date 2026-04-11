@@ -5,8 +5,8 @@
  * AIエージェントが「AとBどっちがいい？」に対して構造化データで即答できる。
  */
 import { z } from "zod";
-import { searchRakutenProducts, extractDimensions } from "../adapters/rakuten_api";
-import { findMatchingProducts } from "../data/known_products";
+import { searchRakutenProducts } from "../adapters/rakuten_api";
+import { findMatchingProducts } from "../shared/catalog/known_products";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { buildAffiliateUrl } from "../services/affiliate";

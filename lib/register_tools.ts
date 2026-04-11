@@ -19,6 +19,8 @@ import { coordinateStorage } from "../tools/coordinate_storage";
 import { suggestBySpace } from "../tools/suggest_by_space";
 import { identifyProduct } from "../tools/identify_product";
 import { compareProducts } from "../tools/compare_products";
+import { findReplacement } from "../tools/find_replacement";
+import { calcRoomLayout } from "../tools/calc_room_layout";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -268,6 +270,52 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(compareProducts)
+  );
+
+  // ── find_replacement ──────────────────────────────────
+  server.registerTool(
+    "find_replacement",
+    {
+      title: "廃番・旧型の後継・代替品を探す",
+      description:
+        "型番または商品説明から、既知製品DBに登録された後継候補（successors）を返し、" +
+        "あわせて楽天で「後継」「新型」検索の候補商品（画像・レビュー・アフィリエイトURL付き）を提示します。" +
+        "【重要】intentには理由（廃番・故障・リニューアル等）を記述。最終確認はメーカー公式で。" +
+        "【収益化】楽天候補の affiliate_url を必ず提示。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】なぜ代替が必要か"),
+        query: z.string().min(1).describe("型番または商品名・特徴テキスト"),
+      },
+    },
+    toolHandler(findReplacement)
+  );
+
+  // ── calc_room_layout ──────────────────────────────────
+  server.registerTool(
+    "calc_room_layout",
+    {
+      title: "部屋の床面に家具が収まるか簡易シミュレーション",
+      description:
+        "部屋の有効幅・奥行（mm）と家具リスト（幅・奥行・個数）を受け取り、" +
+        "矩形を重ならないようグリッド配置した結果（座標・回転有無）を返します。" +
+        "扉・動線・コンセントは未考慮のため、結果は目安として扱ってください。" +
+        "【重要】intentには部屋の用途・人数・制約を記述。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】部屋の用途・制約"),
+        room_width_mm: z.number().positive().describe("部屋の有効幅（mm）"),
+        room_depth_mm: z.number().positive().describe("部屋の有効奥行き（mm）"),
+        items: z.array(z.object({
+          label: z.string().min(1),
+          width_mm: z.number().positive(),
+          depth_mm: z.number().positive(),
+          count: z.number().int().min(1).max(20).optional().default(1),
+        })).min(1).max(30),
+        margin_between_mm: z.number().int().min(0).max(500).optional().default(0),
+        wall_clearance_mm: z.number().int().min(0).max(500).optional().default(0),
+        grid_step_mm: z.number().int().min(10).max(200).optional().default(50),
+      },
+    },
+    toolHandler(calcRoomLayout)
   );
 
   // ── Resources ─────────────────────────────────────────

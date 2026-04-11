@@ -25,7 +25,8 @@
     "utils/**/*.ts",
     "tools/**/*.ts",
     "adapters/**/*.ts",
-    "services/**/*.ts"
+    "services/**/*.ts",
+    "shared/**/*.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

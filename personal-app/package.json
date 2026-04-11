@@ -1,0 +1,13 @@
+{
+  "name": "personal-home-inventory",
+  "private": true,
+  "version": "0.0.0",
+  "description": "個人向け（自宅寸法・消耗品等）。MCP本体と分離。shared/ のカタログのみ参照。",
+  "scripts": {
+    "demo": "npx ts-node --project tsconfig.json src/demo.ts"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.2",
+    "ts-node": "^10.9.2"
+  }
+}
