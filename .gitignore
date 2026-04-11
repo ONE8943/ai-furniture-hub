@@ -20,3 +20,6 @@ Thumbs.db
 
 # テスト一時ファイル
 test/verify_*.ts
+
+# sync-log 生成ドラフト（任意でコミットしない場合）
+public/llms-tools.sync-draft.md

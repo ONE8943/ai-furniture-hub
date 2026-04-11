@@ -14,13 +14,15 @@
     "build": "tsc",
     "start:render": "node dist/server_http.js",
     "review": "ts-node scripts/review_proposals.ts",
-    "analyze": "ts-node scripts/analyze_demand.ts"
+    "analyze": "ts-node scripts/analyze_demand.ts",
+    "sync-log": "ts-node scripts/sync_log.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@smithery/sdk": "^4.3.0",
     "@types/express": "^5.0.6",
