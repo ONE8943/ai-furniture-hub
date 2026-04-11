@@ -1,91 +1,119 @@
-# AI Furniture & Home Product Hub - MCP Server
+# AI Furniture & Home Product Hub — MCP Server
 
-> Millimeter-precision furniture, home appliances, gadgets, beauty devices & smart home data for AI agents.
-> Curated product catalog across 31 categories, 80+ brands, 13 tools.
-> Related-item chains: products link to accessories, protection materials, consumables, and add-ons.
-> Rakuten Ichiba API for product search; Amazon affiliate link generation (URL only).
-> Operated by ONE, Inc. (Japan)
+> Millimeter-precision product data for AI agents: furniture, home appliances, gadgets, beauty devices, smart home, and more.
+> 13 MCP tools + 3 prompt workflows across 31 categories and 80+ brands.
+> Operated by ONE, Inc. (Japan).
 
-## What This Server Does
+## Contact
 
-This MCP server provides structured, machine-optimized product data across home, tech, and lifestyle categories.
-AI agents can search by exact dimensions (mm), price, color, and category,
-then receive affiliate-linked purchase URLs ready to present to end users.
+- GitHub Issues: <https://github.com/ONE8943/ai-furniture-hub/issues>
+- Repository: <https://github.com/ONE8943/ai-furniture-hub>
+- npm: <https://www.npmjs.com/package/ai-furniture-hub>
 
-**Key differentiator: Related-Item Chains.**
-Every product links to required accessories, protection materials, and recommended add-ons.
-Example: Air purifier -> replacement HEPA filter (required) + caster stand + humidity monitor.
-This means 1 product lookup naturally leads to 3-5 additional product views.
+## Services
 
-Beyond simple search, this server uniquely offers:
-- **Shelf + storage coordination** with quantity calculations
-- **Space-based product discovery** (give dimensions, get everything that fits)
-- **Product identification** from visual features (photo -> model number -> specs)
-- **Related-item chains** (product -> required accessories -> protection -> add-ons)
-- **Category browsing** (31 categories from furniture to smart home to beauty devices)
-- **Popular product ranking** with Rakuten trending data
+### Product Search & Discovery
+Search curated product catalog by mm-precision dimensions, price range, color, category, brand, or free-text keyword.
+Rotation-aware space fitting: automatically checks if products fit when width/depth are swapped.
+Color alias support: "白" matches ホワイト, アイボリー, etc.
 
-## Why Use This Server
+### Related-Item Chains
+Every product links to required accessories, protection materials, consumables, and add-ons.
+Example: Air purifier → HEPA filter (required, replace every 2 years) + hygrometer + caster stand.
+Use `depth=2` to traverse "related items of related items."
 
-- **1mm precision**: All dimensions in millimeters — outer AND inner
-- **Cinderella-fit logic**: Find products that exactly fit a given space
-- **Related-item chains**: "You'll also need..." with required vs recommended items
-- **Set proposals**: Shelf + storage boxes + protection = complete solution
-- **Product identification**: Visual features -> model number, inner dimensions, compatible storage
-- **Rakuten API**: Rakuten Ichiba API for product search with pricing data
-- **Affiliate links**: Rakuten affiliate URLs auto-generated; Amazon search links with affiliate tags
-- **Scene intelligence**: Room-specific storage and product tips
-- **31 categories**: Furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness
+### Shelf + Storage Coordination
+Given a shelf keyword, calculates how many storage boxes fit per tier, total quantity needed, and total cost including affiliate links.
 
-## Available Tools (13 tools)
+### Space-Based Suggestions
+Provide dimensions in mm → receive all products that fit, grouped by category, with margin calculations.
+
+### Product Identification
+Visual feature text (from photo/vision AI) → candidate products with model numbers, inner dimensions, compatible storage.
+
+### Product Comparison
+Side-by-side comparison of 2–5 products on price, dimensions, load capacity, material, and running cost.
+
+### Replacement Finder
+Discontinued/old model → successor and alternative products from catalog + Rakuten live search.
+
+### Room Layout Simulation
+Floor-plan grid packing: given room dimensions and furniture list, returns placement coordinates.
+
+### Affiliate Integration
+Rakuten Ichiba API (live search with prices and reviews) and Amazon affiliate URL generation.
+
+### Prompt Workflows (3 templates)
+- **room_coordinator**: Space dimensions → complete coordination plan (shelf + boxes + protection materials)
+- **moving_checklist**: Room layout type → categorized purchasing checklist with budget estimates
+- **product_showdown**: Two products → detailed comparison including accessory/running costs
+
+## What We Do Not Do
+
+- **No price guarantees**: Prices change on retailer sites; our data is a snapshot or estimate.
+- **No order processing**: We generate affiliate URLs but do not handle transactions, payments, or shipping.
+- **No personal data storage**: We collect `intent` parameters for analytics but do not intentionally store names, addresses, or payment info. See our privacy policy.
+- **No interior design**: We suggest products by dimension fit and compatibility, not by aesthetic coordination or room styling.
+- **No real-time Amazon data**: Amazon integration generates search URLs only; no live product data is returned.
+- **No warranty/support**: Product warranty and after-sales support are handled by the respective manufacturers/retailers.
+
+## Available Tools (13)
 
 ### search_products
-Search curated product catalog by dimensions (mm), price, color, and category across 31 categories.
+Search curated catalog by keyword, dimensions (mm), price, color, category, brand. Returns `related_items_hint` linking to `get_related_items`.
 
 ### get_product_detail
-Full specifications by product ID. Includes `related_items_hint` showing required accessories and recommended add-ons.
+Full specs by product ID including inner dimensions, consumables, and compatible storage.
 
 ### search_rakuten_products
-Real-time search across 200,000+ Rakuten Ichiba listings with affiliate URLs.
+Rakuten Ichiba API real-time search with affiliate URLs, prices, and review data.
 
 ### search_amazon_products
-Amazon affiliate search link generation (URL only, no product data returned). SearchIndex auto-selected by product category.
+Amazon affiliate search link generation (URL only). SearchIndex auto-selected by category.
 
 ### coordinate_storage
-Shelf + storage box set proposals with quantity per tier calculations.
+Shelf + storage box set proposals: quantity per tier, total needed, total cost.
 
 ### suggest_by_space
-Space dimensions (mm) -> all fitting products, grouped by category.
+Space dimensions (mm) → fitting products across categories. Rotation-aware.
 
 ### identify_product
-Visual features -> product candidates with confidence scores, specs, and related items.
+Visual feature text → product candidates with confidence, specs, related items.
 
 ### compare_products
-Side-by-side comparison of 2-5 products.
+Side-by-side comparison of 2–5 products on multiple dimensions.
 
 ### find_replacement
-Discontinued models -> successor/alternative lookup.
+Discontinued model → successor/alternative lookup from catalog and Rakuten.
 
 ### calc_room_layout
-Floor-plan rectangle packing simulation.
+Rectangle packing simulation for room floor plans.
 
 ### list_categories
-Browse all 31 product categories with product counts and sample products.
+All 31 categories with counts, brands, and sample products.
 
 ### get_popular_products
-Popular/recommended products by category or brand, with Rakuten trending data.
+Recommended products by category/brand with Rakuten trending.
 
 ### get_related_items
-**Core tool for view multiplication.**
-Given a product ID or keyword, returns the full related-item chain:
-- **required**: Must-have items (e.g., HEPA filters for air purifiers, USB-C cables for chargers)
-- **protects_with**: Protection materials (floor mats, earthquake gel, heat mats, cases)
-- **enhances_with**: Upgrades (casters, extra shelves, monitor arms, attachments)
-- **coordinates_with**: Complementary items (cable trays, stands, matching accessories)
-- **fits_inside**: Storage that fits inside (inner boxes, wire baskets)
+Related-item chain traversal: required accessories, protection, add-ons, compatible storage. Depth 1–2.
 
-Each related item comes with Rakuten search results and affiliate URLs.
-Use `depth=2` to get "related items of related items" for deeper chains.
+## Prompt Workflows (3)
+
+### room_coordinator
+**Input**: Room type, space dimensions (mm), optional budget.
+**Flow**: suggest_by_space → get_related_items → coordinate_storage → complete plan.
+**Output**: Shelf + boxes + protection materials with quantities and total cost.
+
+### moving_checklist
+**Input**: Floor plan type (1K, 1LDK, 2LDK, 3LDK), optional priority rooms.
+**Flow**: list_categories → get_popular_products → get_related_items → categorized list.
+**Output**: Room-by-room purchasing checklist with budget estimates.
+
+### product_showdown
+**Input**: Two product names, optional use case.
+**Flow**: compare_products → get_related_items for both → total cost comparison.
+**Output**: Comparison table with verdict and recommendation.
 
 ## Product Categories (31)
 
@@ -93,9 +121,9 @@ Use `depth=2` to get "related items of related items" for deeper chains.
 |----------|----------|
 | シェルフ・棚 | Open shelves, unit shelves |
 | カラーボックス | Nitori N-Click, IKEA KALLAX |
-| 収納ケース | Storage boxes, Nitori N-InBox, Daiso stacking boxes |
+| 収納ケース | Storage boxes, N-InBox, Daiso stacking boxes |
 | 衣装ケース | Tenma Fits, clothing storage |
-| スチールラック | Steel/metal racks, Luminous |
+| スチールラック | Metal racks, Luminous |
 | デスク | PC desks, standing desks, FlexiSpot E7 |
 | キッチン収納 | Kitchen wagons, range racks, tower series |
 | ランドリー収納 | Laundry racks, baskets, slim chests |
@@ -103,79 +131,50 @@ Use `depth=2` to get "related items of related items" for deeper chains.
 | 玄関収納 | Shoe racks, shoe cabinets, umbrella stands |
 | テレビ台 | TV stands, IKEA BESTÅ, media consoles |
 | 本棚 | Bookshelves, rotating racks, IKEA HEMNES |
-| クローゼット収納 | PAX wardrobes, SKUBB organizers, soft boxes |
+| クローゼット収納 | PAX wardrobes, SKUBB organizers |
 | ファイル収納 | Muji PP file boxes, Seria Just it |
 | ベビー・安全対策 | Baby gates, corner guards |
 | 突っ張り棒・つっぱり | Tension rods, tension shelves |
-| 保護・補修材 | Wall pads, floor mats, earthquake gel, anti-slip sheets |
-| パーツ・アクセサリ | Casters, extra shelves, monitor arms, cable trays, hooks |
-| ワゴン・可動収納 | IKEA RÅSKOG, tower wagons, Nitori trolleys |
+| 保護・補修材 | Wall pads, floor mats, earthquake gel |
+| パーツ・アクセサリ | Casters, extra shelves, monitor arms, hooks |
+| ワゴン・可動収納 | IKEA RÅSKOG, tower wagons |
 | ダイニング家具 | Dining tables, chairs, benches |
-| ソファ・チェア | Sofas, office chairs, gaming chairs, bean bags |
-| 寝具・マットレス | Nitori N-Sleep, Muji mattresses, Tempur pillows |
-| カーテン・ブラインド | Blackout curtains, roller blinds, venetian blinds |
-| 家電・照明 | Roomba, washing machines, LED ceiling lights |
-| PC周辺・デスク環境 | Monitor arms, keyboards, webcams, desk mats, BenQ ScreenBar |
-| スマートホーム | Echo Dot, SwitchBot, Philips Hue, smart plugs |
-| 美容家電 | Dyson dryers, Panasonic NanoCare, ReFa, Salonia, Braun IPL |
-| 空気環境家電 | Air purifiers (Sharp, Dyson, Daikin), humidifiers, dehumidifiers |
-| キッチン家電 | Balmuda Toaster, DeLonghi espresso, Instant Pot, rice cookers |
-| ガジェット・モバイル | AirPods Pro, Sony WH-1000XM5, Anker chargers, Fire TV Stick |
-| 健康・フィットネス | Tanita scales, Fitbit, foam rollers, protein, spin bikes |
-
-## Data Coverage
-
-- **80+ brands**: Nitori, IKEA, Iris Ohyama, Muji, Yamazen, Tenma, tower (Yamazaki), LOWYA, Sharp, Panasonic, Dyson, Sony, Apple, Anker, SwitchBot, Philips, Balmuda, DeLonghi, Fitbit, ReFa, Koala, Emma, Google, Razer, HHKB, and 55+ more
-- **Curated product catalog** with dimensions, specs, visual features, and related-item chains
-- **Rakuten Ichiba**: Product search via API with price and review data
-- **Amazon**: Affiliate search link generation (URL only) with category-specific SearchIndex
-
-## Related-Item Chain Examples
-
-```
-Air purifier (Sharp KC-R50)
-  -> [REQUIRED] Replacement HEPA filter FZ-Y80MF (replace every 2 years)
-  -> [RECOMMENDED] Digital hygrometer (monitor room conditions)
-
-Dyson Supersonic HD15 dryer
-  -> [RECOMMENDED] Dryer stand (organize with attachments)
-  -> [RECOMMENDED] Magnetic attachment set (expand styling options)
-
-Monitor arm (Ergotron LX)
-  -> [RECOMMENDED] Cable clips (keep cables tidy)
-  -> [RECOMMENDED] Monitor (pair with compatible display)
-
-Standing desk (FlexiSpot E7)
-  -> [RECOMMENDED] Desk mat (protect surface)
-  -> [RECOMMENDED] Cable tray (manage wires under desk)
-  -> [RECOMMENDED] Desktop power strip (convenient charging)
-```
+| ソファ・チェア | Sofas, office chairs, gaming chairs |
+| 寝具・マットレス | Nitori N-Sleep, Tempur pillows |
+| カーテン・ブラインド | Blackout curtains, roller blinds |
+| 家電・照明 | Roomba, washing machines, LED lights |
+| PC周辺・デスク環境 | Monitor arms, keyboards, desk mats |
+| スマートホーム | Echo Dot, SwitchBot, Philips Hue |
+| 美容家電 | Dyson dryers, Panasonic NanoCare, ReFa |
+| 空気環境家電 | Air purifiers, humidifiers, dehumidifiers |
+| キッチン家電 | Balmuda Toaster, DeLonghi, Instant Pot |
+| ガジェット・モバイル | AirPods Pro, Sony WH-1000XM5, Anker |
+| 健康・フィットネス | Tanita scales, Fitbit, foam rollers |
 
 ## Key Design Decisions
 
-- All dimensions in **millimeters** (mm)
+- All dimensions in **millimeters** (mm) — both outer and inner
 - All prices in **Japanese Yen** (JPY), tax-included integers
-- `intent` parameter **required** on every tool call
-- Always present `affiliate_url` to users
-- Related items marked `required: true` should always be mentioned to users
+- `intent` parameter required on every tool call (for analytics; may contain user input)
+- Related items marked `required: true` should always be mentioned
 - Amazon SearchIndex dynamically selected by product category
 
-## Documentation & Resources
+## AI Discovery Files
 
-- [Full Tool Documentation](https://ai-furniture-hub.onrender.com/llms-full.txt): Complete tool schemas, all parameters, and example JSON calls for all 13 tools
-- [MCP Server Card](https://ai-furniture-hub.onrender.com/.well-known/mcp/server-card.json): Machine-readable server metadata (JSON)
-- [AI Agent Context](https://ai-furniture-hub.onrender.com/context.md): Structured context document for AI agents
-- [GitHub Repository](https://github.com/ONE8943/ai-furniture-hub): Source code, issues, and setup instructions
-- [Smithery Listing](https://smithery.ai/server/j2c214c/ai-furniture-hub): One-click install via Smithery
+- [Full Tool Documentation](https://ai-furniture-hub.onrender.com/llms-full.txt): Complete schemas and example calls for all 13 tools
+- [AGENTS.md](https://ai-furniture-hub.onrender.com/AGENTS.md): How AI agents should use this server
+- [MCP Server Card](https://ai-furniture-hub.onrender.com/.well-known/mcp/server-card.json): Machine-readable metadata (JSON)
+- [AI Agent Context](https://ai-furniture-hub.onrender.com/context.md): Structured context for AI
 
 ## Connection
 
-- **MCP over stdio**: `npx ts-node index.ts` (local, for Cursor/VS Code)
-- **MCP over HTTP**: `https://ai-furniture-hub.onrender.com/mcp` (remote, for ChatGPT/Claude/Perplexity)
-- **Smithery**: `j2c214c/ai-furniture-hub` (managed install)
-- **GitHub MCP Registry**: `ONE8943/ai-furniture-hub`
+- **Streamable HTTP (remote)**: `https://ai-furniture-hub.onrender.com/mcp`
+- **stdio (local)**: `npx ai-furniture-hub` or `npx ts-node index.ts`
+- **Smithery**: `j2c214c/ai-furniture-hub`
+- **npm**: `npm install ai-furniture-hub`
 
 ## Optional
 
-- [Rakuten Ichiba API Docs](https://webservice.rakuten.co.jp/documentation/ichiba-item-search): For understanding live search capabilities
-- [MCP Protocol Spec](https://modelcontextprotocol.io): Model Context Protocol specification
+- [Rakuten Ichiba API Docs](https://webservice.rakuten.co.jp/documentation/ichiba-item-search)
+- [MCP Protocol Spec](https://modelcontextprotocol.io)
+- [GitHub Repository](https://github.com/ONE8943/ai-furniture-hub)

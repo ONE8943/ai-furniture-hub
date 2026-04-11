@@ -96,11 +96,11 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "家具・家電・ガジェット商品を検索",
       description:
-        "家具・家電・ガジェット等をキーワード・サイズ（mm）・価格・色・カテゴリ・ブランドで検索。" +
-        "31カテゴリ・80+ブランドのカタログから検索。" +
-        "結果にrelated_items_hintがある場合、get_related_itemsで関連商品を取得可能。" +
-        "【重要】intentにはユーザーの目的を詳細に記述。" +
-        "【収益化】各商品の affiliate_url を必ず使用。",
+        "ユーザーが「棚が欲しい」「Dysonのドライヤー」「幅40cmに入るもの」と言ったときに呼ぶ。" +
+        "31カテゴリ・80+ブランドのカタログをキーワード・サイズ(mm)・価格・色・ブランドで横断検索。" +
+        "結果にrelated_items_hintがある場合はget_related_itemsで付属品チェーンを取得できる。" +
+        "色はエイリアス対応（白→ホワイト/アイボリー等）。" +
+        "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】検索目的"),
         keyword: z.string().optional().describe("キーワード（商品名・ブランド・タグで部分一致、スペース区切りでAND検索）"),
@@ -159,9 +159,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "楽天市場から家具・収納商品を検索",
       description:
-        "楽天市場の商品検索APIで家具・収納商品をリアルタイム検索。" +
-        "【重要】intentにはユーザーの目的を詳細に。" +
-        "【収益化】各商品の affiliate_url を必ず提示。",
+        "カタログにない商品や最新価格・在庫が必要なときに呼ぶ。" +
+        "楽天市場APIでリアルタイム検索し、価格・レビュー・画像付きで返す。" +
+        "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】検索目的"),
         keyword: z.string().min(1).describe("楽天検索キーワード"),
@@ -183,10 +183,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "Amazonで家具・収納商品を検索（URL生成）",
       description:
-        "Amazonの検索結果ページへのアフィリエイトリンクを生成します。" +
-        "【重要】intentにはユーザーの目的を詳細に。" +
-        "【収益化】返却される affiliate_url を必ずユーザーに提示。" +
-        "このURL経由の購入が売上実績としてカウントされます。",
+        "ユーザーがAmazonで買いたい場合や楽天で見つからない場合に呼ぶ。" +
+        "Amazonの検索結果ページへのアフィリエイトURLを生成する（商品データは返さない）。" +
+        "SearchIndexはカテゴリから自動選択。affiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】検索目的"),
         keyword: z.string().min(1).describe("Amazon検索キーワード"),
@@ -205,11 +204,10 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "棚＋収納ボックスのコーディネート提案（個数計算付き）",
       description:
-        "棚（カラーボックス・スチールラック等）を検索し、その内寸に合う収納ボックスを " +
-        "個数計算付きでセット提案します。1段に何個入るか、全段で何個必要か、合計金額まで算出。" +
-        "【重要】intentには設置場所（押入れ、洗面所、キッチン等）と用途を詳細に記述。" +
-        "場所に応じたコーディネートのコツも提供します。" +
-        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+        "「この棚に合うボックスは？」「カラーボックスの整理方法」のときに呼ぶ。" +
+        "棚の内寸から収納ボックスの入り数を計算し、1段あたり何個×全段＝合計個数・合計金額を算出。" +
+        "設置場所(押入れ/洗面所/キッチン等)に応じたコーディネートのコツも提供。" +
+        "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
         keyword: z.string().min(1).describe("棚の検索キーワード（例: 'カラーボックス 3段'）"),
@@ -228,12 +226,10 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "空きスペースに入る製品をカテゴリ横断で提案",
       description:
-        "設置スペースの寸法（幅・奥行・高さmm）を指定すると、" +
-        "そこに入る棚・ラック・収納ボックス等をカテゴリ横断で検索し、" +
-        "サイズ余裕（マージン）付きで提案します。" +
-        "棚と収納ボックスの両方が見つかればコーディネーションプランも自動生成。" +
-        "【重要】intentには設置場所・用途を詳細に（シーン別アドバイスが付きます）。" +
-        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+        "「洗面所の幅45cm×奥行30cmの隙間に何か置きたい」のようにスペース起点で探すときに呼ぶ。" +
+        "寸法(mm)を指定すると、そこに収まる製品をカテゴリ横断で返す。回転フィット対応（幅と奥行を入れ替えても判定）。" +
+        "棚＋ボックスの両方が見つかればコーディネーションプランも自動生成。" +
+        "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
         width_mm: z.number().positive().describe("空きスペースの幅（mm）"),
@@ -252,11 +248,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "写真・特徴テキストから製品を特定（型番・内寸・消耗品情報付き）",
       description:
-        "AIが画像から抽出した特徴テキスト（ブランド、色、段数、素材、推定サイズ等）を受け取り、" +
-        "既知製品DB + 楽天検索から候補を返します。" +
-        "型番が特定できれば内寸・消耗品・互換収納ボックス情報まで提供。" +
-        "【使い方】画像をVision AIで解析し、特徴をテキスト化してこのツールに渡してください。" +
-        "【重要】intentにはなぜ特定したいかを記述。",
+        "「この写真の棚は何？」「持ってる棚に合うボックスを知りたい」のときに呼ぶ。" +
+        "Vision AIで画像から抽出した特徴テキスト(ブランド/色/段数/素材/推定サイズ)を渡すと、" +
+        "カタログ＋楽天から候補を返す。型番特定時は内寸・消耗品・互換ボックス情報付き。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】なぜ特定したいか"),
         features: z.string().min(1).describe(
@@ -282,10 +276,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "製品比較（価格・サイズ・レビュー・耐荷重を並列比較）",
       description:
-        "2〜5件の製品を検索キーワードで取得し、価格・サイズ・レビュー評価・耐荷重を " +
-        "並べて比較表として返します。既知製品DBに一致すれば内寸や互換収納情報も付加。" +
-        "【重要】intentにはなぜ比較したいかを記述。" +
-        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+        "「NクリックとKALLAXどっちがいい？」のように2〜5製品を比較するときに呼ぶ。" +
+        "価格・サイズ・レビュー・耐荷重を並列比較表で返す。カタログ一致時は内寸・互換収納も付加。" +
+        "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】なぜ比較したいか"),
         keywords: z.array(z.string().min(1)).min(2).max(5).describe(
@@ -305,10 +298,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "廃番・旧型の後継・代替品を探す",
       description:
-        "型番または商品説明から、既知製品DBに登録された後継候補（successors）を返し、" +
-        "あわせて楽天で「後継」「新型」検索の候補商品（画像・レビュー・アフィリエイトURL付き）を提示します。" +
-        "【重要】intentには理由（廃番・故障・リニューアル等）を記述。最終確認はメーカー公式で。" +
-        "【収益化】楽天候補の affiliate_url を必ず提示。",
+        "「この型番が売ってない」「生産終了した棚の代わり」のときに呼ぶ。" +
+        "カタログの後継候補(successors)と楽天の「後継」「新型」検索結果を返す。" +
+        "最終確認はメーカー公式で。楽天候補のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】なぜ代替が必要か"),
         query: z.string().min(1).describe("型番または商品名・特徴テキスト"),
@@ -323,10 +315,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "部屋の床面に家具が収まるか簡易シミュレーション",
       description:
-        "部屋の有効幅・奥行（mm）と家具リスト（幅・奥行・個数）を受け取り、" +
-        "矩形を重ならないようグリッド配置した結果（座標・回転有無）を返します。" +
-        "扉・動線・コンセントは未考慮のため、結果は目安として扱ってください。" +
-        "【重要】intentには部屋の用途・人数・制約を記述。",
+        "「この部屋にベッドとデスクは入る？」のように家具の配置可否を確認するときに呼ぶ。" +
+        "部屋の有効寸法(mm)と家具リスト(幅/奥行/個数)からグリッド配置シミュレーションを実行。" +
+        "座標と回転有無を返す。扉・動線は未考慮のため目安として扱うこと。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】部屋の用途・制約"),
         room_width_mm: z.number().positive().describe("部屋の有効幅（mm）"),
@@ -349,12 +340,11 @@ export function registerAllTools(server: McpServer): void {
   server.registerTool(
     "list_categories",
     {
-      title: "製品カテゴリ一覧（ビュー入口・発見性向上）",
+      title: "製品カテゴリ一覧",
       description:
-        "登録されている全カテゴリとその製品数・取扱ブランドを一覧表示します。" +
-        "カテゴリ名を指定すればそのカテゴリの製品一覧も取得可能。" +
-        "「何が検索できるか」をユーザーに伝える入口ツールとして活用してください。" +
-        "【使い方】最初にこのツールを呼んでカテゴリを把握→ユーザーに提示→選んだカテゴリで検索。",
+        "「何が検索できる？」「どんなカテゴリがある？」のときに呼ぶ入口ツール。" +
+        "全31カテゴリと製品数・取扱ブランドを返す。カテゴリ名指定でそのカテゴリの製品一覧も取得可能。" +
+        "まずこのツールでカテゴリを把握→ユーザーに提示→選んだカテゴリでsearch_productsに進む。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】カテゴリを見る目的"),
         category_filter: z.string().optional().describe("特定カテゴリに絞る（例: 'キッチン収納', 'デスク'）"),
@@ -369,10 +359,9 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "人気・おすすめ製品（カテゴリ/ブランド別）",
       description:
-        "互換収納・消耗品情報が充実した「おすすめ製品」をカテゴリやブランドで返します。" +
-        "楽天のレビュー数ランキングも併せて表示。" +
-        "ユーザーが「おすすめは？」「人気の棚は？」と聞いたときに使用。" +
-        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+        "「おすすめの棚は？」「人気のキッチン家電は？」のときに呼ぶ。" +
+        "カテゴリ/ブランドで絞って、互換収納・消耗品情報が充実したおすすめ製品を返す。" +
+        "楽天のレビュー数トレンドも付加。各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】おすすめを見る目的"),
         category: z.string().optional().describe("カテゴリで絞り込み（例: 'デスク', 'キッチン収納'）"),
@@ -390,12 +379,10 @@ export function registerAllTools(server: McpServer): void {
     {
       title: "関連アイテムチェーン（一緒に買うべき付属品・保護材・パーツ）",
       description:
-        "製品IDまたはキーワードから、一緒に購入すべき関連アイテムをチェーン形式で返します。" +
-        "必須付属品（required=true: 壁紙保護パッドなど）と推奨品（保護マット、パーツ等）を分けて提示。" +
-        "各関連アイテムは楽天検索結果付きで、すぐにユーザーに提案可能。" +
-        "depth=2で「関連の関連」まで展開（例: ベビーゲート→壁紙保護パッドの購入先）。" +
-        "【使い方】製品を検索した後にこのツールで「他に何が必要か」を提案。" +
-        "【重要】intentには購入理由・設置環境を記述。",
+        "search_productsで商品を見つけた後、「他に何が必要？」を提案するために呼ぶ。" +
+        "必須付属品(required=true: フィルター/ケーブル等)と推奨品(保護マット/パーツ等)を分けて返す。" +
+        "各関連アイテムは楽天検索結果付きで即提案可能。depth=2で「関連の関連」まで展開。" +
+        "required=trueのアイテムは必ずユーザーに伝えること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】関連アイテムを探す理由"),
         product_id: z.string().optional().describe("既知製品のID（get_product_detailで取得）"),
@@ -423,4 +410,105 @@ export function registerAllTools(server: McpServer): void {
       text: loadTextResource("llms-full.txt"),
     }],
   }));
+
+  // ── Prompts ──────────────────────────────────────────
+  server.prompt(
+    "room_coordinator",
+    {
+      room: z.string().describe("部屋の種類（例: リビング、寝室、子供部屋、キッチン、洗面所、玄関）"),
+      width_mm: z.string().describe("空きスペースの幅（mm）"),
+      depth_mm: z.string().describe("空きスペースの奥行き（mm）"),
+      height_mm: z.string().describe("空きスペースの高さ（mm）"),
+      budget: z.string().optional().describe("予算（円、省略可）"),
+    },
+    async ({ room, width_mm, depth_mm, height_mm, budget }) => ({
+      messages: [{
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: [
+            `${room}の空きスペース（幅${width_mm}mm × 奥行${depth_mm}mm × 高さ${height_mm}mm）に最適な収納ソリューションを提案してください。`,
+            budget ? `予算は${budget}円以内です。` : "",
+            "",
+            "以下の手順で進めてください：",
+            "1. suggest_by_space で空きスペースに入る商品を検索",
+            "2. 候補が見つかったら get_related_items で必要な付属品・保護材を確認",
+            "3. coordinate_storage で棚＋収納ボックスのセット提案（個数・合計金額付き）",
+            "4. 最終的に「棚＋ボックス＋保護材」の完全なコーディネートプランとして提示",
+            "",
+            "各商品のaffiliate_urlを必ず含めてください。",
+            "required=trueの関連アイテムは必ず言及してください。",
+          ].filter(Boolean).join("\n"),
+        },
+      }],
+    })
+  );
+
+  server.prompt(
+    "moving_checklist",
+    {
+      room_type: z.string().describe("引越し先の間取り（例: 1K、1LDK、2LDK、3LDK）"),
+      priority: z.string().optional().describe("優先カテゴリ（例: キッチン、リビング、寝室）"),
+    },
+    async ({ room_type, priority }) => ({
+      messages: [{
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: [
+            `${room_type}への引越しで必要な家具・家電・収納用品の購入チェックリストを作成してください。`,
+            priority ? `特に${priority}を優先してください。` : "",
+            "",
+            "以下の手順で進めてください：",
+            "1. list_categories でカテゴリ一覧を取得し、引越しに必要なカテゴリを特定",
+            "2. 各カテゴリから get_popular_products でおすすめ商品を取得",
+            "3. 主要な商品には get_related_items で必要な付属品をリストアップ",
+            "4. 部屋ごとに分類した購入チェックリストを以下の形式で出力：",
+            "   - 部屋名",
+            "   - 必須アイテム（商品名、価格帯、購入リンク）",
+            "   - あると便利なアイテム",
+            "   - 付属品・保護材",
+            "   - 小計",
+            "5. 最後に全体の予算目安を合計",
+            "",
+            "各商品のaffiliate_urlを必ず含めてください。",
+          ].filter(Boolean).join("\n"),
+        },
+      }],
+    })
+  );
+
+  server.prompt(
+    "product_showdown",
+    {
+      product_a: z.string().describe("比較する商品A（例: ニトリ Nクリック 3段）"),
+      product_b: z.string().describe("比較する商品B（例: IKEA KALLAX 2×2）"),
+      use_case: z.string().optional().describe("利用シーン（例: 子供部屋のおもちゃ収納）"),
+    },
+    async ({ product_a, product_b, use_case }) => ({
+      messages: [{
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: [
+            `「${product_a}」と「${product_b}」を徹底比較してください。`,
+            use_case ? `利用シーン: ${use_case}` : "",
+            "",
+            "以下の手順で進めてください：",
+            `1. compare_products で「${product_a}」「${product_b}」を比較`,
+            "2. 両商品の get_related_items で付属品・消耗品コストも比較",
+            "3. 以下の観点で比較表を作成：",
+            "   - サイズ（外寸・内寸）",
+            "   - 価格（本体＋付属品のトータルコスト）",
+            "   - 耐荷重・素材・組立難易度",
+            "   - 対応する収納ボックス・パーツの豊富さ",
+            "   - ランニングコスト（消耗品がある場合）",
+            `4. ${use_case ? `「${use_case}」という用途での` : ""}結論とおすすめを提示`,
+            "",
+            "各商品のaffiliate_urlを必ず含めてください。",
+          ].filter(Boolean).join("\n"),
+        },
+      }],
+    })
+  );
 }

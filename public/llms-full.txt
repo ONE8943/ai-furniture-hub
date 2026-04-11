@@ -1,8 +1,8 @@
 # AI Furniture & Home Product Hub - Full Tool Documentation
 
-> MCP Server v5.2.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
+> MCP Server v5.5.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
 > Operator: ONE, Inc. (株式会社ONE)
-> Curated product catalog | 31 categories | 80+ brands | 13 tools
+> Curated product catalog | 31 categories | 80+ brands | 13 tools + 3 prompt workflows
 
 ---
 
@@ -16,6 +16,8 @@ Covers products across 31 categories: furniture, home appliances, PC peripherals
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | intent | string | YES | Why the user needs this product. Include placement location, use case, constraints. |
+| keyword | string | no | Free-text keyword (partial match on name, brand, tags; space-separated AND) |
+| brand | string | no | Brand filter (e.g., "ニトリ", "IKEA", "Dyson") |
 | width_mm_min | number | no | Minimum width in mm |
 | width_mm_max | number | no | Maximum width in mm |
 | height_mm_min | number | no | Minimum height in mm |
@@ -24,7 +26,7 @@ Covers products across 31 categories: furniture, home appliances, PC peripherals
 | depth_mm_max | number | no | Maximum depth in mm |
 | price_min | integer | no | Minimum price in JPY |
 | price_max | integer | no | Maximum price in JPY |
-| color | string | no | Color name (e.g., "ホワイト", "ブラウン", "ナチュラル") |
+| color | string | no | Color name with alias support (e.g., "白" matches ホワイト/アイボリー) |
 | category | string | no | Category (31 available - see list below) |
 | in_stock_only | boolean | no | Only in-stock items (default: true) |
 
@@ -308,8 +310,29 @@ Mention a room in the `intent` and get tailored tips:
 - Amazon SearchIndex dynamically selected by product category
 - External input validated with Zod
 
+## Prompt Workflows (3)
+
+### room_coordinator
+Complete coordination plan for a given space. Input: room type, dimensions (mm), optional budget.
+Executes: suggest_by_space → get_related_items → coordinate_storage → full plan with quantities and costs.
+
+### moving_checklist
+Room-by-room purchasing checklist for a new home. Input: floor plan type (1K/1LDK/2LDK/3LDK), optional priority rooms.
+Executes: list_categories → get_popular_products → get_related_items → categorized shopping list with budget.
+
+### product_showdown
+Detailed comparison of two products including accessory and running costs. Input: two product names, optional use case.
+Executes: compare_products → get_related_items for both → total ownership cost comparison with verdict.
+
+---
+
+## AI Agent Guide
+
+See [AGENTS.md](https://ai-furniture-hub.onrender.com/AGENTS.md) for detailed tool selection guide, workflow patterns, and error handling.
+
 ## Connection
 
-- **MCP over stdio**: `npx ts-node index.ts`
-- **MCP over HTTP**: `https://ai-furniture-hub.onrender.com/mcp`
+- **Streamable HTTP (remote)**: `https://ai-furniture-hub.onrender.com/mcp`
+- **stdio (local)**: `npx ai-furniture-hub` or `npx ts-node index.ts`
 - **Smithery**: `j2c214c/ai-furniture-hub`
+- **npm**: `npm install ai-furniture-hub`

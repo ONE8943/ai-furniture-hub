@@ -48,7 +48,7 @@ export default function createServer({ config }: { config: Config }) {
 
   const server = new McpServer({
     name: "furniture-hub",
-    version: "5.4.0",
+    version: "5.5.0",
   });
 
   registerAllTools(server);
