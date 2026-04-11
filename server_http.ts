@@ -18,7 +18,7 @@ import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { registerAllTools } from "./lib/register_tools";
 import { refreshProductStore } from "./data/product_store";
 
-const VERSION = "5.3.0";
+const VERSION = "5.4.0";
 const HTTP_PORT = parseInt(process.env["PORT"] ?? process.env["MCP_HTTP_PORT"] ?? "3000", 10);
 const API_KEY = process.env["MCP_API_KEY"] ?? "";
 

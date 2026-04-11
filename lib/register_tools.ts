@@ -21,6 +21,9 @@ import { identifyProduct } from "../tools/identify_product";
 import { compareProducts } from "../tools/compare_products";
 import { findReplacement } from "../tools/find_replacement";
 import { calcRoomLayout } from "../tools/calc_room_layout";
+import { listCategories } from "../tools/list_categories";
+import { getPopularProducts } from "../tools/get_popular_products";
+import { getRelatedItems } from "../tools/get_related_items";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -33,6 +36,21 @@ function loadTextResource(filename: string): string {
     } catch {}
   }
   return `(${filename} not found)`;
+}
+
+function classifyError(e: unknown): { error_code: string; message: string; retry_after_ms?: number } {
+  const msg = e instanceof Error ? e.message : String(e);
+  if (msg.includes("Zod") || msg.includes("validation") || msg.includes("バリデーション"))
+    return { error_code: "VALIDATION_ERROR", message: msg };
+  if (msg.includes("429") || msg.includes("レートリミット"))
+    return { error_code: "API_RATE_LIMIT", message: msg, retry_after_ms: 5000 };
+  if (msg.includes("timeout") || msg.includes("ETIMEDOUT") || msg.includes("ECONNABORTED"))
+    return { error_code: "API_TIMEOUT", message: msg, retry_after_ms: 3000 };
+  if (msg.includes("403") || msg.includes("401") || msg.includes("認証"))
+    return { error_code: "API_AUTH_ERROR", message: msg };
+  if (msg.includes("ECONNREFUSED") || msg.includes("ENOTFOUND") || msg.includes("network"))
+    return { error_code: "API_NETWORK_ERROR", message: msg, retry_after_ms: 5000 };
+  return { error_code: "INTERNAL_ERROR", message: msg };
 }
 
 function toolHandler(fn: (params: any) => Promise<any>) {
@@ -54,11 +72,16 @@ function toolHandler(fn: (params: any) => Promise<any>) {
         }],
       };
     } catch (e) {
-      const message = e instanceof Error ? e.message : String(e);
+      const classified = classifyError(e);
       return {
         content: [{
           type: "text" as const,
-          text: JSON.stringify({ status: "error", message }, null, 2),
+          text: JSON.stringify({
+            status: "error",
+            error_code: classified.error_code,
+            message: classified.message,
+            ...(classified.retry_after_ms && { retry_after_ms: classified.retry_after_ms }),
+          }, null, 2),
         }],
         isError: true,
       };
@@ -71,13 +94,16 @@ export function registerAllTools(server: McpServer): void {
   server.registerTool(
     "search_products",
     {
-      title: "家具・収納商品を検索",
+      title: "家具・家電・ガジェット商品を検索",
       description:
-        "家具・収納商品をサイズ（mm単位）・価格・色・カテゴリ等で検索します。" +
+        "家具・家電・ガジェット等をキーワード・サイズ（mm）・価格・色・カテゴリ・ブランドで検索。" +
+        "31カテゴリ・80+ブランドのカタログから検索。" +
+        "結果にrelated_items_hintがある場合、get_related_itemsで関連商品を取得可能。" +
         "【重要】intentにはユーザーの目的を詳細に記述。" +
         "【収益化】各商品の affiliate_url を必ず使用。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】検索目的"),
+        keyword: z.string().optional().describe("キーワード（商品名・ブランド・タグで部分一致、スペース区切りでAND検索）"),
         width_mm_min: z.number().positive().optional().describe("幅の最小値（mm）"),
         width_mm_max: z.number().positive().optional().describe("幅の最大値（mm）"),
         height_mm_min: z.number().positive().optional().describe("高さの最小値（mm）"),
@@ -86,8 +112,9 @@ export function registerAllTools(server: McpServer): void {
         depth_mm_max: z.number().positive().optional().describe("奥行きの最大値（mm）"),
         price_max: z.number().int().positive().optional().describe("価格の上限（円）"),
         price_min: z.number().int().positive().optional().describe("価格の下限（円）"),
-        color: z.string().optional().describe("色（例：ホワイト、ブラウン、ナチュラル）"),
-        category: z.string().optional().describe("カテゴリ（例：シェルフ・棚、カラーボックス）"),
+        color: z.string().optional().describe("色（例：ホワイト、白、ブラウン、木目）。エイリアス対応：白→ホワイト/アイボリー等"),
+        category: z.string().optional().describe("カテゴリ（例：デスク、美容家電、スマートホーム）"),
+        brand: z.string().optional().describe("ブランド（例：ニトリ、IKEA、Dyson、Panasonic）"),
         in_stock_only: z.boolean().default(true).describe("在庫ありのみ（デフォルト：true）"),
       },
     },
@@ -316,6 +343,68 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(calcRoomLayout)
+  );
+
+  // ── list_categories ────────────────────────────────────
+  server.registerTool(
+    "list_categories",
+    {
+      title: "製品カテゴリ一覧（ビュー入口・発見性向上）",
+      description:
+        "登録されている全カテゴリとその製品数・取扱ブランドを一覧表示します。" +
+        "カテゴリ名を指定すればそのカテゴリの製品一覧も取得可能。" +
+        "「何が検索できるか」をユーザーに伝える入口ツールとして活用してください。" +
+        "【使い方】最初にこのツールを呼んでカテゴリを把握→ユーザーに提示→選んだカテゴリで検索。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】カテゴリを見る目的"),
+        category_filter: z.string().optional().describe("特定カテゴリに絞る（例: 'キッチン収納', 'デスク'）"),
+      },
+    },
+    toolHandler(listCategories)
+  );
+
+  // ── get_popular_products ──────────────────────────────
+  server.registerTool(
+    "get_popular_products",
+    {
+      title: "人気・おすすめ製品（カテゴリ/ブランド別）",
+      description:
+        "互換収納・消耗品情報が充実した「おすすめ製品」をカテゴリやブランドで返します。" +
+        "楽天のレビュー数ランキングも併せて表示。" +
+        "ユーザーが「おすすめは？」「人気の棚は？」と聞いたときに使用。" +
+        "【収益化】各商品の affiliate_url を必ずユーザーに提示。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】おすすめを見る目的"),
+        category: z.string().optional().describe("カテゴリで絞り込み（例: 'デスク', 'キッチン収納'）"),
+        brand: z.string().optional().describe("ブランドで絞り込み（例: 'ニトリ', 'IKEA'）"),
+        limit: z.number().int().min(1).max(30).optional().default(10).describe("取得件数"),
+        include_rakuten_trending: z.boolean().optional().default(true).describe("楽天人気ランキングも含めるか"),
+      },
+    },
+    toolHandler(getPopularProducts)
+  );
+
+  // ── get_related_items ──────────────────────────────────
+  server.registerTool(
+    "get_related_items",
+    {
+      title: "関連アイテムチェーン（一緒に買うべき付属品・保護材・パーツ）",
+      description:
+        "製品IDまたはキーワードから、一緒に購入すべき関連アイテムをチェーン形式で返します。" +
+        "必須付属品（required=true: 壁紙保護パッドなど）と推奨品（保護マット、パーツ等）を分けて提示。" +
+        "各関連アイテムは楽天検索結果付きで、すぐにユーザーに提案可能。" +
+        "depth=2で「関連の関連」まで展開（例: ベビーゲート→壁紙保護パッドの購入先）。" +
+        "【使い方】製品を検索した後にこのツールで「他に何が必要か」を提案。" +
+        "【重要】intentには購入理由・設置環境を記述。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】関連アイテムを探す理由"),
+        product_id: z.string().optional().describe("既知製品のID（get_product_detailで取得）"),
+        keyword: z.string().optional().describe("製品名やキーワード（IDが不明な場合）"),
+        include_rakuten: z.boolean().optional().default(true).describe("楽天で関連アイテムを検索するか"),
+        depth: z.number().int().min(1).max(2).optional().default(1).describe("チェーン深度（1=直接関連、2=関連の関連も含む）"),
+      },
+    },
+    toolHandler(getRelatedItems)
   );
 
   // ── Resources ─────────────────────────────────────────

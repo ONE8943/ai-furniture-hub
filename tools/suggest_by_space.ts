@@ -166,7 +166,9 @@ export async function suggestBySpace(rawInput: unknown): Promise<SuggestBySpaceR
 
       for (const p of result.products) {
         if (p.width_mm <= 0 || p.height_mm <= 0 || p.depth_mm <= 0) continue;
-        if (p.width_mm > width_mm || p.depth_mm > depth_mm || p.height_mm > height_mm) continue;
+        const normalFit = p.width_mm <= width_mm && p.depth_mm <= depth_mm && p.height_mm <= height_mm;
+        const rotatedFit = p.depth_mm <= width_mm && p.width_mm <= depth_mm && p.height_mm <= height_mm;
+        if (!normalFit && !rotatedFit) continue;
 
         const aff = buildAffiliateUrl(p.platform_urls?.["rakuten"] ?? p.url ?? "");
         allProducts.push({

@@ -17,6 +17,7 @@ import {
   ProductWithAffiliate,
   estimateCommission,
 } from "../services/affiliate";
+import { getProductRelatedItems } from "../shared/catalog/known_products";
 
 export interface GapFeedback {
   message: string;
@@ -142,8 +143,25 @@ export async function searchProducts(rawInput: unknown): Promise<SearchResult> {
     }
   }
 
+  const productsWithHints = enrichedProducts.map((p) => {
+    const knownIdTag = p.tags?.find((t) => t.startsWith("known_id:"));
+    if (!knownIdTag) return p;
+    const knownId = knownIdTag.replace("known_id:", "");
+    const related = getProductRelatedItems(knownId);
+    if (related.length === 0) return p;
+    return {
+      ...p,
+      related_items_hint: {
+        known_product_id: knownId,
+        count: related.length,
+        summary: related.slice(0, 3).map((r) => `${r.name} (${r.relation})`).join(", "),
+        tip: `Use get_related_items with product_id="${knownId}" for full related-item chain`,
+      },
+    };
+  });
+
   return {
-    products: enrichedProducts,
+    products: productsWithHints,
     total: hitCount,
     miss: false,
     affiliate_summary: {

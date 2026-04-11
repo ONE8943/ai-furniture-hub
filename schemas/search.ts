@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const SearchParamsSchema = z.object({
+  // キーワード検索（商品名・ブランド・タグで部分一致）
+  keyword: z.string().optional(),
+
   // 寸法フィルタ（mm単位）
   width_mm_min: z.number().positive().optional(),
   width_mm_max: z.number().positive().optional(),
@@ -16,6 +19,7 @@ export const SearchParamsSchema = z.object({
   // 属性フィルタ
   color: z.string().optional(),
   category: z.string().optional(),
+  brand: z.string().optional(),
   in_stock_only: z.boolean().default(true),
 
   // インサイト収集：AIエージェントが検索する目的・背景（必須）
