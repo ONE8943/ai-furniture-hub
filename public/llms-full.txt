@@ -1,8 +1,9 @@
 # AI Furniture & Home Product Hub - Full Tool Documentation
 
-> MCP Server v5.5.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
+> MCP Server v6.0.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
 > Operator: ONE, Inc. (株式会社ONE)
-> Curated product catalog | 31 categories | 80+ brands | 13 tools + 3 prompt workflows
+> Curated product catalog | 31 categories | 80+ brands | 15 tools + 3 prompt workflows
+> NEW: Curated sets (bundles, room presets, influencer picks, hack sets), dimension-compatible replacement, AI visibility diagnosis
 
 ---
 
@@ -232,6 +233,61 @@ Popular/recommended products by category or brand, with Rakuten trending data.
 - **enhances_with**: Upgrades (casters, extra shelves, monitor arms)
 - **coordinates_with**: Complementary (cable trays, stands, baskets)
 - **fits_inside**: Storage that fits inside
+- **hack_substitute**: Budget alternative (100-yen shop substitute for expensive specialized product)
+- **alternative**: Different brand/model that serves same purpose
+
+---
+
+## Tool 14: get_curated_sets
+
+**Curated collections: bundles, room presets, influencer picks, hack sets.**
+
+Search and retrieve expert-curated product sets. Each result includes resolved product names and IDs for easy follow-up with get_product_detail or search_rakuten_products.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why this curated set is needed |
+| type | string | no | Filter: "bundle" / "room_preset" / "influencer_pick" / "hack_set" |
+| scene | string | no | Scene filter for room presets (e.g., "書斎", "キッチン", "リビング") |
+| occasion | string | no | Occasion filter for bundles (e.g., "新生活", "出産準備", "模様替え") |
+| budget_max | number | no | Maximum budget in JPY |
+| keyword | string | no | Free-text search across titles, descriptions, curator names |
+
+### Response includes:
+- **bundles**: Occasion-based product sets (e.g., "新生活スターターキット")
+- **room_presets**: IKEA-style room set proposals with layout tips
+- **influencer_picks**: YouTuber/magazine/expert recommendations with source URLs
+- **hack_sets**: Budget alternative sets using 100-yen shop items
+
+### Example call:
+```json
+{ "intent": "新生活準備", "type": "bundle", "occasion": "新生活", "budget_max": 50000 }
+```
+
+---
+
+## Tool 15: diagnose_ai_visibility
+
+**AI visibility audit for any website URL.**
+
+Diagnoses how well a website is "visible" to AI agents (GPT, Claude, Gemini, etc.) by checking llms.txt, robots.txt, structured data, OGP, dimensions format, and cross-border readiness.
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| intent | string | YES | Why this diagnosis is needed |
+| url | string | YES | Target URL to diagnose |
+
+### Response:
+- **score** (0-100): Overall AI visibility score
+- **grade** (A-F): Letter grade
+- **checks**: Array of diagnostic items (llms.txt, robots.txt, JSON-LD, OGP, dimension format, mobile)
+- **cross_border_readiness**: International AI agent readiness (English meta, structured dimensions, multi-currency, shipping info)
+- **recommendation**: Prioritized improvement suggestions
+
+### Example call:
+```json
+{ "intent": "自社ECサイトのAI可視性チェック", "url": "https://www.nitori-net.jp/ec/product/8841424/" }
+```
 
 ---
 

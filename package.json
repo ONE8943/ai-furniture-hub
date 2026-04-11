@@ -1,6 +1,6 @@
 {
   "name": "ai-furniture-hub",
-  "version": "5.5.0",
+  "version": "6.0.0",
   "description": "MCP server for AI agents: 13 tools, 300 curated products across 31 categories (furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health). Related-item chains, mm-precision search, Rakuten API live, Amazon+Rakuten affiliate engine.",
   "main": "dist/index.js",
   "bin": {

@@ -1,3 +1,102 @@
 import { HackSet } from "./types";
 
-export const HACK_SETS: HackSet[] = [];
+export const HACK_SETS: HackSet[] = [
+  {
+    id: "hack-steelrack-pp-sheet",
+    title: "スチールラック棚板を100均PPシートで代用",
+    target_product_ids: [
+      "iris-metal-rack-3tier-w90",
+      "yamazen-steel-rack-5tier",
+      "luminous-regular-5tier-w120",
+    ],
+    items: [
+      { name: "PPシート 半透明 A2サイズ", price_yen: 110, where_to_buy: "ダイソー", role: "棚板代わり（小物落下防止）" },
+      { name: "結束バンド 15cm 50本入", price_yen: 110, where_to_buy: "ダイソー", role: "PPシート固定" },
+    ],
+    total_price_yen: 220,
+    replaces: "メーカー純正 追加棚板（1枚1,500〜3,000円）",
+    savings_percent: 85,
+    how_to: "PPシートをラック棚のサイズにカッターで切り、結束バンドでワイヤーに4箇所固定。複数枚重ねると強度UP。",
+    source_url: "https://roomclip.jp/",
+    difficulty: "easy",
+    tags: ["100均", "スチールラック", "棚板"],
+  },
+  {
+    id: "hack-cable-binder-clip",
+    title: "ケーブルクリップをダブルクリップで代用",
+    target_product_ids: [
+      "nitori-desk-n-click-120",
+      "flexispot-e7-140",
+      "lowya-desk-120",
+    ],
+    items: [
+      { name: "ダブルクリップ 中 10個入", price_yen: 110, where_to_buy: "ダイソー", role: "デスク天板に挟んでケーブルホルダーに" },
+    ],
+    total_price_yen: 110,
+    replaces: "Anker ケーブルホルダー マグネット式（1,000〜2,000円）",
+    savings_percent: 90,
+    how_to: "ダブルクリップの片方のハンドルを天板の縁に挟み、もう片方のハンドルにケーブルを通す。ハンドルを外せばクリップが固定される。",
+    source_url: "https://www.youtube.com/",
+    difficulty: "easy",
+    tags: ["100均", "デスク", "配線整理"],
+  },
+  {
+    id: "hack-shoe-box-cardboard",
+    title: "シューズボックスを紙箱＋突っ張り棒で代用",
+    target_product_ids: [
+      "nitori-shoe-rack-slim-5",
+      "iris-shoe-rack-10tier",
+    ],
+    items: [
+      { name: "突っ張り棒 70〜120cm", price_yen: 110, where_to_buy: "ダイソー", role: "靴の仕切り棚" },
+      { name: "靴用除湿シート 2枚入", price_yen: 110, where_to_buy: "セリア", role: "湿気対策" },
+    ],
+    total_price_yen: 220,
+    replaces: "シューズラック追加棚板（1段500〜1,500円）",
+    savings_percent: 75,
+    how_to: "靴箱内に突っ張り棒を渡して二段にする。上段にサンダル・スニーカーの軽い靴を置く。除湿シートを各段に敷く。",
+    source_url: "https://roomclip.jp/",
+    difficulty: "easy",
+    tags: ["100均", "玄関", "靴収納"],
+  },
+  {
+    id: "hack-fridge-magnet-spice",
+    title: "冷蔵庫横スパイスラックをマグネットケースで代用",
+    target_product_ids: [
+      "tower-magnet-fridge-side",
+      "nitori-spice-rack-slim",
+    ],
+    items: [
+      { name: "マグネット付き缶ケース 3個セット", price_yen: 330, where_to_buy: "ダイソー", role: "スパイス個別収納" },
+      { name: "マグネットバー 20cm", price_yen: 110, where_to_buy: "セリア", role: "布巾・ラップ掛け" },
+    ],
+    total_price_yen: 440,
+    replaces: "山崎実業 tower マグネットスパイスラック（2,500〜4,000円）",
+    savings_percent: 85,
+    how_to: "マグネット缶を冷蔵庫側面に直接貼り付け。よく使うスパイスを入れる。マグネットバーをその下に貼ってラップ・アルミホイルを掛ける。",
+    source_url: "https://www.instagram.com/",
+    difficulty: "easy",
+    tags: ["100均", "キッチン", "マグネット", "スパイス"],
+  },
+  {
+    id: "hack-monitor-riser-books",
+    title: "モニター台を木製ブロック＋板で自作",
+    target_product_ids: [
+      "nitori-desk-n-click-120",
+      "flexispot-e7-140",
+      "yamazen-desk-rdp-9060",
+    ],
+    items: [
+      { name: "木製ブロック 角材 2本", price_yen: 220, where_to_buy: "ダイソー", role: "脚（左右）" },
+      { name: "MDF板 30×20cm", price_yen: 220, where_to_buy: "セリア", role: "天板" },
+      { name: "木工用ボンド", price_yen: 110, where_to_buy: "ダイソー", role: "接着" },
+    ],
+    total_price_yen: 550,
+    replaces: "モニター台 木製 引き出し付き（2,500〜9,000円）",
+    savings_percent: 80,
+    how_to: "角材を左右の脚に、MDF板を天板にしてボンドで接着。乾燥後にモニターを載せる。台の下にキーボードやメモ帳を収納できる。",
+    source_url: "https://www.youtube.com/",
+    difficulty: "medium",
+    tags: ["100均", "デスク", "モニター台", "DIY"],
+  },
+];

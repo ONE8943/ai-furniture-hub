@@ -48,7 +48,10 @@ if (existsSync(envPath)) {
     if (safe.includes(val)) continue;
     if (val.startsWith("Mozilla/")) continue;
 
-    if (diff.includes(val)) {
+    const addedOnly = diff.split("\n")
+      .filter((l) => l.startsWith("+") && !l.startsWith("+++"))
+      .join("\n");
+    if (addedOnly.includes(val)) {
       console.error(`${RED}[BLOCKED]${NC} .env の '${key}' の実値がコミットに含まれています`);
       blocked = true;
     }
