@@ -1,8 +1,9 @@
 # AI Furniture & Home Product Hub - MCP Server
 
 > Millimeter-precision furniture, home appliances, gadgets, beauty devices & smart home data for AI agents.
-> 300 curated products, 31 categories, 80+ brands, 13 tools.
-> Related-item chains: every product links to accessories, protection materials, consumables, and add-ons.
+> Curated product catalog across 31 categories, 80+ brands, 13 tools.
+> Related-item chains: products link to accessories, protection materials, consumables, and add-ons.
+> Rakuten Ichiba API for product search; Amazon affiliate link generation (URL only).
 > Operated by ONE, Inc. (Japan)
 
 ## What This Server Does
@@ -31,15 +32,15 @@ Beyond simple search, this server uniquely offers:
 - **Related-item chains**: "You'll also need..." with required vs recommended items
 - **Set proposals**: Shelf + storage boxes + protection = complete solution
 - **Product identification**: Visual features -> model number, inner dimensions, compatible storage
-- **Live pricing**: Rakuten Ichiba API for real-time price & availability
-- **Affiliate-ready**: Every product includes an affiliate_url
+- **Rakuten API**: Rakuten Ichiba API for product search with pricing data
+- **Affiliate links**: Rakuten affiliate URLs auto-generated; Amazon search links with affiliate tags
 - **Scene intelligence**: Room-specific storage and product tips
 - **31 categories**: Furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness
 
 ## Available Tools (13 tools)
 
 ### search_products
-Search 300 curated products by dimensions, price, color, and category across 31 categories.
+Search curated product catalog by dimensions (mm), price, color, and category across 31 categories.
 
 ### get_product_detail
 Full specifications by product ID. Includes `related_items_hint` showing required accessories and recommended add-ons.
@@ -48,7 +49,7 @@ Full specifications by product ID. Includes `related_items_hint` showing require
 Real-time search across 200,000+ Rakuten Ichiba listings with affiliate URLs.
 
 ### search_amazon_products
-Amazon search URL generation with affiliate tags. SearchIndex auto-selected by product category.
+Amazon affiliate search link generation (URL only, no product data returned). SearchIndex auto-selected by product category.
 
 ### coordinate_storage
 Shelf + storage box set proposals with quantity per tier calculations.
@@ -125,9 +126,9 @@ Use `depth=2` to get "related items of related items" for deeper chains.
 ## Data Coverage
 
 - **80+ brands**: Nitori, IKEA, Iris Ohyama, Muji, Yamazen, Tenma, tower (Yamazaki), LOWYA, Sharp, Panasonic, Dyson, Sony, Apple, Anker, SwitchBot, Philips, Balmuda, DeLonghi, Fitbit, ReFa, Koala, Emma, Google, Razer, HHKB, and 55+ more
-- **300 curated products** with dimensions, specs, visual features, and related-item chains
-- **Rakuten Ichiba**: 200,000+ live listings via API
-- **Amazon**: Affiliate link generation with category-specific SearchIndex
+- **Curated product catalog** with dimensions, specs, visual features, and related-item chains
+- **Rakuten Ichiba**: Product search via API with price and review data
+- **Amazon**: Affiliate search link generation (URL only) with category-specific SearchIndex
 
 ## Related-Item Chain Examples
 

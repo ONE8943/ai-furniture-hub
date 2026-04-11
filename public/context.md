@@ -4,7 +4,7 @@
 
 ## Project: @one-inc/ai-furniture-hub v5.2.0
 
-MCP server for AI agents: 13 tools, 300 curated products, 31 categories, 80+ brands. mm-precision search, shelf+storage coordination, related-item chains, category discovery, popular rankings. Rakuten API live, Amazon + Rakuten affiliate engine. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
+MCP server for AI agents: 13 tools, curated product catalog, 31 categories, 80+ brands. mm-precision dimension search, shelf+storage coordination, related-item chains, category discovery, popular rankings. Rakuten Ichiba API for product search, Amazon affiliate link generation. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ MCP server for AI agents: 13 tools, 300 curated products, 31 categories, 80+ bra
 - Every tool requires `intent` parameter
 - Always return `affiliate_url` to users
 - External input validated with Zod
-- No personal data collection (privacy.md)
+- No intentional personal data collection; intent field may contain user input (see privacy.md)
 - Logs: analytics.jsonl, conversions.jsonl, requirement_gaps.jsonl
 
 ## Tools

@@ -16,7 +16,7 @@
     "@type": "SoftwareApplication",
     "name": "AI Furniture & Home Product Hub",
     "alternateName": "ai-furniture-hub",
-    "description": "AIエージェント（ChatGPT, Claude, Perplexity等）が直接接続し、300商品・31カテゴリ・80+ブランドの家具・家電データをmm単位で検索できるMCPサーバー。関連商品チェーン機能で1検索→3~5商品表示を実現。",
+    "description": "AIエージェント（ChatGPT, Claude, Perplexity等）が直接接続できるMCPサーバー。家具・家電・ガジェット等のカタログデータをmm単位で構造化し、寸法フィルタ検索・関連商品チェーン・棚と収納のコーディネート等の機能を提供。楽天市場APIによるリアルタイム商品検索とAmazon検索リンク生成に対応。",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Cross-platform",
     "softwareVersion": "5.2.0",
@@ -31,16 +31,9 @@
       "price": "0",
       "priceCurrency": "JPY"
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "31",
-      "bestRating": "5"
-    },
     "url": "https://github.com/ONE8943/ai-furniture-hub",
     "downloadUrl": "https://www.npmjs.com/package/ai-furniture-hub",
-    "screenshot": "https://ai-furniture-hub.onrender.com/llms.txt",
-    "featureList": "mm精度寸法検索, シンデレラフィット判定, 関連商品チェーン, 棚+収納コーディネート, 空間フィット提案, 商品特定, 比較, 後継品検索, 部屋レイアウト, カテゴリ一覧, 人気商品, 楽天API連携, Amazon+楽天アフィリエイト"
+    "featureList": "mm精度寸法検索, シンデレラフィット判定, 関連商品チェーン, 棚+収納コーディネート, 空間フィット提案, 商品特定, 比較, 後継品検索, 部屋レイアウト, カテゴリ一覧, 人気商品, 楽天市場検索, Amazonアフィリエイトリンク生成"
   }
   </script>
 
@@ -55,7 +48,7 @@
         "name": "AI Furniture Hubとは何ですか？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "AI Furniture Hubは、ChatGPT・Claude・Perplexity等のAIエージェントが直接接続できるMCP（Model Context Protocol）サーバーです。300の厳選商品を31カテゴリ・80以上のブランドから収録し、全寸法をmm単位で構造化。AIが「この棚はこの隙間に入るか」を論理的に判定できます。2026年4月時点で13のツールを提供しています。"
+          "text": "AI Furniture Hubは、ChatGPT・Claude・Perplexity等のAIエージェントが直接接続できるMCP（Model Context Protocol）サーバーです。家具・家電・ガジェット等を31カテゴリ・80以上のブランドから収録し、全寸法をmm単位で構造化。AIが「この棚はこの隙間に入るか」を論理的に判定できます。2026年4月時点で13のツールを提供しています。"
         }
       },
       {
@@ -79,7 +72,7 @@
         "name": "関連商品チェーンとは何ですか？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "1つの商品から必需品・保護材・拡張パーツ・組み合わせ商品を自動で辿る機能です。例：空気清浄機→交換用HEPAフィルタ（必需）→キャスター台→湿度計。get_related_itemsツールでdepth=2を指定すると「関連商品の関連商品」まで展開できます。300商品で850以上の関連リンクを収録しており、1検索で平均3~5商品のビューが発生します。"
+          "text": "1つの商品から必需品・保護材・拡張パーツ・組み合わせ商品を自動で辿る機能です。例：空気清浄機→交換用HEPAフィルタ（必需）→キャスター台→湿度計。get_related_itemsツールでdepth=2を指定すると「関連商品の関連商品」まで展開できます。カタログ内の多くの商品に関連商品データが設定されています。"
         }
       },
       {
@@ -111,7 +104,7 @@
         "name": "楽天APIのリアルタイム検索は何ができますか？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "search_rakuten_productsツールで楽天市場の20万件以上の商品をリアルタイムに検索できます。キーワード・価格帯・ソート順（標準、価格昇順/降順、レビュー数、レビュー評価、新着順）を指定でき、自動でカテゴリ分類と寸法抽出を行います。検索結果にはアフィリエイトURLが自動付与されます。"
+          "text": "search_rakuten_productsツールで楽天市場の商品をキーワード検索できます。価格帯・ソート順（標準、価格昇順/降順、レビュー数、レビュー評価、新着順）を指定でき、自動でカテゴリ分類と寸法抽出を行います。検索結果にはアフィリエイトURLが自動付与されます。楽天APIの利用にはAPIキーの設定が必要です。"
         }
       }
     ]
@@ -181,8 +174,9 @@
           <span class="accent-gradient">AIによる最適家具選定</span>
         </h1>
         <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-10 max-w-2xl fade-in fade-in-delay-2">
-          AIエージェントが設置スペースを1mm単位で分析し、
-          あなたの暮らしに完璧にフィットする家具を論理的に提案します。
+          AIエージェントがmm単位の構造化データで設置スペースを分析し、
+          寸法フィット・関連商品チェーン・収納コーディネートで
+          家具選びをサポートします。
         </p>
         <div class="flex flex-wrap gap-4 fade-in fade-in-delay-3">
           <a href="#features" class="inline-block px-8 py-4 rounded-lg font-bold text-white glow" style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
@@ -200,11 +194,7 @@
 
   <!-- ======== Stats Bar ======== -->
   <section class="bg-white border-b">
-    <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6 text-center">
-      <div>
-        <p class="text-3xl font-extrabold text-gray-900 stat-number">300</p>
-        <p class="text-sm text-gray-500 mt-1">厳選商品</p>
-      </div>
+    <div class="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
       <div>
         <p class="text-3xl font-extrabold text-gray-900 stat-number">31</p>
         <p class="text-sm text-gray-500 mt-1">カテゴリ</p>
@@ -216,10 +206,6 @@
       <div>
         <p class="text-3xl font-extrabold text-gray-900 stat-number">13</p>
         <p class="text-sm text-gray-500 mt-1">AIツール</p>
-      </div>
-      <div>
-        <p class="text-3xl font-extrabold text-gray-900 stat-number">850+</p>
-        <p class="text-sm text-gray-500 mt-1">関連リンク</p>
       </div>
       <div>
         <p class="text-3xl font-extrabold text-gray-900 stat-number">1mm</p>
@@ -331,8 +317,8 @@
                 <span class="text-red-600 font-bold text-sm">03</span>
               </div>
               <div>
-                <h4 class="font-bold text-gray-900 mb-1">リアルタイム在庫連携</h4>
-                <p class="text-gray-600 text-sm leading-relaxed">Amazon、楽天、ニトリ等の主要ECサイトと連携し、最新の価格・在庫情報を提供します。</p>
+                <h4 class="font-bold text-gray-900 mb-1">楽天市場API連携 + Amazon検索リンク</h4>
+                <p class="text-gray-600 text-sm leading-relaxed">楽天市場APIで商品をリアルタイムに検索し、価格・レビュー情報を取得。Amazonはアフィリエイト検索リンクを自動生成します。</p>
               </div>
             </div>
             <div class="flex items-start space-x-4">
@@ -460,7 +446,7 @@
             <span>AI Furniture Hubとは何ですか？</span>
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <p class="mt-4 text-gray-600 leading-relaxed">AI Furniture Hubは、ChatGPT・Claude・Perplexity等のAIエージェントが直接接続できるMCP（Model Context Protocol）サーバーです。300の厳選商品を31カテゴリ・80以上のブランドから収録し、全寸法をmm単位で構造化。AIが「この棚はこの隙間に入るか」を論理的に判定できます。2026年4月時点で13のツールを提供しています。</p>
+          <p class="mt-4 text-gray-600 leading-relaxed">AI Furniture Hubは、ChatGPT・Claude・Perplexity等のAIエージェントが直接接続できるMCP（Model Context Protocol）サーバーです。家具・家電・ガジェット等を31カテゴリ・80以上のブランドから収録し、全寸法をmm単位で構造化。AIが「この棚はこの隙間に入るか」を論理的に判定できます。2026年4月時点で13のツールを提供しています。</p>
         </details>
 
         <details class="bg-white rounded-xl border shadow-sm p-6 group">
@@ -484,7 +470,7 @@
             <span>関連商品チェーンとは何ですか？</span>
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <p class="mt-4 text-gray-600 leading-relaxed">1つの商品から必需品・保護材・拡張パーツ・組み合わせ商品を自動で辿る機能です。例：空気清浄機→交換用HEPAフィルタ（必需）→キャスター台→湿度計。get_related_itemsツールでdepth=2を指定すると「関連商品の関連商品」まで展開。300商品で850以上の関連リンクを収録しており、1検索で平均3~5商品のビューが発生します。</p>
+          <p class="mt-4 text-gray-600 leading-relaxed">1つの商品から必需品・保護材・拡張パーツ・組み合わせ商品を自動で辿る機能です。例：空気清浄機→交換用HEPAフィルタ（必需）→キャスター台→湿度計。get_related_itemsツールでdepth=2を指定すると「関連商品の関連商品」まで展開。カタログ内の多くの商品に関連商品データが設定されています。</p>
         </details>
 
         <details class="bg-white rounded-xl border shadow-sm p-6 group">
@@ -523,7 +509,7 @@
             <span>楽天APIのリアルタイム検索は何ができますか？</span>
             <svg class="w-5 h-5 text-gray-400 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
           </summary>
-          <p class="mt-4 text-gray-600 leading-relaxed">search_rakuten_productsツールで楽天市場の20万件以上の商品をリアルタイムに検索できます。キーワード・価格帯・ソート順を指定でき、自動でカテゴリ分類と寸法抽出を行います。検索結果にはアフィリエイトURLが自動付与されます。</p>
+          <p class="mt-4 text-gray-600 leading-relaxed">search_rakuten_productsツールで楽天市場の商品をキーワード検索できます。価格帯・ソート順を指定でき、自動でカテゴリ分類と寸法抽出を行います。検索結果にはアフィリエイトURLが自動付与されます。楽天APIの利用にはAPIキーの設定が必要です。</p>
         </details>
       </div>
     </div>
@@ -532,10 +518,10 @@
   <!-- ======== CTA ======== -->
   <section class="gradient-hero pattern-bg text-white py-20 md:py-28">
     <div class="max-w-4xl mx-auto px-6 text-center">
-      <h2 class="text-3xl md:text-4xl font-extrabold mb-6">AIが変える、家具選びの未来</h2>
+      <h2 class="text-3xl md:text-4xl font-extrabold mb-6">AIエージェントと家具データをつなぐ</h2>
       <p class="text-gray-300 text-lg mb-10 max-w-2xl mx-auto leading-relaxed">
         「あと数センチ足りない」「このスペースに合う棚がない」<br>
-        そんな悩みを、AIの力で過去のものにします。
+        そんな家具選びの課題を、構造化データとAIの組み合わせで解決します。
       </p>
       <a href="#features" class="inline-block px-10 py-4 rounded-lg font-bold text-white text-lg glow" style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
         サービスを詳しく見る
@@ -577,24 +563,57 @@
       </div>
 
       <div class="border-t border-gray-800 pt-8">
-        <!-- Amazon アソシエイト開示（審査基準準拠） -->
+        <!-- Amazon アソシエイト開示 -->
         <div id="disclosure" class="bg-gray-800 rounded-lg p-5 mb-6">
           <h4 class="text-white text-sm font-semibold mb-2">広告・アフィリエイトについて</h4>
-          <p class="text-xs leading-relaxed">
-            本サイト「AI Furniture Hub」は、Amazon.co.jpを宣伝しリンクすることによってサイトが紹介料を獲得できる手段を提供することを目的に設定されたアフィリエイトプログラムである、Amazonアソシエイト・プログラムの参加者です。
-            商品のリンクにはアフィリエイトリンクが含まれており、リンク経由で商品を購入された場合、当サイトが紹介料を受け取ることがあります。
-            なお、これによりお客様がお支払いになる商品の価格に影響はありません。
-          </p>
+          <div class="text-xs leading-relaxed space-y-3">
+            <p>
+              <strong class="text-gray-300">Amazonアソシエイト：</strong>
+              本サイト「AI Furniture Hub」は、Amazon.co.jpを宣伝しリンクすることによってサイトが紹介料を獲得できる手段を提供することを目的に設定されたアフィリエイトプログラムである、Amazonアソシエイト・プログラムの参加者です。
+              Amazon検索リンクにはアフィリエイトタグが含まれており、リンク経由で商品をご購入いただいた場合、当サイトが紹介料を受け取ることがあります。
+              なお、本サービスのAmazon機能は検索リンクの生成であり、Amazon商品の価格・在庫情報を直接取得するものではありません。
+              最新の価格・在庫状況はAmazon.co.jpの商品ページでご確認ください。
+            </p>
+            <p>
+              <strong class="text-gray-300">楽天アフィリエイト：</strong>
+              本サイトは楽天アフィリエイトプログラムに参加しています。
+              楽天市場APIを利用した商品検索結果にはアフィリエイトリンクが含まれており、リンク経由でのご購入により当サイトが報酬を受け取る場合があります。
+              楽天市場の商品情報はAPIを通じて取得していますが、価格・在庫は変動する可能性があります。
+            </p>
+            <p>
+              アフィリエイトリンクの利用によりお客様がお支払いになる商品の価格に影響はありません。
+            </p>
+          </div>
         </div>
 
         <!-- プライバシーポリシー -->
         <div id="privacy" class="bg-gray-800 rounded-lg p-5 mb-6">
           <h4 class="text-white text-sm font-semibold mb-2">プライバシーポリシー</h4>
-          <p class="text-xs leading-relaxed">
-            当サイトでは、サービスの利用状況を把握し改善するために、検索条件やご利用目的の統計データ（個人を特定しない匿名化されたデータ）を収集する場合があります。
-            個人を特定する情報（氏名、住所、メールアドレス等）は一切収集・保存いたしません。
-            収集されたデータは、サービス品質の向上および市場分析の目的にのみ使用されます。
-          </p>
+          <div class="text-xs leading-relaxed space-y-3">
+            <p>
+              <strong class="text-gray-300">収集するデータ：</strong>
+              当サービスでは、品質向上と市場分析を目的として、以下のデータを記録する場合があります。
+            </p>
+            <ul class="list-disc list-inside ml-2 space-y-1">
+              <li>ツール名・検索パラメータ（寸法・価格帯・カテゴリ等の検索条件）</li>
+              <li>利用目的（intent）: AIエージェントから送信される自然言語の利用目的テキスト</li>
+              <li>アフィリエイトリンク生成ログ（生成した商品名・カテゴリ）</li>
+              <li>需要ギャップ検出ログ（検索にヒットしなかった条件の傾向）</li>
+            </ul>
+            <p>
+              <strong class="text-gray-300">個人情報について：</strong>
+              当サービスは氏名・住所・メールアドレス等の個人情報を意図的に収集するフィールドを持ちません。
+              ただし、利用目的（intent）はAIエージェント経由のユーザー入力を含む場合があり、意図せず個人情報が含まれる可能性があります。
+              そのような情報がログに混入した場合、発見次第削除します。
+            </p>
+            <p>
+              <strong class="text-gray-300">ホスティング：</strong>
+              本サービスはRender.com上でホスティングされており、インフラレベルでのアクセスログ（IPアドレス等）はホスティング事業者のプライバシーポリシーに準じます。
+            </p>
+            <p>
+              収集されたデータは、サービス品質の向上および市場分析の目的にのみ使用されます。
+            </p>
+          </div>
         </div>
 
         <div class="text-center text-xs">

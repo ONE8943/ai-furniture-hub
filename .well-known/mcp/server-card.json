@@ -1,6 +1,6 @@
 {
   "name": "ai-furniture-hub",
-  "description": "AI agent MCP server for furniture, home appliances, PC peripherals, smart home, beauty devices, gadgets & more. 13 tools, 300 curated products across 31 categories. Related-item chains: every product links to required accessories, protection materials, consumables, and add-ons. 1 search = 3-5 views. Rakuten API live, Amazon + Rakuten affiliate engine.",
+  "description": "AI agent MCP server for furniture, home appliances, PC peripherals, smart home, beauty devices, gadgets & more. 13 tools across 31 categories. Related-item chains link products to accessories, protection materials, and add-ons. Rakuten Ichiba API for product search, Amazon affiliate link generation.",
   "version": "5.2.0",
   "homepage": "https://github.com/ONE8943/ai-furniture-hub",
   "deployment": {
@@ -8,10 +8,10 @@
     "smithery": "https://smithery.ai/server/j2c214c/ai-furniture-hub"
   },
   "tools": [
-    { "name": "search_products", "description": "Search 300 curated products by dimensions (mm), price, color, category. 31 categories from furniture to gadgets." },
+    { "name": "search_products", "description": "Search curated product catalog by dimensions (mm), price, color, category. 31 categories from furniture to gadgets." },
     { "name": "get_product_detail", "description": "Full specs by product ID, with related-item hints for accessories and add-ons." },
     { "name": "search_rakuten_products", "description": "Real-time Rakuten Ichiba search with affiliate URLs." },
-    { "name": "search_amazon_products", "description": "Amazon affiliate URL generation with category-specific SearchIndex." },
+    { "name": "search_amazon_products", "description": "Amazon affiliate search link generation (URL only, no product data). SearchIndex auto-selected." },
     { "name": "coordinate_storage", "description": "Shelf + storage box set proposals with quantity per tier." },
     { "name": "suggest_by_space", "description": "Space dimensions -> products that fit, grouped by category." },
     { "name": "identify_product", "description": "Photo features -> model number, specs, compatible storage, related items." },
@@ -20,7 +20,7 @@
     { "name": "calc_room_layout", "description": "Floor-plan rectangle packing simulation with recommended products." },
     { "name": "list_categories", "description": "Browse all 31 product categories with counts and sample products." },
     { "name": "get_popular_products", "description": "Popular/recommended products by category or brand, with Rakuten trending." },
-    { "name": "get_related_items", "description": "Related-item chain: required accessories, protection materials, consumables, recommended add-ons. 1 product -> 3-5 related items with affiliate URLs. depth=2 for chains of chains." }
+    { "name": "get_related_items", "description": "Related-item chain: required accessories, protection materials, consumables, recommended add-ons with affiliate URLs. depth=2 for chains of chains." }
   ],
   "categories": [
     "シェルフ・棚", "カラーボックス", "収納ケース", "ワゴン・可動収納",
@@ -34,9 +34,8 @@
     "健康・フィットネス"
   ],
   "stats": {
-    "products": 300,
     "categories": 31,
-    "brands": 80,
-    "related_items": 850
+    "brands_approx": 80,
+    "tools": 13
   }
 }

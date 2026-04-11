@@ -2,14 +2,14 @@
 
 > MCP Server v5.2.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
 > Operator: ONE, Inc. (株式会社ONE)
-> 300 curated products | 31 categories | 80+ brands | 13 tools
+> Curated product catalog | 31 categories | 80+ brands | 13 tools
 
 ---
 
 ## Tool 1: search_products
 
 Search the curated product database with millimeter-precision dimension filters.
-Covers 300 products across 31 categories: furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health & fitness.
+Covers products across 31 categories: furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health & fitness.
 
 ### Parameters
 
@@ -92,7 +92,7 @@ Real-time search across Rakuten Ichiba marketplace with auto-categorization and 
 
 ## Tool 4: search_amazon_products
 
-Generates Amazon search URLs with affiliate tags. SearchIndex automatically selected by product category.
+Generates Amazon affiliate search link URLs. Does NOT return product data — returns a URL the user can open in their browser. SearchIndex automatically selected by product category.
 
 ### Parameters
 
