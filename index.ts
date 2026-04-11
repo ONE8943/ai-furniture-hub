@@ -6,7 +6,7 @@ import { refreshProductStore } from "./data/product_store";
 
 const server = new McpServer({
   name: "furniture-hub",
-  version: "5.2.0",
+  version: "5.3.0",
 });
 
 registerAllTools(server);
