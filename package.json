@@ -1,7 +1,7 @@
 {
   "name": "ai-furniture-hub",
-  "version": "6.0.0",
-  "description": "MCP server for AI agents: 13 tools, 300 curated products across 31 categories (furniture, home appliances, PC peripherals, smart home, beauty, kitchen, gadgets, health). Related-item chains, mm-precision search, Rakuten API live, Amazon+Rakuten affiliate engine.",
+  "version": "6.1.0",
+  "description": "MCP server for AI agents: 15 tools, 300+ curated products, 31 categories, 80+ brands. mm-precision furniture search, curated sets (bundles, room presets, influencer picks), replacement finder with fit_score, AI visibility diagnosis, Rakuten live API, OpenAPI schema. Japan-focused home & lifestyle hub.",
   "main": "dist/index.js",
   "bin": {
     "ai-furniture-hub": "dist/index.js"
@@ -44,14 +44,14 @@
     "enrich:stats": "ts-node scripts/review_enrichment.ts --stats",
     "enrich:sample": "ts-node scripts/review_enrichment.ts --sample"
   },
-  "keywords": ["mcp", "furniture", "ai", "agent", "rakuten", "amazon", "storage", "dimensions", "affiliate", "smart-home", "appliances", "beauty", "gadgets", "llms-txt", "model-context-protocol"],
+  "keywords": ["mcp", "mcp-server", "furniture", "ai", "ai-agent", "agent", "rakuten", "amazon", "storage", "dimensions", "affiliate", "smart-home", "appliances", "beauty", "gadgets", "llms-txt", "model-context-protocol", "product-search", "japan", "e-commerce", "openapi", "curated"],
   "author": "ONE, Inc.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/ONE8943/ai-furniture-hub"
   },
-  "homepage": "https://github.com/ONE8943/ai-furniture-hub#readme",
+  "homepage": "https://ai-furniture-hub.onrender.com",
   "mcpName": "io.github.one8943/ai-furniture-hub",
   "type": "commonjs",
   "dependencies": {
