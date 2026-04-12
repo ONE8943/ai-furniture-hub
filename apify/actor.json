@@ -1,0 +1,20 @@
+{
+  "actorSpecification": 1,
+  "name": "furniture-mcp-hub",
+  "title": "Furniture MCP Hub - AI Agent Product Search",
+  "description": "家具・収納のAIエージェント向けMCPハブ。商品検索、後継品検索、キュレーション提案、AI可視性診断を提供。Furniture & storage MCP hub for AI agents.",
+  "version": "1.0.0",
+  "buildTag": "latest",
+  "env": {
+    "DEPLOYMENT_MODE": "public",
+    "ATTRIBUTION_SOURCE": "apify"
+  },
+  "dockerfile": "./Dockerfile",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Search Results",
+      "description": "Tool execution results with attribution metadata"
+    }
+  }
+}

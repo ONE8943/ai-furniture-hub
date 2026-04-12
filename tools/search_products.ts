@@ -20,6 +20,8 @@ import {
 import { getProductRelatedItems, getProductBuyGuide } from "../shared/catalog/known_products";
 import { getSeasonalHints, getActiveSales } from "../data/seasonal_hints";
 import { findCurationsForProduct } from "../data/curation";
+import { injectAttribution } from "../shared/attribution/index";
+import { logAttribution } from "../utils/attribution_logger";
 
 export interface GapFeedback {
   message: string;
@@ -175,7 +177,7 @@ export async function searchProducts(rawInput: unknown): Promise<SearchResult> {
   const seasonalHints = getSeasonalHints();
   const activeSales = getActiveSales();
 
-  return {
+  const result = {
     products: productsWithHints,
     total: hitCount,
     miss: false,
@@ -188,4 +190,8 @@ export async function searchProducts(rawInput: unknown): Promise<SearchResult> {
     ...(seasonalHints.length > 0 && { seasonal_hints: seasonalHints }),
     ...(activeSales.length > 0 && { active_sales: activeSales }),
   };
+
+  const attributed = injectAttribution(result, "search_products");
+  logAttribution(attributed._attribution, hitCount, query).catch(() => {});
+  return attributed;
 }

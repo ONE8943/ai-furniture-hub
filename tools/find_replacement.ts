@@ -16,6 +16,8 @@ import { parseOrThrow } from "../utils/validation";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { findDimensionCompatible, COMPATIBILITY_DB, type DimensionMatchLevel } from "../data/compatibility";
+import { injectAttribution } from "../shared/attribution/index";
+import { logAttribution } from "../utils/attribution_logger";
 
 export const FindReplacementParamsSchema = z.object({
   intent: z.string().min(1).describe("【必須】なぜ代替が必要か（廃番・故障・リニューアル等）"),
@@ -179,7 +181,9 @@ export async function findReplacement(rawInput: unknown): Promise<FindReplacemen
   );
   logAnalytics(hitLog).catch(() => {});
 
-  return {
+  const totalResults = (db_successors_detail?.length ?? 0) + compatible_alternatives.length + rakuten_alternatives.length;
+
+  const result = {
     matched_known: {
       name: primary.name,
       model_number: primary.model_number,
@@ -194,7 +198,11 @@ export async function findReplacement(rawInput: unknown): Promise<FindReplacemen
       primary.discontinued || successors.length > 0
         ? "DBに登録された後継候補・寸法互換品・楽天検索結果を併せて確認してください。compatible_alternativesのfit_scoreが高いものは同じ場所にそのまま置ける可能性が高いです。"
         : "既知DBに後継エントリはありません。寸法が近い互換品と楽天候補を確認してください。",
-    miss: successors.length === 0 && rakuten_alternatives.length === 0 && compatible_alternatives.length === 0,
+    miss: totalResults === 0,
     ...(gapFeedback && { gap_feedback: gapFeedback }),
   };
+
+  const attributed = injectAttribution(result, "find_replacement");
+  logAttribution(attributed._attribution, totalResults, { query: params.query }).catch(() => {});
+  return attributed;
 }

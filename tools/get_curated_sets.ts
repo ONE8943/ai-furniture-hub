@@ -22,6 +22,8 @@ import type {
 } from "../data/curation";
 import { KNOWN_PRODUCTS_DB } from "../shared/catalog/known_products";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
+import { injectAttribution } from "../shared/attribution/index";
+import { logAttribution } from "../utils/attribution_logger";
 
 export const GET_CURATED_SETS_SCHEMA = {
   intent: z.string().min(1).describe("【必須】なぜこの提案が必要か"),
@@ -106,7 +108,7 @@ export async function getCuratedSets(rawInput: unknown): Promise<CuratedSetsResu
     logAnalytics(hitLog).catch(() => {});
   }
 
-  return {
+  const result = {
     bundles: bundles.map((b) => ({ ...b, products: resolveProductNames(b.product_ids) })),
     room_presets: presets.map((r) => ({ ...r, products: resolveProductNames(r.product_ids) })),
     influencer_picks: picks.map((p) => ({ ...p, products: resolveProductNames(p.product_ids) })),
@@ -117,4 +119,8 @@ export async function getCuratedSets(rawInput: unknown): Promise<CuratedSetsResu
     total_results: total,
     miss: total === 0,
   };
+
+  const attributed = injectAttribution(result, "get_curated_sets");
+  logAttribution(attributed._attribution, total, params).catch(() => {});
+  return attributed;
 }

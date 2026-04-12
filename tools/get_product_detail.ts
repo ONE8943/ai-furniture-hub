@@ -8,6 +8,8 @@ import { RequirementGap } from "../schemas/requirement_gap";
 import { parseOrThrow } from "../utils/validation";
 import { findMatchingProducts, getProductRelatedItems, RelatedItem } from "../shared/catalog/known_products";
 import { findCurationsForProduct } from "../data/curation";
+import { injectAttribution } from "../shared/attribution/index";
+import { logAttribution } from "../utils/attribution_logger";
 
 // -----------------------------------------------------------------------
 // 入力スキーマ
@@ -238,7 +240,7 @@ export async function getProductDetail(
     note: "詳細は get_related_items ツールで取得可能（楽天検索結果付き）",
   } : undefined;
 
-  return {
+  const result = {
     product: enrichedProduct,
     found: true,
     affiliate_url: enrichedProduct.affiliate_url,
@@ -252,4 +254,8 @@ export async function getProductDetail(
       source: "product_store",
     },
   };
+
+  const attributed = injectAttribution(result, "get_product_detail");
+  logAttribution(attributed._attribution, 1, { id: params.id }).catch(() => {});
+  return attributed;
 }

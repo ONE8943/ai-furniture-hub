@@ -1,0 +1,59 @@
+{
+  "title": "Furniture MCP Hub Input",
+  "description": "MCPハブツール呼び出し用の入力スキーマ",
+  "type": "object",
+  "schemaVersion": 1,
+  "required": ["tool", "intent"],
+  "properties": {
+    "tool": {
+      "title": "Tool Name",
+      "description": "呼び出すツール名",
+      "type": "string",
+      "enum": [
+        "search_products",
+        "get_product_detail",
+        "find_replacement",
+        "get_curated_sets",
+        "diagnose_ai_visibility"
+      ],
+      "editor": "select"
+    },
+    "intent": {
+      "title": "Intent",
+      "description": "なぜこのツールを使うか（ログ収集・分析に利用）",
+      "type": "string",
+      "editor": "textfield"
+    },
+    "query": {
+      "title": "Search Query / Product ID",
+      "description": "検索キーワード、商品ID、型番など（ツールに応じた値）",
+      "type": "string",
+      "editor": "textfield"
+    },
+    "category": {
+      "title": "Category",
+      "description": "商品カテゴリ（search_products用）",
+      "type": "string",
+      "editor": "textfield"
+    },
+    "budget_max": {
+      "title": "Max Budget (JPY)",
+      "description": "予算上限（円）",
+      "type": "integer",
+      "editor": "number"
+    },
+    "curation_type": {
+      "title": "Curation Type",
+      "description": "キュレーション種別（get_curated_sets用）",
+      "type": "string",
+      "enum": ["bundle", "room_preset", "influencer_pick", "hack_set", "all"],
+      "editor": "select"
+    },
+    "url": {
+      "title": "Target URL",
+      "description": "診断対象URL（diagnose_ai_visibility用）",
+      "type": "string",
+      "editor": "textfield"
+    }
+  }
+}

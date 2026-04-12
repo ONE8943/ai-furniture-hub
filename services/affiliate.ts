@@ -17,6 +17,11 @@ import {
 // -----------------------------------------------------------------------
 // 環境変数（.env から読み込み）
 // -----------------------------------------------------------------------
+
+/** public = Apify/RapidAPI等の公開版（アフィリエイト無効）, private = 自前運用（従来通り） */
+export const DEPLOYMENT_MODE: "private" | "public" =
+  (process.env["DEPLOYMENT_MODE"] as "private" | "public") ?? "private";
+
 const AFFILIATE_IDS: Record<PlatformKey, string> = {
   nitori: process.env["AFFILIATE_ID_NITORI"] ?? "",
   rakuten: process.env["AFFILIATE_ID_RAKUTEN"] ?? "",
@@ -48,9 +53,15 @@ export interface AffiliateResult {
 
 export function buildAffiliateUrl(baseUrl: string): AffiliateResult {
   const platform = detectPlatform(baseUrl);
+
+  // 公開モード → アフィリエイトタグを一切含めず素URLを返す
+  if (DEPLOYMENT_MODE === "public") {
+    return { affiliate_url: baseUrl, platform };
+  }
+
   const affiliateId = AFFILIATE_IDS[platform];
 
-  // アフィリエイトIDが未設定 → 元URLをそのまま返す（不正なIDでリンク生成しない）
+  // アフィリエイトIDが未設定 → 元URLをそのまま返す
   if (!affiliateId) {
     return { affiliate_url: baseUrl, platform };
   }
