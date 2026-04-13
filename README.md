@@ -7,6 +7,7 @@
 [![CI](https://github.com/ONE8943/ai-furniture-hub/actions/workflows/ci.yml/badge.svg)](https://github.com/ONE8943/ai-furniture-hub/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/ai-furniture-hub)](https://www.npmjs.com/package/ai-furniture-hub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![SafeSkill 84/100](https://img.shields.io/badge/SafeSkill-84%2F100_Passes%20with%20Notes-yellow)](https://safeskill.dev/scan/one8943-ai-furniture-hub)
 
 ## Why This Exists
 
