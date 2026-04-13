@@ -1,7 +1,7 @@
 {
   "name": "ai-furniture-hub",
   "description": "AI agent MCP server for furniture, home appliances, smart home, beauty devices, gadgets & more. 15 tools + 3 prompt workflows across 31 categories. mm-precision search, curated sets (bundles, room presets, influencer picks, hack sets), dimension-compatible replacement finder with fit_score, AI visibility diagnosis (AIO), OpenAPI 3.1 schema, attribution tracking. Rakuten live API + Amazon affiliate.",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "homepage": "https://ai-furniture-hub.onrender.com",
   "repository": "https://github.com/ONE8943/ai-furniture-hub",
   "deployment": {
@@ -43,8 +43,8 @@
   ],
   "stats": {
     "categories": 31,
-    "brands_approx": 80,
-    "products_approx": 300,
+    "brands_approx": 90,
+    "products_approx": 355,
     "tools": 15,
     "prompts": 3
   },

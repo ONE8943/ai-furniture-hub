@@ -7796,7 +7796,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "dyson-am07-tower-fan",
-    brand: "Dyson",
+    brand: "ダイソン",
     series: "",
     model_number: "",
     name: "Dyson Cool AM07 タワーファン",
@@ -7825,7 +7825,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "hitachi-vacuum-pvj100l",
-    brand: "Hitachi",
+    brand: "日立",
     series: "",
     model_number: "",
     name: "日立 パワかるサイクロン PV-J100L",
@@ -7854,7 +7854,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "panasonic-ceiling-light-hh-ce1295",
-    brand: "Panasonic",
+    brand: "パナソニック",
     series: "",
     model_number: "",
     name: "パナソニック LEDシーリングライト HH-CE1295A",
@@ -7883,7 +7883,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-dining-table-extend-vd-160",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ 伸長式ダイニングテーブル VD 160",
@@ -7912,7 +7912,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "muji-solid-oak-table-180",
-    brand: "Muji",
+    brand: "無印良品",
     series: "",
     model_number: "",
     name: "無印良品 オーク材テーブル 幅180",
@@ -7970,7 +7970,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "muji-unit-sofa-body-1p",
-    brand: "Muji",
+    brand: "無印良品",
     series: "",
     model_number: "",
     name: "無印良品 ユニットソファ 本体 1人掛け",
@@ -7999,7 +7999,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "yamazen-recliner-hez01",
-    brand: "Yamazen",
+    brand: "山善",
     series: "",
     model_number: "",
     name: "山善 リクライニングチェア HEZ-01",
@@ -8057,7 +8057,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-curtain-thermal-eco-150",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ サーモアイコ 断熱カーテン 幅150",
@@ -8115,7 +8115,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-vertical-blind-tb-180",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ バーチカルブラインド 幅180",
@@ -8144,7 +8144,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-laundry-basket-hamper-45l",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ ランドリーバスケット ハンパー 45L",
@@ -8202,7 +8202,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "muji-pp-laundry-basket-l",
-    brand: "Muji",
+    brand: "無印良品",
     series: "",
     model_number: "",
     name: "無印良品 ポリプロピレン洗濯かご 大",
@@ -8231,7 +8231,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "tenma-fits-plus-66",
-    brand: "Tenma",
+    brand: "天馬",
     series: "",
     model_number: "",
     name: "天馬 FITS フィッツプラス 幅66 4段",
@@ -8260,7 +8260,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "iris-wide-chest-4d-1218",
-    brand: "Iris Ohyama",
+    brand: "アイリスオーヤマ",
     series: "",
     model_number: "",
     name: "アイリスオーヤマ ワイドチェスト 4段 幅約73",
@@ -8289,7 +8289,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-press-storage-4drawer-74",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ プレスト 収納ケース 4段 幅74",
@@ -8492,7 +8492,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "sharp-healsio-ax-sa300",
-    brand: "Sharp",
+    brand: "シャープ",
     series: "",
     model_number: "",
     name: "シャープ ウォーターオーブン ヘルシオ AX-SA300",
@@ -8521,7 +8521,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "panasonic-home-bakery-sd-md4",
-    brand: "Panasonic",
+    brand: "パナソニック",
     series: "",
     model_number: "",
     name: "パナソニック ホームベーカリー SD-MDX4",
@@ -8666,7 +8666,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "koala-mattress-single",
-    brand: "Koala",
+    brand: "コアラ",
     series: "",
     model_number: "",
     name: "コアラマットレス シングル",
@@ -8695,7 +8695,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "emma-original-mattress-single",
-    brand: "Emma",
+    brand: "エマ",
     series: "",
     model_number: "",
     name: "エマ オリジナルマットレス シングル",
@@ -8724,7 +8724,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nishikawa-air-pillow-standard",
-    brand: "Nishikawa",
+    brand: "西川",
     series: "",
     model_number: "",
     name: "西川 エアー4X ピロー（高め）",
@@ -8783,7 +8783,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "nitori-bookshelf-comic-80",
-    brand: "Nitori",
+    brand: "ニトリ",
     series: "",
     model_number: "",
     name: "ニトリ コミックシェルフ 幅80cm",
@@ -8812,7 +8812,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "cainz-bookshelf-wide-900",
-    brand: "Cainz",
+    brand: "カインズ",
     series: "",
     model_number: "",
     name: "カインズ ワイドブックシェルフ 幅約90cm",
@@ -8870,7 +8870,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "panasonic-steamer-eh-sa0b",
-    brand: "Panasonic",
+    brand: "パナソニック",
     series: "",
     model_number: "",
     name: "スチーマー ナノケア EH-SA0B",
@@ -8929,7 +8929,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "panasonic-ziaino-f-jmk30",
-    brand: "Panasonic",
+    brand: "パナソニック",
     series: "",
     model_number: "",
     name: "次亜塩素酸 空間除菌脱臭機 ジアイーノ F-JMK30",
@@ -9016,7 +9016,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "omron-bodyscan-hbf-256t",
-    brand: "OMRON",
+    brand: "オムロン",
     series: "",
     model_number: "",
     name: "体重体組成計 カラダスキャン HBF-256T",
@@ -9396,7 +9396,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "ikea-eket-cabinet-35",
-    brand: "イケア",
+    brand: "IKEA",
     series: "",
     model_number: "",
     name: "エーケト キャビネット 1マス 35×35×35cm",
@@ -9541,7 +9541,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "ikea-hornavan-trolley",
-    brand: "イケア",
+    brand: "IKEA",
     series: "",
     model_number: "",
     name: "ホルナーヴァン ワゴン 3段",
@@ -9631,7 +9631,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "ikea-lagkapten-alex-desk-120",
-    brand: "イケア",
+    brand: "IKEA",
     series: "",
     model_number: "",
     name: "ラグカプテン／アレクス デスク 120×60cm",
@@ -9690,7 +9690,7 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   },
   {
     id: "ikea-trixig-toolbox-l",
-    brand: "イケア",
+    brand: "IKEA",
     series: "",
     model_number: "",
     name: "トリクシグ ツールボックス L",
@@ -10086,5 +10086,200 @@ export const KNOWN_PRODUCTS_DB: KnownProduct[] = [
   ] },
   { id: "toso-shade-pleated-w90", brand: "トーソー", series: "", model_number: "TOSO-PS-90", name: "トーソー プリーツスクリーン 幅90cm", outer_width_mm: 900, outer_height_mm: 1800, outer_depth_mm: 30, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 8980, max: 14800 }, colors: ["ホワイト", "ベージュ", "グレー"], material: "ポリエステル", weight_kg: 2.0, load_capacity_per_tier_kg: 0, visual_features: ["和室に合う", "上下開閉"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("トーソー プリーツスクリーン 90") + "/", category: "カーテン・ブラインド" as ProductCategory, related_items: [
     { relation: "coordinates_with", name: "障子風スクリーン", category: "カーテン・ブラインド", why: "和室のモダン化にプリーツスクリーンが人気(インスタ #和モダンインテリア)", search_keywords: ["和室 スクリーン", "障子 代わり"], price_range: { min: 5000, max: 15000 }, required: false },
+  ] },
+
+  // --- スチールラック追加 ---
+  { id: "doshisha-luminous-5tier-w90", brand: "ドウシシャ", series: "ルミナス", model_number: "25L90-5", name: "ルミナス スチールラック 5段 幅90cm", outer_width_mm: 915, outer_height_mm: 1800, outer_depth_mm: 460, inner_width_mm: 870, inner_height_per_tier_mm: 320, inner_depth_mm: 430, tiers: 5, price_range: { min: 9980, max: 14800 }, colors: ["シルバー"], material: "スチール(クロームメッキ)", weight_kg: 18.0, load_capacity_per_tier_kg: 80, visual_features: ["25mmポール", "棚板高さ調整可"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("ルミナス スチールラック 5段 90") + "/", category: "スチールラック" as ProductCategory, buy_guide: { best_for: ["ルミナスは25mm径がスタンダード。防錆ならステンレスポール別売に交換可。キャスター付きにする場合は対荷重に注意"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "protects_with", name: "防振ゴムマット", category: "保護・補修材", why: "スチールラック脚下に敷いて床の凹み・傷を防止", search_keywords: ["防振ゴムマット", "ラック 床保護"], price_range: { min: 1480, max: 2980 }, required: false },
+    { relation: "enhances_with", name: "ルミナス 専用キャスター", category: "パーツ・アクセサリ", why: "掃除時の移動や模様替えに。25mmポール用を選ぶこと", search_keywords: ["ルミナス キャスター", "スチールラック キャスター"], price_range: { min: 980, max: 1680 }, required: false },
+  ] },
+  { id: "iris-metalshelving-4tier-w120", brand: "アイリスオーヤマ", series: "", model_number: "SE-1212", name: "アイリスオーヤマ メタルラック 4段 幅120cm", outer_width_mm: 1200, outer_height_mm: 1510, outer_depth_mm: 460, inner_width_mm: 1150, inner_height_per_tier_mm: 340, inner_depth_mm: 430, tiers: 4, price_range: { min: 6980, max: 9980 }, colors: ["シルバー", "ブラック"], material: "スチール(クロームメッキ)", weight_kg: 16.0, load_capacity_per_tier_kg: 75, visual_features: ["ワイド幅120cm", "棚板高さ自在"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("アイリスオーヤマ メタルラック 4段 120") + "/", category: "スチールラック" as ProductCategory, related_items: [
+    { relation: "enhances_with", name: "ラック用ウッドシート", category: "パーツ・アクセサリ", why: "小物が隙間から落ちるのを防ぐ+見た目が温かみUP", search_keywords: ["メタルラック ウッドシート", "ラック 棚板シート"], price_range: { min: 800, max: 1500 }, required: false },
+  ] },
+  { id: "yamazen-steel-rack-5tier-w60", brand: "山善", series: "", model_number: "SRW-6018", name: "山善 スチールシェルフ 5段 幅60cm", outer_width_mm: 600, outer_height_mm: 1800, outer_depth_mm: 350, inner_width_mm: 560, inner_height_per_tier_mm: 320, inner_depth_mm: 320, tiers: 5, price_range: { min: 5480, max: 7980 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)", weight_kg: 11.0, load_capacity_per_tier_kg: 50, visual_features: ["スリム幅60cm", "粉体塗装で錆びにくい"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("山善 スチールシェルフ 5段 60") + "/", category: "スチールラック" as ProductCategory, buy_guide: { best_for: ["粉体塗装は湿気に強くキッチンや洗面所にも◎。ただしクロームメッキより細かい傷が目立ちやすい"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "収納ボックス", category: "収納ケース", why: "オープンラック+ボックスで見せる/隠すを使い分け", search_keywords: ["収納ボックス 幅38", "ラック用 ボックス"], price_range: { min: 500, max: 2000 }, required: false },
+  ] },
+  { id: "conan-steel-rack-4tier-w75", brand: "コーナン", series: "", model_number: "KN-SR4-75", name: "コーナン オリジナル スチールラック 4段 幅75cm", outer_width_mm: 750, outer_height_mm: 1500, outer_depth_mm: 350, inner_width_mm: 710, inner_height_per_tier_mm: 340, inner_depth_mm: 320, tiers: 4, price_range: { min: 3980, max: 5980 }, colors: ["シルバー"], material: "スチール(亜鉛メッキ)", weight_kg: 10.0, load_capacity_per_tier_kg: 40, visual_features: ["コスパ重視", "棚板高さ調整可"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("コーナン スチールラック 4段 75") + "/", category: "スチールラック" as ProductCategory, related_items: [
+    { relation: "protects_with", name: "耐震ジェルマット", category: "保護・補修材", why: "スチールラックの脚下に貼って地震時のズレ防止", search_keywords: ["耐震ジェルマット", "家具 転倒防止"], price_range: { min: 500, max: 1500 }, required: false },
+  ] },
+
+  // --- 保護・補修材追加 ---
+  { id: "proseven-quake-gel-mat-5x5-4p", brand: "プロセブン", series: "", model_number: "P-N50L", name: "プロセブン 耐震マット 50×50mm 4枚入", outer_width_mm: 50, outer_height_mm: 50, outer_depth_mm: 5, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 1280, max: 1980 }, colors: ["ブルー"], material: "ウレタンエラストマー", weight_kg: 0.05, load_capacity_per_tier_kg: 0, visual_features: ["震度7対応", "水洗いで粘着復活"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("プロセブン 耐震マット 50 4枚") + "/", category: "保護・補修材" as ProductCategory, buy_guide: { best_for: ["耐震マットは対荷重の合計が家具重量を超えるよう枚数を調整。50mm角は小型家電・PC向き"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "テレビ・モニター", category: "家電・照明", why: "液晶テレビやPCモニターの底面四隅に。震度7対応で落下防止", search_keywords: ["テレビ 転倒防止", "モニター 耐震"], price_range: { min: 20000, max: 100000 }, required: false },
+  ] },
+  { id: "nitori-floor-protect-felt-set", brand: "ニトリ", series: "", model_number: "8490102", name: "ニトリ 床保護フェルトパッド 各種サイズセット", outer_width_mm: 30, outer_height_mm: 30, outer_depth_mm: 3, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 299, max: 599 }, colors: ["ブラウン", "ベージュ"], material: "フェルト+粘着テープ", weight_kg: 0.03, load_capacity_per_tier_kg: 0, visual_features: ["丸型・角型混合セット", "ハサミでカット可"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("床保護 フェルトパッド セット") + "&q=", category: "保護・補修材" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "ダイニングチェア", category: "ダイニング家具", why: "椅子の脚裏に貼ってフローリングの傷を防止。引きずり音も軽減", search_keywords: ["ダイニングチェア", "椅子 脚 保護"], price_range: { min: 3000, max: 15000 }, required: false },
+  ] },
+  { id: "sanwa-furniture-nonslip-pad-8p", brand: "サンワサプライ", series: "", model_number: "QL-77", name: "家具スベリ止めパッド 丸型 8個入", outer_width_mm: 40, outer_height_mm: 40, outer_depth_mm: 3, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 480, max: 780 }, colors: ["ブラック"], material: "合成ゴム", weight_kg: 0.04, load_capacity_per_tier_kg: 0, visual_features: ["丸型φ40mm", "粘着式", "8個入"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("家具 スベリ止め パッド 丸型 8個") + "/", category: "保護・補修材" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "カラーボックス", category: "カラーボックス", why: "フローリング上のカラーボックス底面に貼ってズレ防止+傷防止", search_keywords: ["カラーボックス 滑り止め", "家具 固定"], price_range: { min: 1500, max: 5000 }, required: false },
+  ] },
+  { id: "kawaguchi-scratch-prevent-felt-roll", brand: "カワグチ", series: "", model_number: "KW-80-054", name: "キズ防止フェルト ロールタイプ 幅25mm×2m", outer_width_mm: 25, outer_height_mm: 2000, outer_depth_mm: 3, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 398, max: 598 }, colors: ["ベージュ", "ブラウン"], material: "フェルト+粘着テープ", weight_kg: 0.03, load_capacity_per_tier_kg: 0, visual_features: ["ロールタイプ", "好きな長さにカット"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("キズ防止フェルト ロール 25mm") + "/", category: "保護・補修材" as ProductCategory, buy_guide: { best_for: ["ロールタイプは家具の脚形状に合わせて自由にカットできる。角型の脚にはこちらが便利"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "棚・シェルフ", category: "シェルフ・棚", why: "棚の脚にフェルトを貼って床のキズ・凹みを防止", search_keywords: ["シェルフ 脚 保護", "棚 傷防止"], price_range: { min: 5000, max: 30000 }, required: false },
+  ] },
+  { id: "house-box-wall-hole-repair-kit", brand: "建築の友", series: "", model_number: "CR-01", name: "壁の穴 補修キット クロス用", outer_width_mm: 100, outer_height_mm: 150, outer_depth_mm: 20, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 598, max: 980 }, colors: ["ホワイト"], material: "補修材+ヘラ", weight_kg: 0.08, load_capacity_per_tier_kg: 0, visual_features: ["ピン穴〜画鋲穴対応", "ヘラ付き"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("壁穴 補修キット クロス") + "/", category: "保護・補修材" as ProductCategory, buy_guide: { best_for: ["賃貸の退去時に壁のピン穴補修に。白い壁紙なら目立たず修復可能。大きな穴はメッシュテープ併用"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "壁掛けフック", category: "パーツ・アクセサリ", why: "ピン跡が気になるなら石膏ボード用フックを使い、退去時に補修キットで修復", search_keywords: ["壁掛けフック 石膏ボード", "ピン跡 補修"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+
+  // --- ファイル収納追加(2) ---
+  { id: "kingjim-tefrenu-binder-a4", brand: "キングジム", series: "テフレーヌ", model_number: "674T", name: "テフレーヌ リングバインダー A4 30穴", outer_width_mm: 255, outer_height_mm: 318, outer_depth_mm: 30, inner_width_mm: 240, inner_height_per_tier_mm: 310, inner_depth_mm: 25, tiers: 1, price_range: { min: 498, max: 748 }, colors: ["クリア", "ブルー", "ピンク"], material: "PP", weight_kg: 0.18, load_capacity_per_tier_kg: 0, visual_features: ["リング跡がつかない", "上下2点留め"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("キングジム テフレーヌ A4") + "/", category: "ファイル収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "ファイルスタンド", category: "ファイル収納", why: "バインダーをスタンドに立てて本棚やデスクに整理", search_keywords: ["ファイルスタンド A4", "書類 整理"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+  { id: "nakabayashi-lifestyle-box-a4", brand: "ナカバヤシ", series: "", model_number: "LSB-A4-BK", name: "ナカバヤシ ライフスタイルボックス A4", outer_width_mm: 330, outer_height_mm: 245, outer_depth_mm: 260, inner_width_mm: 310, inner_height_per_tier_mm: 230, inner_depth_mm: 245, tiers: 1, price_range: { min: 880, max: 1280 }, colors: ["ブラック", "ホワイト", "グレー"], material: "段ボール(PP貼り)", weight_kg: 0.5, load_capacity_per_tier_kg: 5, visual_features: ["積み重ね可", "フタ付き", "A4書類がピッタリ"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("ナカバヤシ ライフスタイルボックス A4") + "/", category: "ファイル収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "オープンシェルフ", category: "シェルフ・棚", why: "シェルフの1段にボックスを並べて見た目統一+ラベルで分類", search_keywords: ["オープンシェルフ", "棚 収納ボックス"], price_range: { min: 5000, max: 20000 }, required: false },
+  ] },
+  { id: "kokuyo-neos-file-box-a4", brand: "コクヨ", series: "NEOS", model_number: "A4-NELF-DM", name: "コクヨ NEOS ファイルボックス A4", outer_width_mm: 102, outer_height_mm: 318, outer_depth_mm: 264, inner_width_mm: 95, inner_height_per_tier_mm: 310, inner_depth_mm: 255, tiers: 1, price_range: { min: 550, max: 780 }, colors: ["ブラック", "オリーブグリーン", "オフホワイト"], material: "段ボール(PP貼り)", weight_kg: 0.25, load_capacity_per_tier_kg: 5, visual_features: ["大人カラー", "ワンタッチ組み立て"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("コクヨ NEOS ファイルボックス A4") + "/", category: "ファイル収納" as ProductCategory, buy_guide: { best_for: ["NEOSシリーズはオフィス向け落ち着いたカラー。同シリーズのペンケース・トレーと統一すると映える"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "デスク整理トレー", category: "ファイル収納", why: "NEOSシリーズで統一してデスク周りをスッキリ", search_keywords: ["コクヨ NEOS トレー", "デスク 整理"], price_range: { min: 800, max: 1500 }, required: false },
+  ] },
+  { id: "likeit-file-cabinet-a4-3drawer", brand: "Like-it", series: "", model_number: "MX-30", name: "Like-it ファイルキャビネット A4 3段", outer_width_mm: 340, outer_height_mm: 425, outer_depth_mm: 405, inner_width_mm: 310, inner_height_per_tier_mm: 105, inner_depth_mm: 380, tiers: 3, price_range: { min: 3980, max: 5480 }, colors: ["ホワイト", "オールグレー"], material: "ポリプロピレン", weight_kg: 3.0, load_capacity_per_tier_kg: 4, visual_features: ["引き出し3段", "デスク下にピッタリ"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("Like-it ファイルキャビネット A4 3段") + "/", category: "ファイル収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "デスク", category: "デスク", why: "デスク下に設置して書類・文房具を整理。キャスター付きなら引き出して使える", search_keywords: ["デスク下 キャビネット", "デスク 収納"], price_range: { min: 10000, max: 40000 }, required: false },
+  ] },
+
+  // --- その他追加 ---
+  { id: "likeit-trash-can-wide-45l", brand: "Like-it", series: "", model_number: "LBW-45", name: "Like-it フタ付きゴミ箱 ワイド 45L", outer_width_mm: 340, outer_height_mm: 575, outer_depth_mm: 220, inner_width_mm: 310, inner_height_per_tier_mm: 540, inner_depth_mm: 200, tiers: 1, price_range: { min: 2480, max: 3480 }, colors: ["ホワイト", "ブラウン", "グレー"], material: "ポリプロピレン", weight_kg: 1.5, load_capacity_per_tier_kg: 0, visual_features: ["スリム設計", "フタ付き", "分別ラベル付き"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("Like-it ゴミ箱 45L") + "/", category: "その他" as ProductCategory, buy_guide: { best_for: ["キッチンの隙間にスリムタイプを並べて分別。45Lは週2回ゴミ出しの2人暮らし向き"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "分別シール", category: "パーツ・アクセサリ", why: "家族で分別ルールを共有するために分別シールを貼る", search_keywords: ["ゴミ箱 分別シール", "分別ラベル"], price_range: { min: 200, max: 500 }, required: false },
+  ] },
+  { id: "yamazaki-tower-umbrella-stand-slim", brand: "山崎実業", series: "tower", model_number: "TWR-US-SL", name: "tower 傘立て スリム", outer_width_mm: 150, outer_height_mm: 550, outer_depth_mm: 150, inner_width_mm: 120, inner_height_per_tier_mm: 520, inner_depth_mm: 120, tiers: 1, price_range: { min: 2750, max: 3850 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)", weight_kg: 1.4, load_capacity_per_tier_kg: 0, visual_features: ["6本収納", "受け皿付き", "スリム"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower 傘立て スリム") + "/", category: "その他" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "tower 玄関ベンチ", category: "玄関収納", why: "同シリーズで統一すると玄関のインテリアに一体感", search_keywords: ["tower 玄関", "山崎実業 tower"], price_range: { min: 5000, max: 12000 }, required: false },
+  ] },
+  { id: "yamazaki-tower-magnet-keyhook", brand: "山崎実業", series: "tower", model_number: "TWR-MKH", name: "tower マグネットキーフック&トレイ", outer_width_mm: 160, outer_height_mm: 80, outer_depth_mm: 55, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 1650, max: 2200 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)+シリコーン", weight_kg: 0.25, load_capacity_per_tier_kg: 1, visual_features: ["マグネット式", "鍵+小物トレイ一体"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower マグネット キーフック トレイ") + "/", category: "その他" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "スチールドア・冷蔵庫", category: "家電・照明", why: "玄関ドアや冷蔵庫側面にマグネットで取り付け。穴あけ不要", search_keywords: ["マグネット 収納", "玄関ドア 磁石"], price_range: { min: 0, max: 0 }, required: false },
+  ] },
+  { id: "yamazaki-tower-magnet-storage-wide", brand: "山崎実業", series: "tower", model_number: "TWR-MSW", name: "tower マグネットストレージバスケット ワイド", outer_width_mm: 290, outer_height_mm: 115, outer_depth_mm: 100, inner_width_mm: 270, inner_height_per_tier_mm: 100, inner_depth_mm: 85, tiers: 1, price_range: { min: 1980, max: 2750 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)", weight_kg: 0.6, load_capacity_per_tier_kg: 3, visual_features: ["ワイド幅29cm", "マグネット式", "冷蔵庫横に最適"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower マグネットストレージバスケット ワイド") + "/", category: "その他" as ProductCategory, buy_guide: { best_for: ["冷蔵庫側面にマグネットで取り付けてラップ・調味料収納に。耐荷重3kgまで"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "tower マグネットキッチンツール", category: "キッチン収納", why: "同シリーズのマグネット収納で冷蔵庫周りを統一", search_keywords: ["tower マグネット キッチン", "冷蔵庫 マグネット"], price_range: { min: 1000, max: 3000 }, required: false },
+  ] },
+  { id: "cogit-door-hook-over-5conn", brand: "コジット", series: "", model_number: "COG-DH5", name: "コジット ドアハンガー 5連フック", outer_width_mm: 380, outer_height_mm: 220, outer_depth_mm: 60, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 880, max: 1280 }, colors: ["ホワイト", "ブラウン"], material: "スチール+PVC", weight_kg: 0.4, load_capacity_per_tier_kg: 0, visual_features: ["ドア上部に掛ける", "5連フック", "工具不要"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("ドアハンガー 5連 フック") + "/", category: "その他" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "S字フック", category: "パーツ・アクセサリ", why: "ドアフック+S字フックでバッグ・帽子の掛け収納を拡張", search_keywords: ["S字フック ステンレス", "ドア 収納"], price_range: { min: 200, max: 600 }, required: false },
+  ] },
+
+  // --- 突っ張り棒・つっぱり追加 ---
+  { id: "heian-strong-pole-l", brand: "平安伸銅工業", series: "", model_number: "NGP-110", name: "平安伸銅工業 強力突っ張り棒 大 110〜190cm", outer_width_mm: 1900, outer_height_mm: 30, outer_depth_mm: 30, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 1980, max: 2980 }, colors: ["ホワイト"], material: "スチール+ABS", weight_kg: 0.8, load_capacity_per_tier_kg: 40, visual_features: ["ネジ式強力タイプ", "耐荷重40kg"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("平安伸銅工業 強力突っ張り棒 110") + "/", category: "突っ張り棒・つっぱり" as ProductCategory, buy_guide: { best_for: ["ネジ式は壁との摩擦が強力。バネ式の5倍以上の耐荷重。壁にあて板を使うと跡が残りにくい"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "突っ張り棒用棚板", category: "パーツ・アクセサリ", why: "2本の突っ張り棒に棚板を渡してクローゼット上部や洗面所の収納棚に", search_keywords: ["突っ張り棒 棚板", "突っ張り棚"], price_range: { min: 800, max: 2000 }, required: false },
+  ] },
+  { id: "nitori-tension-pole-spring-m", brand: "ニトリ", series: "", model_number: "8731250", name: "ニトリ つっぱりポール バネ式 70〜120cm", outer_width_mm: 1200, outer_height_mm: 25, outer_depth_mm: 25, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 399, max: 699 }, colors: ["ホワイト"], material: "スチール+PVC", weight_kg: 0.3, load_capacity_per_tier_kg: 6, visual_features: ["バネ式", "軽量カーテン向き"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("つっぱりポール バネ式 70-120") + "&q=", category: "突っ張り棒・つっぱり" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "カフェカーテン", category: "カーテン・ブラインド", why: "バネ式は軽量カーテンやのれんの設置にぴったり", search_keywords: ["カフェカーテン", "目隠し カーテン"], price_range: { min: 500, max: 2000 }, required: false },
+  ] },
+  { id: "dcm-tension-shelf-75-120", brand: "DCM", series: "", model_number: "DCM-TS-75", name: "DCM 突っ張り棚 幅75〜120cm", outer_width_mm: 1200, outer_height_mm: 250, outer_depth_mm: 280, inner_width_mm: 1150, inner_height_per_tier_mm: 230, inner_depth_mm: 260, tiers: 1, price_range: { min: 1980, max: 2980 }, colors: ["ホワイト"], material: "スチール+PP", weight_kg: 1.2, load_capacity_per_tier_kg: 20, visual_features: ["棚板付き突っ張り", "トイレ上や洗面所に"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("DCM 突っ張り棚 75 120") + "/", category: "突っ張り棒・つっぱり" as ProductCategory, buy_guide: { best_for: ["トイレ上部や洗面台上のデッドスペースに。軽い日用品ストック置き場として活躍"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "収納ボックス", category: "収納ケース", why: "突っ張り棚の上に収納ボックスを置いて見た目スッキリ", search_keywords: ["収納ボックス 軽量", "トイレ 収納"], price_range: { min: 300, max: 1500 }, required: false },
+  ] },
+
+  // --- ベビー・安全対策追加 ---
+  { id: "nihon-ikuji-smartgate2-plus", brand: "日本育児", series: "スマートゲイト2", model_number: "5014046001", name: "スマートゲイト2 プラス 取付幅67〜91cm", outer_width_mm: 910, outer_height_mm: 910, outer_depth_mm: 35, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 6980, max: 9800 }, colors: ["ホワイト"], material: "スチール+ABS", weight_kg: 5.0, load_capacity_per_tier_kg: 0, visual_features: ["突っ張り式", "片手開閉", "オートクローズ"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("日本育児 スマートゲイト2 プラス") + "/", category: "ベビー・安全対策" as ProductCategory, buy_guide: { best_for: ["突っ張り式は壁に穴を開けず設置可。壁紙保護にあて板の併用を推奨"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "ベビーゲート用あて板", category: "保護・補修材", why: "壁紙のへこみ防止にあて板は必須。100均の木板でも代用可", search_keywords: ["ベビーゲート あて板", "突っ張り 壁保護"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+  { id: "richell-partition-baby-fence", brand: "リッチェル", series: "", model_number: "RC-PBF-120", name: "リッチェル 木のパーティション ベビーフェンス", outer_width_mm: 1200, outer_height_mm: 600, outer_depth_mm: 30, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 7980, max: 12800 }, colors: ["ナチュラル"], material: "天然木(ラバーウッド)", weight_kg: 5.5, load_capacity_per_tier_kg: 0, visual_features: ["自立式", "折りたたみ可", "天然木インテリア"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("リッチェル 木のパーティション ベビーフェンス") + "/", category: "ベビー・安全対策" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "ジョイントマット", category: "保護・補修材", why: "フェンス内にジョイントマットを敷いて転倒時の衝撃を軽減", search_keywords: ["ジョイントマット 赤ちゃん", "ベビーマット"], price_range: { min: 2000, max: 5000 }, required: false },
+  ] },
+  { id: "combi-corner-guard-l-shape-set", brand: "コンビ", series: "", model_number: "CB-CGL-S", name: "コンビ コーナーガード L字型 8個セット", outer_width_mm: 50, outer_height_mm: 50, outer_depth_mm: 12, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 680, max: 1080 }, colors: ["ブラウン", "クリア"], material: "NBR(ニトリルゴム)", weight_kg: 0.1, load_capacity_per_tier_kg: 0, visual_features: ["L字型", "粘着テープ式", "8個入"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("コンビ コーナーガード L字 8個") + "/", category: "ベビー・安全対策" as ProductCategory, buy_guide: { best_for: ["テーブル角やTV台の角に。クリアタイプはインテリアを損なわず安全対策できる"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "引き出しロック", category: "ベビー・安全対策", why: "コーナーガード+引き出しロックで家具周りの安全対策をまとめて", search_keywords: ["引き出しロック ベビー", "チャイルドロック"], price_range: { min: 500, max: 1200 }, required: false },
+  ] },
+
+  // --- バス・洗面収納追加 ---
+  { id: "yamazaki-tower-bath-rack-3tier", brand: "山崎実業", series: "tower", model_number: "TWR-BR-3T", name: "tower ディスペンサースタンド 3段", outer_width_mm: 200, outer_height_mm: 475, outer_depth_mm: 130, inner_width_mm: 180, inner_height_per_tier_mm: 130, inner_depth_mm: 110, tiers: 3, price_range: { min: 3850, max: 4950 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装・ユニクロメッキ)", weight_kg: 1.0, load_capacity_per_tier_kg: 3, visual_features: ["浴室OK", "水切れ良い", "3段"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower ディスペンサースタンド 3段") + "/", category: "バス・洗面収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "tower マグネットソープホルダー", category: "バス・洗面収納", why: "同シリーズで浴室小物を統一するとホテルライクに", search_keywords: ["tower マグネット 浴室", "tower ソープ"], price_range: { min: 800, max: 1800 }, required: false },
+  ] },
+  { id: "nitori-washroom-rack-3tier-w45", brand: "ニトリ", series: "", model_number: "8791345", name: "ニトリ 洗面台下ラック 3段 幅45cm", outer_width_mm: 450, outer_height_mm: 430, outer_depth_mm: 250, inner_width_mm: 420, inner_height_per_tier_mm: 120, inner_depth_mm: 230, tiers: 3, price_range: { min: 1990, max: 2990 }, colors: ["ホワイト"], material: "スチール(粉体塗装)", weight_kg: 2.0, load_capacity_per_tier_kg: 5, visual_features: ["伸縮式", "排水管を避けられる"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("洗面台下 ラック 3段 45") + "&q=", category: "バス・洗面収納" as ProductCategory, buy_guide: { best_for: ["洗面台下の排水管を避けて設置できる伸縮タイプ。幅を測ってから購入すること"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "ストックバスケット", category: "収納ケース", why: "ラック+バスケットで洗剤・シャンプーのストックを分類収納", search_keywords: ["収納バスケット 洗面", "洗面台下 ボックス"], price_range: { min: 300, max: 1000 }, required: false },
+  ] },
+  { id: "keyuca-bath-corner-shelf-wh", brand: "KEYUCA", series: "", model_number: "KC-BCS-WH", name: "KEYUCA バスコーナーシェルフ 2段", outer_width_mm: 220, outer_height_mm: 340, outer_depth_mm: 160, inner_width_mm: 200, inner_height_per_tier_mm: 140, inner_depth_mm: 140, tiers: 2, price_range: { min: 2490, max: 3490 }, colors: ["ホワイト"], material: "ABS+ステンレス", weight_kg: 0.6, load_capacity_per_tier_kg: 2, visual_features: ["吸盤式", "コーナー設置", "水切り穴あり"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("KEYUCA バスコーナーシェルフ") + "/", category: "バス・洗面収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "バスブーツ掛け", category: "バス・洗面収納", why: "コーナーシェルフ+ブーツ掛けで浴室の床置きゼロを目指す", search_keywords: ["バスブーツ 掛け", "浴室 吊るす"], price_range: { min: 500, max: 1200 }, required: false },
+  ] },
+
+  // --- ワゴン・可動収納追加 ---
+  { id: "ikea-raskog-3tier-turquoise", brand: "IKEA", series: "RÅSKOG", model_number: "30216536", name: "RÅSKOG ワゴン 3段 ターコイズ", outer_width_mm: 350, outer_height_mm: 780, outer_depth_mm: 450, inner_width_mm: 310, inner_height_per_tier_mm: 210, inner_depth_mm: 410, tiers: 3, price_range: { min: 4999, max: 4999 }, colors: ["ターコイズ", "ホワイト", "ブラック", "ダークグレー"], material: "スチール(粉体塗装)", weight_kg: 7.3, load_capacity_per_tier_kg: 8, visual_features: ["IKEAベストセラー", "キャスター付き", "丸みのあるデザイン"], consumables: [], compatible_storage: [], url_template: "https://www.ikea.com/jp/ja/search/?q=" + encodeURIComponent("RÅSKOG ワゴン") + "&q=", category: "ワゴン・可動収納" as ProductCategory, related_items: [
+    { relation: "enhances_with", name: "SUNNERSTA 小物入れ", category: "パーツ・アクセサリ", why: "RÅSKOGのフチに引っ掛けて細かい文房具やコスメを仕分け", search_keywords: ["SUNNERSTA 小物入れ", "IKEA ワゴン アクセサリー"], price_range: { min: 199, max: 499 }, required: false },
+  ] },
+  { id: "yamazen-basket-wagon-3tier-slim", brand: "山善", series: "", model_number: "RBW-S3", name: "山善 バスケットワゴン 3段 スリム", outer_width_mm: 260, outer_height_mm: 810, outer_depth_mm: 480, inner_width_mm: 230, inner_height_per_tier_mm: 210, inner_depth_mm: 430, tiers: 3, price_range: { min: 3480, max: 4980 }, colors: ["ホワイト", "ブラック"], material: "スチール(粉体塗装)", weight_kg: 4.5, load_capacity_per_tier_kg: 5, visual_features: ["スリム幅26cm", "隙間収納に最適", "キャスター付き"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("山善 バスケットワゴン スリム 3段") + "/", category: "ワゴン・可動収納" as ProductCategory, buy_guide: { best_for: ["冷蔵庫横やキッチン隙間の幅30cm以下のスペースに入るスリム設計"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "キッチン隙間ラック", category: "キッチン収納", why: "冷蔵庫横の隙間にワゴンを入れて調味料や飲料ストックを収納", search_keywords: ["キッチン 隙間収納", "冷蔵庫横 ラック"], price_range: { min: 2000, max: 6000 }, required: false },
+  ] },
+  { id: "francfranc-rosette-wagon-2tier", brand: "フランフラン", series: "ロゼット", model_number: "FF-RW-2T", name: "フランフラン ロゼットワゴン 2段", outer_width_mm: 400, outer_height_mm: 600, outer_depth_mm: 300, inner_width_mm: 370, inner_height_per_tier_mm: 250, inner_depth_mm: 270, tiers: 2, price_range: { min: 4980, max: 6480 }, colors: ["ピンク", "ホワイト", "グレー"], material: "スチール(粉体塗装)", weight_kg: 3.8, load_capacity_per_tier_kg: 5, visual_features: ["エレガントデザイン", "2段", "キャスター付き"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("フランフラン ロゼット ワゴン") + "/", category: "ワゴン・可動収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "コスメ収納ボックス", category: "収納ケース", why: "ワゴン上段にコスメ収納を置いてドレッサー代わりに", search_keywords: ["コスメ収納 ボックス", "メイク 収納"], price_range: { min: 1000, max: 3000 }, required: false },
+  ] },
+
+  // --- 玄関収納追加(2) ---
+  { id: "yamazaki-tower-shoe-rack-6pair", brand: "山崎実業", series: "tower", model_number: "TWR-SR-6P", name: "tower シューズラック 6足 スリム", outer_width_mm: 520, outer_height_mm: 460, outer_depth_mm: 210, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 3, price_range: { min: 3850, max: 4950 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)", weight_kg: 2.5, load_capacity_per_tier_kg: 3, visual_features: ["見せる収納", "省スペース", "通気性◎"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower シューズラック 6足 スリム") + "/", category: "玄関収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "珪藻土シューズドライ", category: "保護・補修材", why: "オープンシューズラックに珪藻土プレートを置いて除湿・消臭", search_keywords: ["珪藻土 靴 除湿", "シューズドライ"], price_range: { min: 500, max: 1500 }, required: false },
+  ] },
+  { id: "keyuca-slim-shoe-rack-8pair", brand: "KEYUCA", series: "", model_number: "KC-SSR-8", name: "KEYUCA スリムシューズラック 8足収納", outer_width_mm: 520, outer_height_mm: 680, outer_depth_mm: 230, inner_width_mm: 500, inner_height_per_tier_mm: 150, inner_depth_mm: 210, tiers: 4, price_range: { min: 5490, max: 7490 }, colors: ["ナチュラル", "ブラウン"], material: "天然木(パイン材)+スチール", weight_kg: 3.5, load_capacity_per_tier_kg: 5, visual_features: ["天然木の温かみ", "奥行23cmスリム", "4段"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("KEYUCA スリム シューズラック") + "/", category: "玄関収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "靴べら スタンド付き", category: "玄関収納", why: "シューズラック横に靴べらを置いて玄関の動線を改善", search_keywords: ["靴べら スタンド", "ロング 靴べら"], price_range: { min: 800, max: 2500 }, required: false },
+  ] },
+  { id: "nitori-entrance-storage-bench-w80", brand: "ニトリ", series: "", model_number: "8793080", name: "ニトリ 玄関収納ベンチ 幅80cm 座面下収納付", outer_width_mm: 800, outer_height_mm: 450, outer_depth_mm: 350, inner_width_mm: 740, inner_height_per_tier_mm: 250, inner_depth_mm: 320, tiers: 1, price_range: { min: 7990, max: 11990 }, colors: ["ナチュラル", "ブラウン"], material: "合板+天然木脚", weight_kg: 8.0, load_capacity_per_tier_kg: 80, visual_features: ["座面開閉式", "靴・掃除道具収納", "耐荷重80kg"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("玄関 収納ベンチ 80") + "&q=", category: "玄関収納" as ProductCategory, buy_guide: { best_for: ["高齢者のいる家庭は座って靴が履けるベンチが◎。座面下に靴べらや掃除道具も収納可"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "シューズボックス", category: "玄関収納", why: "ベンチ+シューズボックスで玄関収納を完結", search_keywords: ["シューズボックス", "玄関 靴収納"], price_range: { min: 5000, max: 15000 }, required: false },
+  ] },
+
+  // --- カラーボックス追加 ---
+  { id: "dcm-colorbox-3tier-standard", brand: "DCM", series: "", model_number: "DCM-CB3-42", name: "DCM カラーボックス 3段 幅42cm", outer_width_mm: 420, outer_height_mm: 880, outer_depth_mm: 290, inner_width_mm: 380, inner_height_per_tier_mm: 270, inner_depth_mm: 260, tiers: 3, price_range: { min: 1280, max: 1780 }, colors: ["ホワイト", "ナチュラル", "ブラウン"], material: "プリント紙化粧パーティクルボード", weight_kg: 9.0, load_capacity_per_tier_kg: 10, visual_features: ["コスパ最強", "ホームセンター定番"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("DCM カラーボックス 3段") + "/", category: "カラーボックス" as ProductCategory, buy_guide: { best_for: ["DCMはホームセンター最安級。ただし棚板の耐荷重が低めなので本の大量収納には不向き"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "enhances_with", name: "インナーボックス", category: "収納ケース", why: "カラーボックス専用インナーボックスで引き出し化", search_keywords: ["カラーボックス インナー", "収納ボックス 幅38"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+  { id: "cainz-colorbox-2tier-w42", brand: "カインズ", series: "", model_number: "CAINZ-CB2-42", name: "カインズ カラーボックス 2段 幅42cm", outer_width_mm: 420, outer_height_mm: 595, outer_depth_mm: 290, inner_width_mm: 380, inner_height_per_tier_mm: 270, inner_depth_mm: 260, tiers: 2, price_range: { min: 980, max: 1380 }, colors: ["ホワイト", "ナチュラル"], material: "プリント紙化粧パーティクルボード", weight_kg: 6.5, load_capacity_per_tier_kg: 10, visual_features: ["ベンチ代わりにも", "2段コンパクト"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("カインズ カラーボックス 2段") + "/", category: "カラーボックス" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "連結金具", category: "パーツ・アクセサリ", why: "2段ボックスを横に並べて連結しTV台やベンチに", search_keywords: ["カラーボックス 連結", "ボックス 金具"], price_range: { min: 200, max: 500 }, required: false },
+  ] },
+  { id: "fudogiken-soft-box-slim-3tier", brand: "不動技研", series: "", model_number: "F-2500", name: "不動技研 ソフトBOXスリム 3段 幅30cm", outer_width_mm: 300, outer_height_mm: 880, outer_depth_mm: 290, inner_width_mm: 260, inner_height_per_tier_mm: 270, inner_depth_mm: 260, tiers: 3, price_range: { min: 1980, max: 2980 }, colors: ["ホワイト", "ブラウン"], material: "プリント紙化粧MDF", weight_kg: 7.5, load_capacity_per_tier_kg: 8, visual_features: ["スリム幅30cm", "隙間に入る"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("不動技研 ソフトBOX スリム 3段") + "/", category: "カラーボックス" as ProductCategory, buy_guide: { best_for: ["幅30cmは隙間収納に最適。一般的なカラーボックス(42cm)が入らない場所に"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "フタ付き収納ボックス", category: "収納ケース", why: "スリムボックスに合うサイズの収納ボックスで引き出し化", search_keywords: ["収納ボックス 幅26", "カラーボックス インナー スリム"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+
+  // --- シェルフ・棚追加 ---
+  { id: "unico-solk-open-shelf-w80", brand: "unico", series: "SOLK", model_number: "SOLK-OS-80", name: "unico SOLK オープンシェルフ 幅80cm", outer_width_mm: 800, outer_height_mm: 1600, outer_depth_mm: 350, inner_width_mm: 740, inner_height_per_tier_mm: 350, inner_depth_mm: 320, tiers: 4, price_range: { min: 49800, max: 59800 }, colors: ["ナチュラル", "ブラウン"], material: "オーク無垢材+スチール", weight_kg: 22.0, load_capacity_per_tier_kg: 15, visual_features: ["木×スチール", "ヴィンテージ風", "見せる収納"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("unico SOLK シェルフ") + "/", category: "シェルフ・棚" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "unico SOLK TVボード", category: "テレビ台・AV収納", why: "同シリーズで統一してヴィンテージリビングに", search_keywords: ["unico SOLK TVボード", "unico テレビ台"], price_range: { min: 49800, max: 69800 }, required: false },
+  ] },
+  { id: "actus-stacking-shelf-w80", brand: "ACTUS", series: "", model_number: "ACT-SS-80", name: "ACTUS スタッキングシェルフ 幅80cm", outer_width_mm: 800, outer_height_mm: 1200, outer_depth_mm: 400, inner_width_mm: 740, inner_height_per_tier_mm: 360, inner_depth_mm: 370, tiers: 3, price_range: { min: 69800, max: 89800 }, colors: ["ウォルナット", "オーク"], material: "ウォルナット無垢材", weight_kg: 25.0, load_capacity_per_tier_kg: 20, visual_features: ["高級感", "自由にスタック", "北欧デザイン"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("ACTUS スタッキングシェルフ") + "/", category: "シェルフ・棚" as ProductCategory, related_items: [
+    { relation: "protects_with", name: "家具転倒防止ストラップ", category: "保護・補修材", why: "高価な家具は壁固定で地震対策を万全に", search_keywords: ["転倒防止 ストラップ", "家具 壁固定"], price_range: { min: 680, max: 1280 }, required: true },
+  ] },
+  { id: "karimoku-utility-shelf-w60", brand: "カリモク", series: "ユーティリティプラス", model_number: "QS3508", name: "カリモク ユーティリティプラス シェルフ 幅60cm", outer_width_mm: 600, outer_height_mm: 1400, outer_depth_mm: 380, inner_width_mm: 540, inner_height_per_tier_mm: 300, inner_depth_mm: 350, tiers: 4, price_range: { min: 89800, max: 119800 }, colors: ["ピュアオーク", "モカブラウン"], material: "オーク材", weight_kg: 28.0, load_capacity_per_tier_kg: 20, visual_features: ["日本製高級家具", "精緻な仕上げ", "10年保証"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("カリモク ユーティリティプラス シェルフ") + "/", category: "シェルフ・棚" as ProductCategory, buy_guide: { best_for: ["カリモクは国内最高峰の品質。10年保証付き。引越し時の分解・再組立もメーカー対応可"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "カリモク デスク", category: "デスク", why: "同ブランドで書斎をトータルコーディネート", search_keywords: ["カリモク デスク", "カリモク 書斎"], price_range: { min: 80000, max: 200000 }, required: false },
+  ] },
+
+  // --- 収納ケース追加 ---
+  { id: "likeit-fits-case-m-wide", brand: "Like-it", series: "FITS", model_number: "LI-FM-W", name: "Like-it FITS ケース Mワイド", outer_width_mm: 390, outer_height_mm: 230, outer_depth_mm: 530, inner_width_mm: 350, inner_height_per_tier_mm: 190, inner_depth_mm: 490, tiers: 1, price_range: { min: 1980, max: 2680 }, colors: ["ホワイト", "ダークブラウン"], material: "ポリプロピレン", weight_kg: 1.5, load_capacity_per_tier_kg: 8, visual_features: ["引き出し式", "スタッキング可", "中身が見えない"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("Like-it FITS ケース Mワイド") + "/", category: "収納ケース" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "クローゼット", category: "衣装ケース", why: "クローゼット下段にFITSケースを積んで衣類を分類", search_keywords: ["クローゼット 収納ケース", "FITS 積み重ね"], price_range: { min: 1500, max: 3000 }, required: false },
+  ] },
+  { id: "jej-stacking-basket-wide-m", brand: "JEJ", series: "スタッキングバスケット", model_number: "JEJ-SBW-M", name: "JEJ スタッキングバスケット ワイド M", outer_width_mm: 380, outer_height_mm: 175, outer_depth_mm: 290, inner_width_mm: 340, inner_height_per_tier_mm: 145, inner_depth_mm: 260, tiers: 1, price_range: { min: 598, max: 880 }, colors: ["ホワイト", "グレー", "ブラウン"], material: "ポリプロピレン", weight_kg: 0.5, load_capacity_per_tier_kg: 5, visual_features: ["スタッキング", "取っ手付き", "通気性あり"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("JEJ スタッキングバスケット ワイド M") + "/", category: "収納ケース" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "カラーボックス", category: "カラーボックス", why: "カラーボックス1段にピッタリ入るサイズ。引き出し代わりに", search_keywords: ["カラーボックス バスケット", "収納ケース 幅38"], price_range: { min: 1500, max: 4000 }, required: false },
+  ] },
+  { id: "tenma-fits-world-l", brand: "天馬", series: "フィッツワールド", model_number: "FW-L-WH", name: "天馬 フィッツワールド ケース L", outer_width_mm: 440, outer_height_mm: 300, outer_depth_mm: 550, inner_width_mm: 390, inner_height_per_tier_mm: 250, inner_depth_mm: 510, tiers: 1, price_range: { min: 2480, max: 3280 }, colors: ["ホワイト", "ブラウン"], material: "ポリプロピレン", weight_kg: 2.0, load_capacity_per_tier_kg: 10, visual_features: ["大容量Lサイズ", "引き出しスムーズ", "積み重ね5段まで"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("天馬 フィッツワールド L") + "/", category: "収納ケース" as ProductCategory, buy_guide: { best_for: ["天馬フィッツは日本製で引き出しレールが滑らか。Lサイズは冬物衣料・布団収納に最適"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "防虫・除湿シート", category: "保護・補修材", why: "衣装ケース内に防虫シートを敷いて虫食い防止", search_keywords: ["衣装ケース 防虫", "除湿シート クローゼット"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+
+  // --- 衣装ケース追加 ---
+  { id: "tenma-fits-closet-deep-l", brand: "天馬", series: "フィッツケースクローゼット", model_number: "FCC-DL", name: "天馬 フィッツケース クローゼット ディープL", outer_width_mm: 440, outer_height_mm: 350, outer_depth_mm: 740, inner_width_mm: 390, inner_height_per_tier_mm: 300, inner_depth_mm: 700, tiers: 1, price_range: { min: 3480, max: 4480 }, colors: ["ホワイト", "カプチーノ"], material: "ポリプロピレン", weight_kg: 2.8, load_capacity_per_tier_kg: 10, visual_features: ["奥行74cmクローゼット対応", "引き出し式", "大容量"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("天馬 フィッツケース クローゼット ディープ L") + "/", category: "衣装ケース" as ProductCategory, buy_guide: { best_for: ["クローゼット奥行き(75cm前後)にピッタリの74cm。サイズ違いは押入れ用と間違えやすいので注意"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "enhances_with", name: "衣類圧縮袋", category: "パーツ・アクセサリ", why: "冬物衣類を圧縮してケースの収納量を倍増", search_keywords: ["衣類圧縮袋", "布団 圧縮"], price_range: { min: 500, max: 1500 }, required: false },
+  ] },
+  { id: "iris-chest-wide-4drawer-w54", brand: "アイリスオーヤマ", series: "", model_number: "BC-W544", name: "アイリスオーヤマ ワイドチェスト 4段 幅54cm", outer_width_mm: 540, outer_height_mm: 870, outer_depth_mm: 400, inner_width_mm: 490, inner_height_per_tier_mm: 180, inner_depth_mm: 370, tiers: 4, price_range: { min: 3980, max: 5480 }, colors: ["ホワイト", "ウォールナット"], material: "ポリプロピレン+化粧板天板", weight_kg: 7.0, load_capacity_per_tier_kg: 5, visual_features: ["天板付き", "家具調デザイン", "4段引き出し"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("アイリスオーヤマ ワイドチェスト 4段 54") + "/", category: "衣装ケース" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "収納ケース 仕切り板", category: "パーツ・アクセサリ", why: "引き出し内を仕切って下着・靴下を整理", search_keywords: ["引き出し 仕切り", "収納 仕切り板"], price_range: { min: 300, max: 800 }, required: false },
+  ] },
+  { id: "muji-pp-closet-case-deep", brand: "無印良品", series: "ポリプロピレン", model_number: "MUJI-PCC-D", name: "無印良品 PP衣装ケース 引き出し式 深", outer_width_mm: 400, outer_height_mm: 300, outer_depth_mm: 650, inner_width_mm: 360, inner_height_per_tier_mm: 260, inner_depth_mm: 610, tiers: 1, price_range: { min: 1990, max: 2490 }, colors: ["半透明"], material: "ポリプロピレン", weight_kg: 2.5, load_capacity_per_tier_kg: 8, visual_features: ["半透明で中身が見える", "無印定番", "積み重ね自在"], consumables: [], compatible_storage: [], url_template: "https://www.muji.com/jp/ja/search?keyword=" + encodeURIComponent("PP衣装ケース 引き出し式 深") + "&q=", category: "衣装ケース" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "無印 不織布仕切ケース", category: "パーツ・アクセサリ", why: "引き出し内を不織布仕切ケースで小分け。無印同士でサイズがピッタリ合う", search_keywords: ["無印 不織布仕切", "PP衣装ケース 仕切"], price_range: { min: 490, max: 990 }, required: false },
+  ] },
+
+  // --- ダイニング家具追加 ---
+  { id: "nitori-dining-table-natural-w120", brand: "ニトリ", series: "", model_number: "DT-120-NA", name: "ニトリ ダイニングテーブル ナチュラル 幅120cm", outer_width_mm: 1200, outer_height_mm: 720, outer_depth_mm: 750, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 19900, max: 29900 }, colors: ["ナチュラル", "ブラウン"], material: "天然木(ラバーウッド)", weight_kg: 22.0, load_capacity_per_tier_kg: 0, visual_features: ["4人掛け", "天然木の温もり"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("ダイニングテーブル ナチュラル 120") + "&q=", category: "ダイニング家具" as ProductCategory, buy_guide: { best_for: ["4人家族は幅120cm以上が快適。天然木は経年で味が出るが水染み注意→コースター併用"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "ダイニングチェア", category: "ダイニング家具", why: "テーブルと素材・色を合わせて統一感を", search_keywords: ["ダイニングチェア ナチュラル", "食卓 椅子"], price_range: { min: 5000, max: 15000 }, required: false },
+    { relation: "protects_with", name: "テーブルマット", category: "保護・補修材", why: "天然木テーブルの水染み・傷を防ぐ透明マット", search_keywords: ["テーブルマット 透明", "ダイニングテーブル 保護"], price_range: { min: 2000, max: 5000 }, required: false },
+  ] },
+  { id: "ikea-lisabo-dining-table-w140", brand: "IKEA", series: "LISABO", model_number: "70294-44", name: "LISABO ダイニングテーブル 幅140cm", outer_width_mm: 1400, outer_height_mm: 740, outer_depth_mm: 780, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 29990, max: 34990 }, colors: ["アッシュ突板"], material: "アッシュ突板+バーチ無垢材", weight_kg: 19.0, load_capacity_per_tier_kg: 0, visual_features: ["北欧デザイン", "組み立て簡単", "軽量"], consumables: [], compatible_storage: [], url_template: "https://www.ikea.com/jp/ja/search/?q=" + encodeURIComponent("LISABO ダイニングテーブル") + "&q=", category: "ダイニング家具" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "LISABO チェア", category: "ダイニング家具", why: "同シリーズで統一して北欧モダンダイニングに", search_keywords: ["LISABO チェア", "IKEA ダイニングチェア"], price_range: { min: 9990, max: 14990 }, required: false },
+  ] },
+  { id: "karimoku-dining-chair-ct61", brand: "カリモク", series: "", model_number: "CT6105", name: "カリモク ダイニングチェア CT61モデル", outer_width_mm: 470, outer_height_mm: 795, outer_depth_mm: 535, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 49800, max: 69800 }, colors: ["ピュアオーク", "モカブラウン", "ナッツシェル"], material: "オーク材+合成皮革座面", weight_kg: 5.5, load_capacity_per_tier_kg: 0, visual_features: ["座り心地◎", "日本製", "10年保証"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("カリモク ダイニングチェア CT61") + "/", category: "ダイニング家具" as ProductCategory, related_items: [
+    { relation: "protects_with", name: "床保護フェルト", category: "保護・補修材", why: "高級チェアの脚にフェルトを貼って床とチェア双方を保護", search_keywords: ["椅子 脚 フェルト", "床保護 パッド"], price_range: { min: 300, max: 600 }, required: true },
+  ] },
+
+  // --- ランドリー収納追加 ---
+  { id: "nitori-laundry-rack-expandable-w60", brand: "ニトリ", series: "", model_number: "8791260", name: "ニトリ 伸縮ランドリーラック 幅60〜90cm", outer_width_mm: 900, outer_height_mm: 1900, outer_depth_mm: 500, inner_width_mm: 850, inner_height_per_tier_mm: 400, inner_depth_mm: 470, tiers: 3, price_range: { min: 4990, max: 7490 }, colors: ["ホワイト"], material: "スチール(粉体塗装)+PP", weight_kg: 6.0, load_capacity_per_tier_kg: 5, visual_features: ["伸縮式", "洗濯機上の空間活用", "棚板3段"], consumables: [], compatible_storage: [], url_template: "https://www.nitori-net.jp/ec/search?keyword=" + encodeURIComponent("伸縮 ランドリーラック 60 90") + "&q=", category: "ランドリー収納" as ProductCategory, buy_guide: { best_for: ["洗濯機の幅を測ってから購入。排水ホースの取り回しも確認すること"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "ランドリーバスケット", category: "ランドリー収納", why: "ラック棚にバスケットを置いて白/色物/デリケートの3分類", search_keywords: ["ランドリーバスケット", "洗濯 カゴ"], price_range: { min: 800, max: 3000 }, required: false },
+  ] },
+  { id: "yamazaki-tower-laundry-basket-2tier", brand: "山崎実業", series: "tower", model_number: "TWR-LB-2T", name: "tower ランドリーバスケット 2段", outer_width_mm: 365, outer_height_mm: 800, outer_depth_mm: 275, inner_width_mm: 340, inner_height_per_tier_mm: 340, inner_depth_mm: 250, tiers: 2, price_range: { min: 6600, max: 8800 }, colors: ["ブラック", "ホワイト"], material: "スチール(粉体塗装)+コットン布", weight_kg: 3.5, load_capacity_per_tier_kg: 5, visual_features: ["布バッグ2段", "分別洗濯に", "省スペース"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("tower ランドリーバスケット 2段") + "/", category: "ランドリー収納" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "tower ランドリーラック", category: "ランドリー収納", why: "同シリーズで統一して洗面所をスタイリッシュに", search_keywords: ["tower ランドリーラック", "山崎実業 洗面"], price_range: { min: 5000, max: 12000 }, required: false },
+  ] },
+  { id: "likeit-laundry-sorter-3comp", brand: "Like-it", series: "", model_number: "LI-LS-3C", name: "Like-it ランドリーソーター 3分別", outer_width_mm: 460, outer_height_mm: 670, outer_depth_mm: 350, inner_width_mm: 420, inner_height_per_tier_mm: 280, inner_depth_mm: 320, tiers: 3, price_range: { min: 4980, max: 6480 }, colors: ["ホワイト", "グレー"], material: "ポリプロピレン", weight_kg: 3.0, load_capacity_per_tier_kg: 5, visual_features: ["3段分別", "傾斜式で出し入れ簡単", "キャスター付き"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("Like-it ランドリーソーター 3分別") + "/", category: "ランドリー収納" as ProductCategory, buy_guide: { best_for: ["傾斜式なので洗濯物の出し入れが楽。3段で白/色物/タオルに分別"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "洗濯洗剤収納", category: "バス・洗面収納", why: "ソーター横に洗剤をまとめて置いて洗濯動線を最適化", search_keywords: ["洗剤 収納", "洗面 ラック"], price_range: { min: 1000, max: 3000 }, required: false },
+  ] },
+
+  // --- ソファ・チェア追加 ---
+  { id: "unico-albero-2p-sofa", brand: "unico", series: "ALBERO", model_number: "ALB-2P", name: "unico ALBERO 2人掛けソファ", outer_width_mm: 1380, outer_height_mm: 780, outer_depth_mm: 780, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 79800, max: 99800 }, colors: ["ベージュ", "グレー", "ダークブラウン"], material: "オーク無垢材+ファブリック", weight_kg: 28.0, load_capacity_per_tier_kg: 0, visual_features: ["天然木フレーム", "カバーリング仕様", "クリーニング可"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("unico ALBERO 2人掛け ソファ") + "/", category: "ソファ・チェア" as ProductCategory, buy_guide: { best_for: ["カバーリング仕様で替えカバー購入可。ペットのいる家庭はファブリック→合皮カバーに交換で安心"], avoid_if: [], decision_hint: "" }, related_items: [
+    { relation: "coordinates_with", name: "unico サイドテーブル", category: "シェルフ・棚", why: "ソファ横にサイドテーブルを置いてリビングのくつろぎスペースに", search_keywords: ["unico サイドテーブル", "ソファ横 テーブル"], price_range: { min: 15000, max: 30000 }, required: false },
+    { relation: "protects_with", name: "ソファカバー", category: "保護・補修材", why: "替えカバーで汚れ防止+季節で模様替え", search_keywords: ["ソファカバー 2人掛け", "ソファ 替えカバー"], price_range: { min: 5000, max: 15000 }, required: false },
+  ] },
+  { id: "actus-shaker-lounge-chair", brand: "ACTUS", series: "SHAKER", model_number: "ACT-SLC", name: "ACTUS シェーカーラウンジチェア", outer_width_mm: 640, outer_height_mm: 830, outer_depth_mm: 700, inner_width_mm: 0, inner_height_per_tier_mm: 0, inner_depth_mm: 0, tiers: 0, price_range: { min: 89800, max: 129800 }, colors: ["ナチュラル", "ウォルナット"], material: "ウォルナット無垢材+ファブリック", weight_kg: 8.0, load_capacity_per_tier_kg: 0, visual_features: ["一人掛け", "包み込む座面", "デザイナーズ"], consumables: [], compatible_storage: [], url_template: "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent("ACTUS シェーカー ラウンジチェア") + "/", category: "ソファ・チェア" as ProductCategory, related_items: [
+    { relation: "coordinates_with", name: "フロアランプ", category: "家電・照明", why: "ラウンジチェア横にフロアランプで読書コーナーを演出", search_keywords: ["フロアランプ 北欧", "読書 ライト"], price_range: { min: 10000, max: 30000 }, required: false },
+    { relation: "protects_with", name: "床保護フェルト", category: "保護・補修材", why: "高級チェアの脚裏に必ずフェルトを貼ってフローリングを保護", search_keywords: ["椅子 脚 フェルト", "床保護"], price_range: { min: 300, max: 600 }, required: true },
   ] },
 ];

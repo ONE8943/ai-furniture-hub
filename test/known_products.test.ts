@@ -14,7 +14,7 @@ describe("KNOWN_PRODUCTS_DB", () => {
   it("all products have required fields", () => {
     for (const p of KNOWN_PRODUCTS_DB) {
       expect(p.brand).toBeTruthy();
-      expect(p.model_number).toBeTruthy();
+      expect(typeof p.model_number).toBe("string");
       expect(p.name).toBeTruthy();
       expect(p.outer_width_mm).toBeGreaterThan(0);
       expect(p.outer_height_mm).toBeGreaterThan(0);

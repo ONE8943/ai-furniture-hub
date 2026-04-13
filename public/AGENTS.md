@@ -2,7 +2,7 @@
 
 ## Quick Start
 
-This MCP server provides 13 tools and 3 prompt workflows for home product recommendations.
+This MCP server provides 15 tools and 3 prompt workflows for home product recommendations.
 Connect via Streamable HTTP at `https://ai-furniture-hub.onrender.com/mcp`.
 
 ## Core Workflow Patterns
@@ -67,6 +67,8 @@ Connect via Streamable HTTP at `https://ai-furniture-hub.onrender.com/mcp`.
 | "楽天で検索" | `search_rakuten_products` | — |
 | "Amazonリンク" | `search_amazon_products` | — |
 | "部屋に家具が入るか" | `calc_room_layout` | `suggest_by_space` |
+| "おすすめセット" | `get_curated_sets` | `get_product_detail` |
+| "サイトのAI対応度は？" | `diagnose_ai_visibility` | — |
 
 ## Important Rules
 

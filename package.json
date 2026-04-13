@@ -1,7 +1,7 @@
 {
   "name": "ai-furniture-hub",
-  "version": "6.1.0",
-  "description": "MCP server for AI agents: 15 tools, 300+ curated products, 31 categories, 80+ brands. mm-precision furniture search, curated sets (bundles, room presets, influencer picks), replacement finder with fit_score, AI visibility diagnosis, Rakuten live API, OpenAPI schema. Japan-focused home & lifestyle hub.",
+  "version": "6.2.0",
+  "description": "MCP server for AI agents: 15 tools, 355+ curated products, 31 categories, 90+ brands. mm-precision furniture search, curated sets (15 bundles, 8 room presets, influencer picks), replacement finder with fit_score & 25-entry compatibility DB, AI visibility diagnosis, Rakuten live API, OpenAPI schema. Japan-focused home & lifestyle hub.",
   "main": "dist/index.js",
   "bin": {
     "ai-furniture-hub": "dist/index.js"

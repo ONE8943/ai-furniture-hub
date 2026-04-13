@@ -1,8 +1,8 @@
 # AI Furniture & Home Product Hub — MCP Server
 
 > Millimeter-precision product data for AI agents: furniture, home appliances, gadgets, beauty devices, smart home, and more.
-> 15 MCP tools + 3 prompt workflows across 31 categories and 80+ brands.
-> NEW: Curated sets (bundles, room presets, influencer picks), dimension-compatible replacement search, AI visibility diagnosis.
+> 15 MCP tools + 3 prompt workflows across 31 categories and 90+ brands (355+ products).
+> Curated sets (15 bundles, 8 room presets, influencer picks), dimension-compatible replacement with 25-entry compatibility DB, AI visibility diagnosis.
 > Operated by ONE, Inc. (Japan).
 
 ## Contact

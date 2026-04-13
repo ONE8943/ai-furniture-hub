@@ -1,6 +1,6 @@
 # AI Furniture & Home Product Hub - MCP Server
 
-> **15 tools** | **300+ curated products** | **31 categories** | **80+ brands**
+> **15 tools** | **355+ curated products** | **31 categories** | **90+ brands**
 > Millimeter-precision search, curated sets, AI visibility diagnosis, OpenAPI 3.1 schema.
 > Built for ChatGPT, Claude, Gemini, Cursor, Perplexity, and any MCP-compatible AI agent.
 

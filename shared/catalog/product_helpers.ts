@@ -15,10 +15,11 @@ import { KNOWN_PRODUCTS_DB } from "./products_db";
  */
 export function findProductByModelNumber(raw: string): KnownProduct | undefined {
   const q = raw.normalize("NFKC").trim().toLowerCase();
-  const byExact = KNOWN_PRODUCTS_DB.find((p) => p.model_number.toLowerCase() === q);
+  if (!q) return undefined;
+  const byExact = KNOWN_PRODUCTS_DB.find((p) => p.model_number && p.model_number.toLowerCase() === q);
   if (byExact) return byExact;
   return KNOWN_PRODUCTS_DB.find(
-    (p) => q.includes(p.model_number.toLowerCase()) || p.model_number.toLowerCase().includes(q)
+    (p) => p.model_number && (q.includes(p.model_number.toLowerCase()) || p.model_number.toLowerCase().includes(q))
   );
 }
 

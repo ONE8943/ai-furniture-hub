@@ -1,16 +1,16 @@
 # AI Furniture & Home Product Hub - Context for AI Agents
 
-> Auto-generated at 2026-04-11
+> Auto-generated at 2026-04-13
 
-## Project: @one-inc/ai-furniture-hub v5.5.0
+## Project: ai-furniture-hub v6.2.0
 
-MCP server for AI agents: 13 tools + 3 prompt workflows, curated product catalog, 31 categories, 80+ brands. mm-precision dimension search, keyword/brand/color alias filtering, shelf+storage coordination, related-item chains, category discovery, popular rankings. Rakuten Ichiba API for product search, Amazon affiliate link generation. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
+MCP server for AI agents: 15 tools + 3 prompt workflows, 355+ curated products, 31 categories, 90+ brands. mm-precision dimension search, keyword/brand/color alias filtering, shelf+storage coordination, related-item chains, category discovery, popular rankings, curated sets (bundles, room presets, influencer picks, hack sets), dimension-compatible replacement with fit_score, AI visibility diagnosis (AIO), attribution tracking. Rakuten Ichiba live API, Amazon affiliate link generation. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
 
 ## Architecture
 
 - MCP Server (Model Context Protocol) for AI-to-AI communication
 - Transport: stdio (Cursor) + Streamable HTTP (Render.com)
-- Tools: 13 registered MCP tools + 3 prompt workflow templates
+- Tools: 15 registered MCP tools + 3 prompt workflow templates
 - Catalog: Curated products across 31 categories with mm-precision dimensions
 - External APIs: Rakuten Ichiba (live), Amazon (URL generation with category-specific SearchIndex)
 - Affiliate: Rakuten + Amazon auto-link generation
@@ -42,6 +42,8 @@ MCP server for AI agents: 13 tools + 3 prompt workflows, curated product catalog
 | 11 | list_categories | "What can you search?" — category discovery |
 | 12 | get_popular_products | "What's popular?" — trending + recommendations |
 | 13 | get_related_items | "What else do I need?" — accessory chains |
+| 14 | get_curated_sets | "What sets are available?" — bundles, room presets, influencer picks |
+| 15 | diagnose_ai_visibility | "How AI-ready is this URL?" — llms.txt, robots, JSON-LD audit |
 
 ## Prompt Workflows
 
@@ -55,12 +57,12 @@ MCP server for AI agents: 13 tools + 3 prompt workflows, curated product catalog
 
 | Category | Count | Key Brands |
 |----------|-------|------------|
-| 家電・照明 | 15 | Panasonic, iRobot, Iris Ohyama |
-| デスク | 11 | IKEA, Nitori, LOWYA, FlexiSpot |
-| PC周辺・デスク環境 | 11 | Ergotron, Logitech, BenQ, Anker |
-| キッチン収納 | 10 | Nitori, tower, IKEA, Yamazen |
-| スマートホーム | 9 | SwitchBot, Amazon Echo, Philips Hue |
-| 美容家電 | 9 | Dyson, Panasonic, ReFa, YA-MAN |
+| 家電・照明 | 20 | パナソニック, iRobot, アイリスオーヤマ |
+| PC周辺・デスク環境 | 14 | エルゴトロン, ロジクール, BenQ, Anker |
+| デスク | 13 | IKEA, ニトリ, LOWYA, FlexiSpot |
+| キッチン収納 | 12 | ニトリ, tower, IKEA, 山善 |
+| スマートホーム | 12 | SwitchBot, Amazon Echo, Philips Hue |
+| 美容家電 | 12 | ダイソン, パナソニック, ReFa, ヤーマン |
 
 ## Deployment
 

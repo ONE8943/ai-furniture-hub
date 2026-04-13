@@ -6,15 +6,15 @@ info:
     商品検索、後継品検索、キュレーション提案、AI可視性診断を提供。
     Furniture & storage product search hub optimized for AI agents.
     All dimensions in mm, prices in JPY (integer).
-  version: 6.1.0
+  version: 6.2.0
   contact:
     name: MCP Hub Support
   license:
     name: MIT
 
 servers:
-  - url: https://api.example.com/v1
-    description: Production (replace with actual URL)
+  - url: https://ai-furniture-hub.onrender.com
+    description: Production (Render.com)
 
 paths:
   /search:

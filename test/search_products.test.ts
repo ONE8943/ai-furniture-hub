@@ -29,10 +29,10 @@ describe("search_products", () => {
 
   it("flags miss when no products match", async () => {
     const result = await searchProducts({
-      width_mm_min: 430,
-      width_mm_max: 599,
+      width_mm_min: 1,
+      width_mm_max: 15,
       in_stock_only: true,
-      intent: "洗面所の壁と洗濯機の間が430〜599mmしかない",
+      intent: "幅15mm以下の超極小スペースに入る収納を探している",
     });
     expect(result.miss).toBe(true);
     expect(result.suggestion).toBeDefined();
