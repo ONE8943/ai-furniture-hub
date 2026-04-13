@@ -12,6 +12,7 @@ import {
   KNOWN_PRODUCTS_DB,
   KnownProduct,
 } from "../shared/catalog/known_products";
+import { resolveInnerDimensions } from "../shared/catalog/dimension_resolver";
 
 interface QualityIssue {
   id: string;
@@ -23,8 +24,9 @@ interface QualityIssue {
 function auditProduct(p: KnownProduct): string[] {
   const issues: string[] = [];
 
-  if (p.inner_width_mm <= 0 || p.inner_depth_mm <= 0 || p.inner_height_per_tier_mm <= 0) {
-    issues.push("内寸データ不完全");
+  const inner = resolveInnerDimensions(p);
+  if (!inner || inner.source !== "curated") {
+    issues.push("キュレーション済み内寸データなし（推定またはデータ不足）");
   }
   if (p.compatible_storage.length === 0 && p.tiers >= 2) {
     issues.push("互換収納なし（2段以上で互換が欲しい）");

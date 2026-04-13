@@ -11,6 +11,7 @@ import {
   searchRakutenMultiPage,
   isRakutenApiConfigured,
 } from "../adapters/rakuten_api";
+import { resolveInnerDimensions } from "../shared/catalog/dimension_resolver";
 import { randomUUID } from "node:crypto";
 
 /**
@@ -38,14 +39,15 @@ function knownToProduct(kp: KnownProduct): Product {
     width_mm: kp.outer_width_mm,
     height_mm: kp.outer_height_mm,
     depth_mm: kp.outer_depth_mm,
-    inner_dimensions:
-      kp.inner_width_mm > 0
-        ? {
-            width_mm: kp.inner_width_mm,
-            height_mm: kp.inner_height_per_tier_mm,
-            depth_mm: kp.inner_depth_mm,
-          }
-        : undefined,
+    inner_dimensions: (() => {
+      const resolved = resolveInnerDimensions(kp);
+      if (!resolved) return undefined;
+      return {
+        width_mm: resolved.inner_width_mm,
+        height_mm: resolved.inner_height_per_tier_mm,
+        depth_mm: resolved.inner_depth_mm,
+      };
+    })(),
     price: Math.round((kp.price_range.min + kp.price_range.max) / 2),
     in_stock: !kp.discontinued,
     color: kp.colors[0] || undefined,

@@ -16,11 +16,15 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js";
 import { registerAllTools } from "./lib/register_tools";
-import { refreshProductStore } from "./data/product_store";
+import { refreshProductStore, getAllProducts } from "./data/product_store";
+import { checkRateLimit, TIER_CONFIGS, type RateLimitResult } from "./lib/rate_limiter";
+import { validateApiKeyCompat, type KeyValidation } from "./lib/api_key_store";
+import { KNOWN_PRODUCTS_DB } from "./shared/catalog/known_products";
+import { resolveInnerDimensions } from "./shared/catalog/dimension_resolver";
 
-const VERSION = "6.2.0";
+const VERSION = "6.3.0";
 const HTTP_PORT = parseInt(process.env["PORT"] ?? process.env["MCP_HTTP_PORT"] ?? "3000", 10);
-const API_KEY = process.env["MCP_API_KEY"] ?? "";
+const LEGACY_API_KEY = process.env["MCP_API_KEY"] ?? "";
 
 function jsonResp(res: ServerResponse, status: number, body: unknown): void {
   res.writeHead(status, { "Content-Type": "application/json" });
@@ -42,12 +46,55 @@ async function main(): Promise<void> {
 
   const transports: Record<string, StreamableHTTPServerTransport | SSEServerTransport> = {};
 
-  function checkApiKey(req: IncomingMessage, res: ServerResponse): boolean {
-    if (!API_KEY) return true;
+  function extractBearerToken(req: IncomingMessage): string | undefined {
     const auth = req.headers["authorization"];
-    if (auth === `Bearer ${API_KEY}`) return true;
-    jsonResp(res, 401, { error: "Unauthorized" });
-    return false;
+    if (auth?.startsWith("Bearer ")) return auth.slice(7);
+    const qKey = new URL(req.url ?? "/", `http://${req.headers.host}`).searchParams.get("api_key");
+    return qKey ?? undefined;
+  }
+
+  function getClientIp(req: IncomingMessage): string {
+    const xff = req.headers["x-forwarded-for"];
+    if (typeof xff === "string") return xff.split(",")[0]!.trim();
+    return req.socket.remoteAddress ?? "unknown";
+  }
+
+  /**
+   * 認証 + レート制限チェック。
+   * 通過したらリクエストに tier 情報を付与して true を返す。
+   */
+  function authAndRateLimit(req: IncomingMessage, res: ServerResponse): { ok: boolean; keyInfo?: KeyValidation; rateLimit?: RateLimitResult } {
+    const token = extractBearerToken(req);
+    const keyInfo = validateApiKeyCompat(token, LEGACY_API_KEY || undefined);
+
+    if (!keyInfo.valid) {
+      jsonResp(res, 401, { error: "Invalid API key" });
+      return { ok: false };
+    }
+
+    const ip = getClientIp(req);
+    const rl = checkRateLimit(ip, token, keyInfo.tier);
+
+    res.setHeader("X-RateLimit-Limit", String(rl.limit === Infinity ? "unlimited" : rl.limit));
+    res.setHeader("X-RateLimit-Remaining", String(rl.remaining === Infinity ? "unlimited" : rl.remaining));
+    res.setHeader("X-RateLimit-Tier", rl.tier);
+    if (rl.resetAt > 0) res.setHeader("X-RateLimit-Reset", String(Math.floor(rl.resetAt / 1000)));
+
+    if (!rl.allowed) {
+      res.writeHead(429, { "Content-Type": "application/json", "Retry-After": String(Math.ceil((rl.resetAt - Date.now()) / 1000)) });
+      res.end(JSON.stringify({
+        error: "Rate limit exceeded",
+        tier: rl.tier,
+        limit: rl.limit,
+        reset_at: new Date(rl.resetAt).toISOString(),
+        upgrade_hint: rl.tier === "anonymous"
+          ? "Register a free API key for 500 queries/month. See /health for details."
+          : "Upgrade to Pro tier for unlimited access.",
+      }));
+      return { ok: false };
+    }
+
+    return { ok: true, keyInfo, rateLimit: rl };
   }
 
   function setCors(res: ServerResponse): void {
@@ -73,7 +120,15 @@ async function main(): Promise<void> {
     const url = req.url ?? "/";
 
     if (url === "/health" && req.method === "GET") {
-      jsonResp(res, 200, { status: "ok", version: VERSION });
+      jsonResp(res, 200, {
+        status: "ok",
+        version: VERSION,
+        rate_limits: {
+          anonymous: { monthly_limit: TIER_CONFIGS.anonymous.monthlyLimit, curated_dimensions: false },
+          free: { monthly_limit: TIER_CONFIGS.free.monthlyLimit, curated_dimensions: true },
+          pro: { monthly_limit: "unlimited", curated_dimensions: true },
+        },
+      });
       return;
     }
 
@@ -113,9 +168,95 @@ async function main(): Promise<void> {
       return;
     }
 
+    // ── /api/fit-check: Dimension-based fit checking REST API ──
+    if (url.startsWith("/api/fit-check") && (req.method === "GET" || req.method === "POST")) {
+      const auth = authAndRateLimit(req, res);
+      if (!auth.ok) return;
+
+      let width = 0, height = 0, depth = 0, category = "";
+      if (req.method === "GET") {
+        const qp = new URL(req.url!, `http://${req.headers.host}`).searchParams;
+        width = parseInt(qp.get("width_mm") ?? "0", 10);
+        height = parseInt(qp.get("height_mm") ?? "0", 10);
+        depth = parseInt(qp.get("depth_mm") ?? "0", 10);
+        category = qp.get("category") ?? "";
+      } else {
+        try {
+          const body = JSON.parse(await readBody(req));
+          width = body.width_mm ?? 0;
+          height = body.height_mm ?? 0;
+          depth = body.depth_mm ?? 0;
+          category = body.category ?? "";
+        } catch {
+          jsonResp(res, 400, { error: "Invalid JSON body" });
+          return;
+        }
+      }
+
+      if (width <= 0 || height <= 0 || depth <= 0) {
+        jsonResp(res, 400, { error: "width_mm, height_mm, depth_mm are required (positive integers, mm)" });
+        return;
+      }
+
+      const showCurated = auth.keyInfo?.tier !== "anonymous";
+      const fits: Array<{
+        id: string; name: string; brand: string; category: string;
+        outer: { width_mm: number; height_mm: number; depth_mm: number };
+        inner: { width_mm: number; height_per_tier_mm: number; depth_mm: number; source: string } | null;
+        fits_in_space: boolean; clearance: { width_mm: number; height_mm: number; depth_mm: number };
+        compatible_storage_count: number;
+      }> = [];
+
+      const products = KNOWN_PRODUCTS_DB.filter((p) => {
+        if (category && p.category !== category) return false;
+        return p.outer_width_mm <= width && p.outer_height_mm <= height && p.outer_depth_mm <= depth;
+      });
+
+      for (const p of products.slice(0, 30)) {
+        const resolved = resolveInnerDimensions(p);
+        const innerResult = resolved
+          ? (showCurated || resolved.source === "estimated"
+            ? { width_mm: resolved.inner_width_mm, height_per_tier_mm: resolved.inner_height_per_tier_mm, depth_mm: resolved.inner_depth_mm, source: resolved.source }
+            : { width_mm: resolved.inner_width_mm, height_per_tier_mm: resolved.inner_height_per_tier_mm, depth_mm: resolved.inner_depth_mm, source: "estimated" })
+          : null;
+
+        fits.push({
+          id: p.id,
+          name: p.name,
+          brand: p.brand,
+          category: p.category ?? "その他",
+          outer: { width_mm: p.outer_width_mm, height_mm: p.outer_height_mm, depth_mm: p.outer_depth_mm },
+          inner: innerResult,
+          fits_in_space: true,
+          clearance: {
+            width_mm: width - p.outer_width_mm,
+            height_mm: height - p.outer_height_mm,
+            depth_mm: depth - p.outer_depth_mm,
+          },
+          compatible_storage_count: p.compatible_storage.length,
+        });
+      }
+
+      fits.sort((a, b) => {
+        const aTotal = a.clearance.width_mm + a.clearance.height_mm + a.clearance.depth_mm;
+        const bTotal = b.clearance.width_mm + b.clearance.height_mm + b.clearance.depth_mm;
+        return aTotal - bTotal;
+      });
+
+      jsonResp(res, 200, {
+        query: { width_mm: width, height_mm: height, depth_mm: depth, category: category || undefined },
+        total: fits.length,
+        tier: auth.rateLimit?.tier ?? "anonymous",
+        curated_dimensions: showCurated,
+        products: fits,
+      });
+      return;
+    }
+
     // Streamable HTTP (modern MCP transport)
     if (url === "/mcp") {
-      if (!checkApiKey(req, res)) return;
+      const auth = authAndRateLimit(req, res);
+      if (!auth.ok) return;
 
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       let transport: StreamableHTTPServerTransport;
@@ -165,7 +306,8 @@ async function main(): Promise<void> {
 
     // Deprecated SSE transport
     if (url === "/sse" && req.method === "GET") {
-      if (!checkApiKey(req, res)) return;
+      const authSse = authAndRateLimit(req, res);
+      if (!authSse.ok) return;
       const transport = new SSEServerTransport("/messages", res);
       transports[transport.sessionId] = transport;
       res.on("close", () => { delete transports[transport.sessionId]; });
@@ -196,7 +338,8 @@ async function main(): Promise<void> {
       `  Streamable HTTP: http://localhost:${HTTP_PORT}/mcp\n` +
       `  SSE (legacy):    http://localhost:${HTTP_PORT}/sse\n` +
       `  Health:          http://localhost:${HTTP_PORT}/health\n` +
-      `  API Key:         ${API_KEY ? "ENABLED" : "DISABLED (set MCP_API_KEY)"}\n`
+      `  Fit-Check Demo:  http://localhost:${HTTP_PORT}/\n` +
+      `  Rate Limits:     anonymous=${TIER_CONFIGS.anonymous.monthlyLimit}/mo, free=${TIER_CONFIGS.free.monthlyLimit}/mo, pro=unlimited\n`
     );
   });
 

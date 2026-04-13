@@ -8,6 +8,7 @@
  */
 import { z } from "zod";
 import { findMatchingProducts, ProductMatch, KnownProduct, getProductRelatedItems } from "../shared/catalog/known_products";
+import { resolveInnerDimensions } from "../shared/catalog/dimension_resolver";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, logRequirementGap, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
@@ -146,12 +147,16 @@ export async function identifyProduct(rawInput: unknown): Promise<IdentifyProduc
         height_mm: p.outer_height_mm,
         depth_mm: p.outer_depth_mm,
       },
-      inner_dimensions: {
-        width_mm: p.inner_width_mm,
-        height_per_tier_mm: p.inner_height_per_tier_mm,
-        depth_mm: p.inner_depth_mm,
-        tiers: p.tiers,
-      },
+      inner_dimensions: (() => {
+        const resolved = resolveInnerDimensions(p);
+        if (!resolved) return { width_mm: 0, height_per_tier_mm: 0, depth_mm: 0, tiers: p.tiers };
+        return {
+          width_mm: resolved.inner_width_mm,
+          height_per_tier_mm: resolved.inner_height_per_tier_mm,
+          depth_mm: resolved.inner_depth_mm,
+          tiers: p.tiers,
+        };
+      })(),
       price_range: p.price_range,
       colors: p.colors,
       material: p.material,

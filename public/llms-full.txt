@@ -1,6 +1,6 @@
 # AI Furniture & Home Product Hub - Full Tool Documentation
 
-> MCP Server v6.2.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
+> MCP Server v6.3.0 | Protocol: Model Context Protocol (stdio + Streamable HTTP)
 > Operator: ONE, Inc. (株式会社ONE)
 > 355+ curated products | 31 categories | 90+ brands | 15 tools + 3 prompt workflows
 > Curated sets (15 bundles, 8 room presets, influencer picks, hack sets), 25-entry compatibility DB, AI visibility diagnosis

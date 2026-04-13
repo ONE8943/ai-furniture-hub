@@ -2,7 +2,7 @@
 
 > Auto-generated at 2026-04-13
 
-## Project: ai-furniture-hub v6.2.0
+## Project: ai-furniture-hub v6.3.0
 
 MCP server for AI agents: 15 tools + 3 prompt workflows, 355+ curated products, 31 categories, 90+ brands. mm-precision dimension search, keyword/brand/color alias filtering, shelf+storage coordination, related-item chains, category discovery, popular rankings, curated sets (bundles, room presets, influencer picks, hack sets), dimension-compatible replacement with fit_score, AI visibility diagnosis (AIO), attribution tracking. Rakuten Ichiba live API, Amazon affiliate link generation. Covers furniture, home appliances, PC peripherals, smart home, beauty devices, kitchen gadgets, health & fitness.
 

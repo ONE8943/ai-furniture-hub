@@ -7,6 +7,7 @@
 import { z } from "zod";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { findMatchingProducts, getProductBuyGuide } from "../shared/catalog/known_products";
+import { resolveInnerDimensions } from "../shared/catalog/dimension_resolver";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { buildAffiliateUrl } from "../services/affiliate";
@@ -123,17 +124,20 @@ export async function compareProducts(rawInput: unknown): Promise<CompareResult>
         image_url: p.image_url ?? "",
         affiliate_url: aff.affiliate_url,
         url: p.url ?? "",
-        known_product_match: knownMatch ? {
-          model_number: knownMatch.model_number,
-          brand: knownMatch.brand,
-          series: knownMatch.series,
-          inner_width_mm: knownMatch.inner_width_mm,
-          inner_depth_mm: knownMatch.inner_depth_mm,
-          inner_height_per_tier_mm: knownMatch.inner_height_per_tier_mm,
-          tiers: knownMatch.tiers,
-          load_capacity_per_tier_kg: knownMatch.load_capacity_per_tier_kg,
-          compatible_storage_count: knownMatch.compatible_storage.length,
-        } : null,
+        known_product_match: knownMatch ? (() => {
+          const resolved = resolveInnerDimensions(knownMatch);
+          return {
+            model_number: knownMatch.model_number,
+            brand: knownMatch.brand,
+            series: knownMatch.series,
+            inner_width_mm: resolved?.inner_width_mm ?? 0,
+            inner_depth_mm: resolved?.inner_depth_mm ?? 0,
+            inner_height_per_tier_mm: resolved?.inner_height_per_tier_mm ?? 0,
+            tiers: knownMatch.tiers,
+            load_capacity_per_tier_kg: knownMatch.load_capacity_per_tier_kg,
+            compatible_storage_count: knownMatch.compatible_storage.length,
+          };
+        })() : null,
         ...(buyGuide && { buy_guide: buyGuide }),
       });
     } catch {

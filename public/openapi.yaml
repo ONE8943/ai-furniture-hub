@@ -6,7 +6,7 @@ info:
     商品検索、後継品検索、キュレーション提案、AI可視性診断を提供。
     Furniture & storage product search hub optimized for AI agents.
     All dimensions in mm, prices in JPY (integer).
-  version: 6.2.0
+  version: 6.3.0
   contact:
     name: MCP Hub Support
   license:
@@ -17,6 +17,52 @@ servers:
     description: Production (Render.com)
 
 paths:
+  /api/fit-check:
+    get:
+      operationId: fitCheck
+      summary: 寸法フィットチェック / Dimension Fit Check
+      description: 設置スペースの寸法を指定し、収まる製品を検索。内寸データはAPIキー登録ユーザーのみ精密値を提供。
+      parameters:
+        - name: width_mm
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: スペースの幅 (mm)
+        - name: height_mm
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: スペースの高さ (mm)
+        - name: depth_mm
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: スペースの奥行き (mm)
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+          description: カテゴリ絞り込み
+      responses:
+        "200":
+          description: フィットする製品一覧
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: string
+            X-RateLimit-Remaining:
+              schema:
+                type: string
+            X-RateLimit-Tier:
+              schema:
+                type: string
+        "429":
+          description: レート制限超過
+
   /search:
     post:
       operationId: searchProducts

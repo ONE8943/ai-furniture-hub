@@ -154,7 +154,13 @@ try {
         console.log(`  ${product.brand} ${product.name}`);
         console.log(`  Model: ${product.model_number}`);
         console.log(`  Outer: ${product.outer_width_mm}x${product.outer_depth_mm}x${product.outer_height_mm}mm`);
-        console.log(`  Inner: ${product.inner_width_mm}x${product.inner_depth_mm}x${product.inner_height_per_tier_mm}mm x ${product.tiers} tiers`);
+        const { resolveInnerDimensions } = require("../../shared/catalog/dimension_resolver");
+        const innerDim = resolveInnerDimensions(product);
+        if (innerDim) {
+          console.log(`  Inner: ${innerDim.inner_width_mm}x${innerDim.inner_depth_mm}x${innerDim.inner_height_per_tier_mm}mm x ${product.tiers} tiers (${innerDim.source})`);
+        } else {
+          console.log(`  Inner: N/A`);
+        }
         console.log(`  Price: ¥${product.price_range.min.toLocaleString()} - ¥${product.price_range.max.toLocaleString()}`);
         if (product.compatible_storage.length > 0) {
           console.log("  Compatible storage:");

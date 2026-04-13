@@ -19,7 +19,7 @@
     "description": "AIエージェント（ChatGPT, Claude, Perplexity等）が直接接続できるMCPサーバー。家具・家電・ガジェット等のカタログデータをmm単位で構造化し、寸法フィルタ検索・関連商品チェーン・棚と収納のコーディネート等の機能を提供。楽天市場APIによるリアルタイム商品検索とAmazon検索リンク生成に対応。",
     "applicationCategory": "DeveloperApplication",
     "operatingSystem": "Cross-platform",
-    "softwareVersion": "5.2.0",
+    "softwareVersion": "6.3.0",
     "author": {
       "@type": "Organization",
       "name": "株式会社ONE",
@@ -158,6 +158,7 @@
         <span class="text-xl font-bold tracking-tight">AI Furniture Hub</span>
       </div>
       <div class="hidden md:flex items-center space-x-8 text-sm">
+        <a href="#fit-demo" class="hover:text-red-300 transition-colors font-semibold">デモ</a>
         <a href="#features" class="hover:text-red-300 transition-colors">機能</a>
         <a href="#technology" class="hover:text-red-300 transition-colors">技術</a>
         <a href="#flow" class="hover:text-red-300 transition-colors">仕組み</a>
@@ -179,11 +180,11 @@
           家具選びをサポートします。
         </p>
         <div class="flex flex-wrap gap-4 fade-in fade-in-delay-3">
-          <a href="#features" class="inline-block px-8 py-4 rounded-lg font-bold text-white glow" style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
-            サービス詳細を見る
+          <a href="#fit-demo" class="inline-block px-8 py-4 rounded-lg font-bold text-white glow" style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
+            寸法フィットチェックを試す
           </a>
-          <a href="#company" class="inline-block px-8 py-4 rounded-lg font-bold border border-white border-opacity-30 hover:bg-white hover:bg-opacity-10 transition-colors">
-            運営会社について
+          <a href="#features" class="inline-block px-8 py-4 rounded-lg font-bold border border-white border-opacity-30 hover:bg-white hover:bg-opacity-10 transition-colors">
+            サービス詳細を見る
           </a>
         </div>
       </div>
@@ -200,11 +201,11 @@
         <p class="text-sm text-gray-500 mt-1">カテゴリ</p>
       </div>
       <div>
-        <p class="text-3xl font-extrabold text-gray-900 stat-number">80+</p>
+        <p class="text-3xl font-extrabold text-gray-900 stat-number">90+</p>
         <p class="text-sm text-gray-500 mt-1">ブランド</p>
       </div>
       <div>
-        <p class="text-3xl font-extrabold text-gray-900 stat-number">13</p>
+        <p class="text-3xl font-extrabold text-gray-900 stat-number">15</p>
         <p class="text-sm text-gray-500 mt-1">AIツール</p>
       </div>
       <div>
@@ -221,6 +222,164 @@
       </div>
     </div>
   </section>
+
+  <!-- ======== Fit Check Demo ======== -->
+  <section id="fit-demo" class="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
+    <div class="max-w-4xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <p class="text-red-500 font-semibold text-sm tracking-widest uppercase mb-3">Live Demo</p>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">寸法フィットチェック</h2>
+        <p class="mt-4 text-gray-500 max-w-2xl mx-auto">設置スペースの寸法を入力すると、そこに収まる家具をリアルタイムで検索します</p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border p-8 md:p-10">
+        <div class="grid md:grid-cols-4 gap-4 mb-2">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">幅</label>
+            <div class="relative">
+              <input type="number" id="demo-width" placeholder="例: 425" value="425" min="1"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:outline-none transition-colors text-lg font-mono">
+              <span class="absolute right-3 top-3 text-gray-400 text-sm" id="demo-unit-w">mm</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">奥行き</label>
+            <div class="relative">
+              <input type="number" id="demo-depth" placeholder="例: 350" value="350" min="1"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:outline-none transition-colors text-lg font-mono">
+              <span class="absolute right-3 top-3 text-gray-400 text-sm" id="demo-unit-d">mm</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">高さ</label>
+            <div class="relative">
+              <input type="number" id="demo-height" placeholder="例: 1800" value="1800" min="1"
+                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:outline-none transition-colors text-lg font-mono">
+              <span class="absolute right-3 top-3 text-gray-400 text-sm" id="demo-unit-h">mm</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">単位</label>
+            <select id="demo-unit-select" class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:outline-none transition-colors text-lg bg-white">
+              <option value="mm" selected>mm</option>
+              <option value="cm">cm</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="demo-search-btn" onclick="runFitCheck()"
+          class="w-full mt-6 px-8 py-4 rounded-xl font-bold text-white text-lg transition-all hover:shadow-lg active:scale-98"
+          style="background: linear-gradient(135deg, #e94560, #ff6b6b);">
+          フィットする製品を探す
+        </button>
+
+        <div id="demo-status" class="mt-6 text-center text-gray-500 text-sm hidden"></div>
+
+        <div id="demo-results" class="mt-8 hidden">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-900">検索結果</h3>
+            <span id="demo-count" class="text-sm text-gray-500"></span>
+          </div>
+          <div id="demo-list" class="space-y-4"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const unitSelect = document.getElementById('demo-unit-select');
+    unitSelect.addEventListener('change', function() {
+      const u = this.value;
+      document.getElementById('demo-unit-w').textContent = u;
+      document.getElementById('demo-unit-d').textContent = u;
+      document.getElementById('demo-unit-h').textContent = u;
+    });
+
+    async function runFitCheck() {
+      const btn = document.getElementById('demo-search-btn');
+      const statusEl = document.getElementById('demo-status');
+      const resultsEl = document.getElementById('demo-results');
+      const listEl = document.getElementById('demo-list');
+      const countEl = document.getElementById('demo-count');
+
+      const unit = document.getElementById('demo-unit-select').value;
+      const factor = unit === 'cm' ? 10 : 1;
+      const w = Math.round(parseFloat(document.getElementById('demo-width').value || '0') * factor);
+      const d = Math.round(parseFloat(document.getElementById('demo-depth').value || '0') * factor);
+      const h = Math.round(parseFloat(document.getElementById('demo-height').value || '0') * factor);
+
+      if (w <= 0 || d <= 0 || h <= 0) {
+        statusEl.textContent = '幅・奥行き・高さをすべて正の数で入力してください';
+        statusEl.classList.remove('hidden');
+        resultsEl.classList.add('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '検索中...';
+      statusEl.textContent = '';
+      statusEl.classList.add('hidden');
+      resultsEl.classList.add('hidden');
+
+      try {
+        const resp = await fetch(`/api/fit-check?width_mm=${w}&height_mm=${h}&depth_mm=${d}`);
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          statusEl.textContent = data.error || 'エラーが発生しました';
+          statusEl.classList.remove('hidden');
+          return;
+        }
+
+        if (data.total === 0) {
+          statusEl.textContent = `${w}x${d}x${h}mm のスペースに収まる製品が見つかりませんでした。寸法を広げてみてください。`;
+          statusEl.classList.remove('hidden');
+          return;
+        }
+
+        countEl.textContent = `${data.total}件がフィット（${data.curated_dimensions ? '精密内寸' : '推定内寸'}）`;
+        listEl.innerHTML = '';
+
+        for (const p of data.products) {
+          const clearTotal = p.clearance.width_mm + p.clearance.height_mm + p.clearance.depth_mm;
+          const isTight = clearTotal <= 30;
+          const card = document.createElement('div');
+          card.className = 'bg-gray-50 rounded-xl border p-5 hover:shadow-md transition-shadow';
+          card.innerHTML = `
+            <div class="flex items-start justify-between flex-wrap gap-2">
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${isTight ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}">${isTight ? 'シンデレラフィット' : 'フィット'}</span>
+                  <span class="text-xs text-gray-400">${p.category}</span>
+                </div>
+                <h4 class="font-bold text-gray-900 mt-1 truncate">${p.brand} ${p.name}</h4>
+                <div class="flex flex-wrap gap-x-4 gap-y-1 mt-2 text-sm text-gray-600">
+                  <span>外寸: ${p.outer.width_mm}x${p.outer.depth_mm}x${p.outer.height_mm}mm</span>
+                  ${p.inner ? `<span>内寸: ${p.inner.width_mm}x${p.inner.depth_mm}x${p.inner.height_per_tier_mm}mm<span class="text-xs ml-1 ${p.inner.source === 'curated' ? 'text-green-600' : 'text-yellow-600'}">(${p.inner.source === 'curated' ? '実測' : '推定'})</span></span>` : ''}
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <div class="text-xs text-gray-400">余白</div>
+                <div class="font-mono text-sm ${isTight ? 'text-red-600 font-bold' : 'text-gray-700'}">
+                  W${p.clearance.width_mm} D${p.clearance.depth_mm} H${p.clearance.height_mm}mm
+                </div>
+                ${p.compatible_storage_count > 0 ? `<div class="text-xs text-green-600 mt-1">互換収納 ${p.compatible_storage_count}件</div>` : ''}
+              </div>
+            </div>
+          `;
+          listEl.appendChild(card);
+        }
+
+        resultsEl.classList.remove('hidden');
+      } catch (e) {
+        statusEl.textContent = 'ネットワークエラーが発生しました。もう一度お試しください。';
+        statusEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'フィットする製品を探す';
+      }
+    }
+  </script>
 
   <!-- ======== Features ======== -->
   <section id="features" class="py-20 md:py-28">
