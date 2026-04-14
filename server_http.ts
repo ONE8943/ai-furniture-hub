@@ -22,7 +22,7 @@ import { validateApiKeyCompat, type KeyValidation } from "./lib/api_key_store";
 import { KNOWN_PRODUCTS_DB } from "./shared/catalog/known_products";
 import { resolveInnerDimensions } from "./shared/catalog/dimension_resolver";
 
-const VERSION = "6.3.0";
+const VERSION = "6.4.0";
 const HTTP_PORT = parseInt(process.env["PORT"] ?? process.env["MCP_HTTP_PORT"] ?? "3000", 10);
 const LEGACY_API_KEY = process.env["MCP_API_KEY"] ?? "";
 
