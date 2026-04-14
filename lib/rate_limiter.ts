@@ -1,9 +1,13 @@
 /**
- * インメモリ レート制限
+ * レート制限（ファイル永続化対応）
  *
  * IPアドレスまたはAPIキーに基づいて月間クエリ数を制限する。
- * 本番運用ではRedis等に置換可能だが、初期はインメモリで十分。
+ * インメモリで高速処理しつつ、定期的にファイルへ永続化。
+ * Render再起動でもカウンタを維持（ディスクが揮発しない限り）。
  */
+
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { join } from "node:path";
 
 export type ApiTier = "anonymous" | "free" | "pro";
 
@@ -21,11 +25,75 @@ export const TIER_CONFIGS: Record<ApiTier, TierConfig> = {
 
 interface UsageBucket {
   count: number;
-  resetAt: number; // epoch ms
+  resetAt: number;
 }
+
+interface PersistedState {
+  byIp: Record<string, UsageBucket>;
+  byKey: Record<string, UsageBucket>;
+  savedAt: number;
+}
+
+const PERSIST_DIR = process.env["RATE_LIMIT_DIR"] ?? join(process.cwd(), "logs");
+const PERSIST_FILE = join(PERSIST_DIR, ".rate_limits.json");
+const SAVE_INTERVAL_MS = 60_000;
 
 const usageByIp = new Map<string, UsageBucket>();
 const usageByKey = new Map<string, UsageBucket>();
+let dirty = false;
+let lastSaved = 0;
+
+function loadState(): void {
+  try {
+    if (!existsSync(PERSIST_FILE)) return;
+    const raw = readFileSync(PERSIST_FILE, "utf-8");
+    const state: PersistedState = JSON.parse(raw);
+    const now = Date.now();
+    for (const [k, v] of Object.entries(state.byIp ?? {})) {
+      if (v.resetAt > now) usageByIp.set(k, v);
+    }
+    for (const [k, v] of Object.entries(state.byKey ?? {})) {
+      if (v.resetAt > now) usageByKey.set(k, v);
+    }
+  } catch {
+    // corrupt or missing — start fresh
+  }
+}
+
+function saveState(): void {
+  if (!dirty) return;
+  try {
+    mkdirSync(PERSIST_DIR, { recursive: true });
+    const state: PersistedState = {
+      byIp: Object.fromEntries(usageByIp),
+      byKey: Object.fromEntries(usageByKey),
+      savedAt: Date.now(),
+    };
+    writeFileSync(PERSIST_FILE, JSON.stringify(state), "utf-8");
+    dirty = false;
+    lastSaved = Date.now();
+  } catch {
+    // non-critical: next save will retry
+  }
+}
+
+function maybeSave(): void {
+  if (dirty && Date.now() - lastSaved > SAVE_INTERVAL_MS) {
+    saveState();
+  }
+}
+
+// Load on module init
+loadState();
+
+// Periodic save (non-blocking)
+const saveTimer = setInterval(saveState, SAVE_INTERVAL_MS);
+if (saveTimer.unref) saveTimer.unref();
+
+// Save on process exit
+process.on("beforeExit", saveState);
+process.on("SIGINT", () => { saveState(); process.exit(0); });
+process.on("SIGTERM", () => { saveState(); process.exit(0); });
 
 function getMonthEnd(): number {
   const now = new Date();
@@ -38,6 +106,7 @@ function getBucket(map: Map<string, UsageBucket>, id: string): UsageBucket {
   if (!bucket || now >= bucket.resetAt) {
     bucket = { count: 0, resetAt: getMonthEnd() };
     map.set(id, bucket);
+    dirty = true;
   }
   return bucket;
 }
@@ -68,6 +137,9 @@ export function checkRateLimit(ip: string, apiKey?: string, tier?: ApiTier): Rat
   }
 
   bucket.count++;
+  dirty = true;
+  maybeSave();
+
   return {
     allowed: true,
     tier: resolvedTier,

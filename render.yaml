@@ -3,7 +3,7 @@ services:
     runtime: node
     name: ai-furniture-hub
     plan: starter
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && node scripts/generate_inner_db.js && npm run build
     startCommand: npm run start:render
     healthCheckPath: /health
     autoDeploy: true
@@ -23,4 +23,6 @@ services:
       - key: AFFILIATE_ID_RAKUTEN
         sync: false
       - key: AFFILIATE_ID_AMAZON
+        sync: false
+      - key: INNER_DIMENSIONS_DATA
         sync: false

@@ -5,7 +5,7 @@
 node_modules/
 dist/
 
-# ログ
+# ログ・ランタイムデータ
 logs/
 
 # Cursor ローカル設定
@@ -26,6 +26,9 @@ public/llms-tools.sync-draft.md
 
 # personal-app local data
 personal-app/data/
+
+# 内寸データベース（非公開: 環境変数から生成）
+data/dimensions/inner_dimensions_db.ts
 
 # 機密情報隔離（絶対にコミットしない）
 .secrets_backup/
