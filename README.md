@@ -8,6 +8,16 @@
 [![npm](https://img.shields.io/npm/v/ai-furniture-hub)](https://www.npmjs.com/package/ai-furniture-hub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## Discovery & Install
+
+- **MCP Registry name**: `io.github.one8943/ai-furniture-hub`
+- **Remote MCP endpoint**: `https://ai-furniture-hub.onrender.com/mcp`
+- **Well-known discovery**: `https://ai-furniture-hub.onrender.com/.well-known/mcp.json`
+- **npm package**: [`ai-furniture-hub`](https://www.npmjs.com/package/ai-furniture-hub)
+
+If your MCP client supports registry search, search for `io.github.one8943/ai-furniture-hub` or `AI Furniture & Home Product Hub`.
+If your client supports direct remote MCP, connect it to `https://ai-furniture-hub.onrender.com/mcp`.
+
 ## Why This Exists
 
 AI agents need structured, machine-optimized product data to make useful recommendations. This MCP server provides:
@@ -20,7 +30,7 @@ AI agents need structured, machine-optimized product data to make useful recomme
 
 ## Quick Start
 
-### Option 1: Remote (no install)
+### Option 1: Remote (Cursor / Claude / VS Code / ChatGPT)
 
 Connect directly to the hosted server:
 
@@ -33,6 +43,8 @@ Connect directly to the hosted server:
   }
 }
 ```
+
+Works in any MCP client that accepts a remote Streamable HTTP URL.
 
 ### Option 2: npx (local)
 
@@ -169,7 +181,7 @@ AI Agent (ChatGPT, Claude, Gemini, Cursor, Perplexity, ...)
 +-----------------------------------------------------------+
 |  15 Tools + 3 Prompts                                     |
 +-----------------------------------------------------------+
-|  300+ Products | 31 Categories | 80+ Brands               |
+|  355+ Products | 31 Categories | 90+ Brands               |
 |  Curated Sets: bundles, room presets, influencer picks     |
 |  Compatibility DB: dimension-based fit scoring             |
 |  Attribution: per-request tracking with attribution_id     |
@@ -188,6 +200,9 @@ AI Agent (ChatGPT, Claude, Gemini, Cursor, Perplexity, ...)
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `DEPLOYMENT_MODE` | No | `private` (default, affiliate ON) or `public` (affiliate OFF for marketplace) |
+| `MCP_API_KEYS_FREE` | No | Comma-separated free-tier API keys for higher rate limits + curated inner dimensions |
+| `MCP_API_KEYS_PRO` | No | Comma-separated pro-tier API keys for unlimited access |
+| `INNER_DIMENSIONS_DATA` | Render only | Hidden curated inner-dimension DB injected at build time |
 | `AFFILIATE_ID_AMAZON` | No | Amazon Associate tag |
 | `AFFILIATE_ID_RAKUTEN` | No | Rakuten Affiliate ID |
 | `RAKUTEN_APP_ID` | No | Rakuten API Application ID |
@@ -199,6 +214,7 @@ All environment variables are optional. The server works out of the box with moc
 
 | Platform | URL |
 |----------|-----|
+| **MCP Registry** | `io.github.one8943/ai-furniture-hub` |
 | **Render** | `https://ai-furniture-hub.onrender.com/mcp` |
 | **npm** | `npx ai-furniture-hub` |
 
@@ -223,7 +239,11 @@ MIT
 
 **AI Furniture & Home Product Hub** は家具・家電・ガジェット等のAIエージェント向けMCPサーバーです。
 
-- **300+商品、31カテゴリ、80+ブランド** のキュレーション済みカタログ
+- **MCP Registry名**: `io.github.one8943/ai-furniture-hub`
+- **リモート接続URL**: `https://ai-furniture-hub.onrender.com/mcp`
+- **well-known**: `https://ai-furniture-hub.onrender.com/.well-known/mcp.json`
+
+- **355+商品、31カテゴリ、90+ブランド** のキュレーション済みカタログ
 - **mm精度の寸法検索** - 「幅425mmの隙間にぴったり収まる棚」を即座に発見
 - **関連アイテムチェーン** - 1商品から3-5個の関連商品（必須アクセサリ、保護材、消耗品）
 - **キュレーション** - バンドル提案、ルームプリセット、インフルエンサーおすすめ、100均代用ハック

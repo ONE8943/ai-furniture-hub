@@ -6,9 +6,14 @@
  * なければ inner_size_estimator で推定するフォールバックを提供する。
  */
 
-import type { InnerDimensions } from "../../data/dimensions/inner_dimensions_db";
 import { estimateInnerSize, EstimatedInner } from "../../utils/inner_size_estimator";
 import type { KnownProduct } from "./types";
+
+interface InnerDimensions {
+  inner_width_mm: number;
+  inner_height_per_tier_mm: number;
+  inner_depth_mm: number;
+}
 
 let innerDB: Record<string, InnerDimensions> | null = null;
 let loadAttempted = false;

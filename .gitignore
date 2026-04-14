@@ -29,6 +29,7 @@ personal-app/data/
 
 # 内寸データベース（非公開: 環境変数から生成）
 data/dimensions/inner_dimensions_db.ts
+_inner_dims_env.txt
 
 # 機密情報隔離（絶対にコミットしない）
 .secrets_backup/

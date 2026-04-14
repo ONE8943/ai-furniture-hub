@@ -11,6 +11,13 @@
 - Repository: <https://github.com/ONE8943/ai-furniture-hub>
 - npm: <https://www.npmjs.com/package/ai-furniture-hub>
 
+## MCP Connection
+
+- Registry name: `io.github.one8943/ai-furniture-hub`
+- Remote Streamable HTTP: <https://ai-furniture-hub.onrender.com/mcp>
+- Well-known discovery: <https://ai-furniture-hub.onrender.com/.well-known/mcp.json>
+- stdio package: `npx ai-furniture-hub`
+
 ## Services
 
 ### Product Search & Discovery

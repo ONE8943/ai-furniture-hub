@@ -44,7 +44,7 @@
     "enrich:stats": "ts-node scripts/review_enrichment.ts --stats",
     "enrich:sample": "ts-node scripts/review_enrichment.ts --sample"
   },
-  "keywords": ["mcp", "mcp-server", "furniture", "ai", "ai-agent", "agent", "rakuten", "amazon", "storage", "dimensions", "affiliate", "smart-home", "appliances", "beauty", "gadgets", "llms-txt", "model-context-protocol", "product-search", "japan", "e-commerce", "openapi", "curated"],
+  "keywords": ["mcp", "mcp-server", "mcp-registry", "furniture", "ai", "ai-agent", "agent", "cursor", "claude", "chatgpt", "vscode", "rakuten", "amazon", "storage", "dimensions", "affiliate", "smart-home", "appliances", "beauty", "gadgets", "llms-txt", "model-context-protocol", "product-search", "japan", "e-commerce", "openapi", "curated"],
   "author": "ONE, Inc.",
   "license": "MIT",
   "repository": {
