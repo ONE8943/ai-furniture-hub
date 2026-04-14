@@ -17,15 +17,5 @@
       "type": "sse",
       "url": "https://ai-furniture-hub.onrender.com/sse"
     }
-  ],
-  "packages": [
-    {
-      "registryType": "npm",
-      "identifier": "ai-furniture-hub",
-      "version": "6.3.0",
-      "transport": {
-        "type": "stdio"
-      }
-    }
   ]
 }
