@@ -1,6 +1,6 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.one8943/ai-furniture-hub",
+  "name": "io.github.ONE8943/ai-furniture-hub",
   "title": "AI Furniture & Home Product Hub",
   "description": "MCP server for mm-precision furniture search, fit checks, curated sets, and AIO audits.",
   "repository": {

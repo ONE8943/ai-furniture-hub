@@ -52,7 +52,7 @@
     "url": "https://github.com/ONE8943/ai-furniture-hub"
   },
   "homepage": "https://ai-furniture-hub.onrender.com",
-  "mcpName": "io.github.one8943/ai-furniture-hub",
+  "mcpName": "io.github.ONE8943/ai-furniture-hub",
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

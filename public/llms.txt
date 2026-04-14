@@ -13,7 +13,7 @@
 
 ## MCP Connection
 
-- Registry name: `io.github.one8943/ai-furniture-hub`
+- Registry name: `io.github.ONE8943/ai-furniture-hub`
 - Remote Streamable HTTP: <https://ai-furniture-hub.onrender.com/mcp>
 - Well-known discovery: <https://ai-furniture-hub.onrender.com/.well-known/mcp.json>
 - stdio package: `npx ai-furniture-hub`

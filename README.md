@@ -10,12 +10,12 @@
 
 ## Discovery & Install
 
-- **MCP Registry name**: `io.github.one8943/ai-furniture-hub`
+- **MCP Registry name**: `io.github.ONE8943/ai-furniture-hub`
 - **Remote MCP endpoint**: `https://ai-furniture-hub.onrender.com/mcp`
 - **Well-known discovery**: `https://ai-furniture-hub.onrender.com/.well-known/mcp.json`
 - **npm package**: [`ai-furniture-hub`](https://www.npmjs.com/package/ai-furniture-hub)
 
-If your MCP client supports registry search, search for `io.github.one8943/ai-furniture-hub` or `AI Furniture & Home Product Hub`.
+If your MCP client supports registry search, search for `io.github.ONE8943/ai-furniture-hub` or `AI Furniture & Home Product Hub`.
 If your client supports direct remote MCP, connect it to `https://ai-furniture-hub.onrender.com/mcp`.
 
 ## Why This Exists
@@ -214,7 +214,7 @@ All environment variables are optional. The server works out of the box with moc
 
 | Platform | URL |
 |----------|-----|
-| **MCP Registry** | `io.github.one8943/ai-furniture-hub` |
+| **MCP Registry** | `io.github.ONE8943/ai-furniture-hub` |
 | **Render** | `https://ai-furniture-hub.onrender.com/mcp` |
 | **npm** | `npx ai-furniture-hub` |
 
@@ -239,7 +239,7 @@ MIT
 
 **AI Furniture & Home Product Hub** は家具・家電・ガジェット等のAIエージェント向けMCPサーバーです。
 
-- **MCP Registry名**: `io.github.one8943/ai-furniture-hub`
+- **MCP Registry名**: `io.github.ONE8943/ai-furniture-hub`
 - **リモート接続URL**: `https://ai-furniture-hub.onrender.com/mcp`
 - **well-known**: `https://ai-furniture-hub.onrender.com/.well-known/mcp.json`
 
