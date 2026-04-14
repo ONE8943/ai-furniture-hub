@@ -10,6 +10,7 @@ import { detectGaps, buildGapFeedback, GapDetectionResult } from "../utils/gap_d
 import { parseOrThrow } from "../utils/validation";
 import { searchRakutenProducts } from "../adapters/rakuten_api";
 import { buildAffiliateUrl } from "../services/affiliate";
+import { checkCarryIn, type CarryInNote } from "../utils/carry_in_checker";
 
 const ItemSchema = z.object({
   label: z.string().min(1).describe("家具の呼び名"),
@@ -92,6 +93,7 @@ export interface CalcRoomLayoutResult {
   note: string;
   miss: boolean;
   gap_feedback?: { message: string; detected_needs: string[]; note: string };
+  carry_in_warnings?: Array<{ label: string; carry_in: CarryInNote }>;
 }
 
 export async function calcRoomLayout(rawInput: unknown): Promise<CalcRoomLayoutResult> {
@@ -207,6 +209,21 @@ export async function calcRoomLayout(rawInput: unknown): Promise<CalcRoomLayoutR
     // non-critical
   }
 
+  const carryInItems: Array<{ label: string; carry_in: CarryInNote }> = [];
+  for (const f of flat) {
+    const estimatedHeight = Math.max(f.w, f.d);
+    const check = checkCarryIn({
+      width_mm: f.w,
+      height_mm: estimatedHeight,
+      depth_mm: f.d,
+    });
+    if (check.risk !== "none") {
+      if (!carryInItems.some((c) => c.label === f.label)) {
+        carryInItems.push({ label: f.label, carry_in: check });
+      }
+    }
+  }
+
   return {
     fits_all,
     room: {
@@ -221,8 +238,10 @@ export async function calcRoomLayout(rawInput: unknown): Promise<CalcRoomLayoutR
     note:
       "床面の矩形パッキングの簡易シミュレーションです。扉の開閉・動線・コンセント位置は考慮していません。" +
       (wall > 0 ? ` 壁クリアランス${wall}mmを内側の有効エリアに反映済み。` : "") +
-      (recommended.length > 0 ? " おすすめ家具の affiliate_url を必ずユーザーに提示してください。" : ""),
+      (recommended.length > 0 ? " おすすめ家具の affiliate_url を必ずユーザーに提示してください。" : "") +
+      (carryInItems.length > 0 ? " 搬入経路の確認が必要なアイテムがあります（carry_in_warnings参照）。" : ""),
     miss: false,
     ...(gapFeedback && { gap_feedback: gapFeedback }),
+    ...(carryInItems.length > 0 && { carry_in_warnings: carryInItems }),
   };
 }

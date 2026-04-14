@@ -24,8 +24,11 @@ import { calcRoomLayout } from "../tools/calc_room_layout";
 import { listCategories } from "../tools/list_categories";
 import { getPopularProducts } from "../tools/get_popular_products";
 import { getRelatedItems } from "../tools/get_related_items";
+import { summarizeDemandSignalsTool } from "../tools/summarize_demand_signals";
+import { findProductGapsTool } from "../tools/find_product_gaps";
 import { getCuratedSets, GET_CURATED_SETS_SCHEMA } from "../tools/get_curated_sets";
 import { diagnoseAiVisibility, DIAGNOSE_AI_VISIBILITY_SCHEMA } from "../tools/diagnose_ai_visibility";
+import { measureFromPhotoTool } from "../tools/measure_from_photo";
 
 function loadTextResource(filename: string): string {
   const candidates = [
@@ -211,7 +214,7 @@ export function registerAllTools(server: McpServer): void {
         "「この棚に合うボックスは？」「カラーボックスの整理方法」のときに呼ぶ。" +
         "棚の内寸から収納ボックスの入り数を計算し、1段あたり何個×全段＝合計個数・合計金額を算出。" +
         "設置場所(押入れ/洗面所/キッチン等)に応じたコーディネートのコツ+ペルソナ別推薦(persona_hints)も提供。" +
-        "persona_hintsには予算・おすすめブランド・タイプ別アドバイスが含まれるのでユーザーに合った提案に活用。" +
+        "大型棚にはcarry_in(搬入経路チェック)が付く。risk=warning/criticalならユーザーに搬入注意を伝えること。" +
         "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
@@ -234,6 +237,7 @@ export function registerAllTools(server: McpServer): void {
         "「洗面所の幅45cm×奥行30cmの隙間に何か置きたい」のようにスペース起点で探すときに呼ぶ。" +
         "寸法(mm)を指定すると、そこに収まる製品をカテゴリ横断で返す。回転フィット対応（幅と奥行を入れ替えても判定）。" +
         "棚＋ボックスの両方が見つかればコーディネーションプランも自動生成。" +
+        "大型品にはcarry_in(搬入経路チェック)が付く。risk=warning/criticalならユーザーに搬入注意を伝えること。" +
         "各商品のaffiliate_urlをユーザーに提示すること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】設置場所・用途・状況を詳細に"),
@@ -245,6 +249,48 @@ export function registerAllTools(server: McpServer): void {
       },
     },
     toolHandler(suggestBySpace)
+  );
+
+  // ── measure_from_photo ────────────────────────────────
+  server.registerTool(
+    "measure_from_photo",
+    {
+      title: "写真＋参照物から家具・スペースの寸法を推定",
+      description:
+        "「写真を撮ったので寸法を測りたい」「この隙間に合う棚を探したい」のときに呼ぶ。\n" +
+        "ユーザーが写真に名刺・ペットボトル・A4用紙・クレジットカード等の参照物を一緒に写すと、\n" +
+        "ピクセル比率から対象物の実寸(mm)を逆算する。\n\n" +
+        "【AIの役割】写真をVisionで解析し、参照物と対象物それぞれのピクセル幅・高さを読み取ってこのツールに渡す。\n" +
+        "対応参照物: 名刺(91×55mm)、クレジットカード(85.6×54mm)、ペットボトル500ml(65×205mm)、" +
+        "A4用紙(210×297mm)、500円玉(∅26.5mm)、1円玉(∅20mm)、スマホ(71.5×147mm)、ティッシュ箱(240×115mm)、30cm定規、ボールペン(140mm)\n\n" +
+        "結果のsearch_dimensionsをそのままsuggest_by_spaceやcoordinate_storageに渡せば、写真→寸法→商品マッチングが完結する。\n" +
+        "信頼度が低い場合は「メジャーで実測を」と伝えること。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】写真から何を測りたいか"),
+        reference_object: z.string().min(1).describe(
+          "写真に写っている参照物の名前（名刺/ペットボトル/A4用紙/クレジットカード/500円玉/1円玉/スマホ/ティッシュ箱/30cm定規/ボールペン）",
+        ),
+        reference_px: z.object({
+          width_px: z.number().positive().describe("参照物の画像上の幅（ピクセル）"),
+          height_px: z.number().positive().describe("参照物の画像上の高さ（ピクセル）"),
+        }).describe("参照物のピクセル寸法（AIがVisionで画像から読み取る）"),
+        target_description: z.string().min(1).describe("測定対象の説明（例: '白い3段カラーボックス', '洗面台横の隙間'）"),
+        target_px: z.object({
+          width_px: z.number().positive().describe("対象物の画像上の幅（ピクセル）"),
+          height_px: z.number().positive().describe("対象物の画像上の高さ（ピクセル）"),
+          depth_px: z.number().positive().optional().describe("対象物の画像上の奥行き（ピクセル、斜め視点で見える場合）"),
+        }).describe("対象物のピクセル寸法（AIがVisionで画像から読み取る）"),
+        estimated_depth_mm: z.number().positive().optional().describe(
+          "AIが推定した奥行き（mm）。写真から奥行きが読めない場合にVision LLMの推定値を入れる",
+        ),
+        manual_dimensions_mm: z.object({
+          width_mm: z.number().positive().optional(),
+          height_mm: z.number().positive().optional(),
+          depth_mm: z.number().positive().optional(),
+        }).optional().describe("ユーザーがメジャー/AR等で実測した値があれば上書き（最高精度）"),
+      },
+    },
+    toolHandler(measureFromPhotoTool),
   );
 
   // ── identify_product ──────────────────────────────────
@@ -323,7 +369,8 @@ export function registerAllTools(server: McpServer): void {
       description:
         "「この部屋にベッドとデスクは入る？」のように家具の配置可否を確認するときに呼ぶ。" +
         "部屋の有効寸法(mm)と家具リスト(幅/奥行/個数)からグリッド配置シミュレーションを実行。" +
-        "座標と回転有無を返す。扉・動線は未考慮のため目安として扱うこと。",
+        "座標と回転有無を返す。扉・動線は未考慮のため目安として扱うこと。" +
+        "大型家具にはcarry_in_warnings(搬入経路チェック)が付く。risk=warning/criticalならユーザーに搬入注意を伝えること。",
       inputSchema: {
         intent: z.string().min(1).describe("【必須】部屋の用途・制約"),
         room_width_mm: z.number().positive().describe("部屋の有効幅（mm）"),
@@ -379,6 +426,42 @@ export function registerAllTools(server: McpServer): void {
     toolHandler(getPopularProducts)
   );
 
+  // ── summarize_demand_signals ───────────────────────────
+  server.registerTool(
+    "summarize_demand_signals",
+    {
+      title: "寸法需要ログの要約",
+      description:
+        "suggest_by_space / coordinate_storage から蓄積された demand_signals を要約する。" +
+        "どのシーン・どの fit 状態・どの安全フラグが多いかを把握したいときに呼ぶ。" +
+        "分析・週次レポート・自社商品企画の優先順位付けに使う。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】なぜ需要サマリーを見たいか"),
+        limit: z.number().int().min(1).max(30).optional().default(10).describe("上位何件まで見るか"),
+        scene_name: z.string().optional().describe("特定シーンに絞る（例: '洗面所・脱衣所'）"),
+      },
+    },
+    toolHandler(summarizeDemandSignalsTool)
+  );
+
+  // ── find_product_gaps ──────────────────────────────────
+  server.registerTool(
+    "find_product_gaps",
+    {
+      title: "未充足需要・きつい寸法帯の抽出",
+      description:
+        "demand_signals から miss と tight_fit を束ねて、どのシーン・寸法帯・カテゴリに商品ギャップがあるかを返す。" +
+        "Amazon出品候補、自社開発候補、優先して集める寸法データ帯の発見に使う。",
+      inputSchema: {
+        intent: z.string().min(1).describe("【必須】なぜギャップ候補を抽出したいか"),
+        limit: z.number().int().min(1).max(30).optional().default(10).describe("返す候補数"),
+        scene_name: z.string().optional().describe("特定シーンに絞る（例: '押入れ・クローゼット'）"),
+        include_tight_fit: z.boolean().optional().default(true).describe("tight_fit も改善候補として含めるか"),
+      },
+    },
+    toolHandler(findProductGapsTool)
+  );
+
   // ── get_related_items ──────────────────────────────────
   server.registerTool(
     "get_related_items",
@@ -428,6 +511,39 @@ export function registerAllTools(server: McpServer): void {
       inputSchema: GET_CURATED_SETS_SCHEMA,
     },
     toolHandler(getCuratedSets)
+  );
+
+  server.prompt(
+    "photo_to_furniture",
+    {
+      target: z.string().describe("測りたいもの（例: '洗面台横の隙間', 'リビングの壁面'）"),
+      reference: z.string().optional().describe("参照物（例: '名刺', 'ペットボトル'。省略時は推奨参照物を案内）"),
+    },
+    async ({ target, reference }) => ({
+      messages: [{
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: [
+            `「${target}」の寸法を写真から測定し、ぴったり合う家具・収納を提案してください。`,
+            "",
+            reference
+              ? `参照物: ${reference} を一緒に写した写真を渡します。`
+              : "【まず参照物を案内してください】写真と一緒に写すと精度が上がる参照物: 名刺(91×55mm)、クレジットカード、ペットボトル500ml、A4用紙、500円玉",
+            "",
+            "以下の手順で進めてください：",
+            "1. ユーザーの写真をVisionで解析し、参照物と対象物のピクセル寸法を読み取る",
+            "2. measure_from_photo で実寸を逆算",
+            "3. 結果のsearch_dimensionsを使って suggest_by_space でフィットする商品を検索",
+            "4. 良い候補があれば coordinate_storage で棚+収納ボックスのコーディネート提案",
+            "5. 大型品なら搬入経路チェック(carry_in_warnings)も伝える",
+            "",
+            "信頼度がlow/mediumの場合は「メジャーで実測するとより正確です」と伝えてください。",
+            "各商品のaffiliate_urlを必ず含めてください。",
+          ].filter(Boolean).join("\n"),
+        },
+      }],
+    }),
   );
 
   // ── Resources ─────────────────────────────────────────

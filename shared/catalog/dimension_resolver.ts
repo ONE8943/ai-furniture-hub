@@ -38,6 +38,9 @@ export interface ResolvedInnerDimensions {
   inner_height_per_tier_mm: number;
   inner_depth_mm: number;
   source: "curated" | "estimated";
+  resolution: "curated" | "text_inner" | "known_spec" | "estimated";
+  confidence: "high" | "medium" | "low";
+  reason: string;
 }
 
 /**
@@ -59,6 +62,9 @@ export function resolveInnerDimensions(
       inner_height_per_tier_mm: entry.inner_height_per_tier_mm,
       inner_depth_mm: entry.inner_depth_mm,
       source: "curated",
+      resolution: "curated",
+      confidence: "high",
+      reason: "curated_inner_dimensions_db",
     };
   }
 
@@ -75,6 +81,9 @@ export function resolveInnerDimensions(
       inner_height_per_tier_mm: est.height_per_tier_mm,
       inner_depth_mm: est.depth_mm,
       source: "estimated",
+      resolution: est.source,
+      confidence: est.confidence,
+      reason: est.reason,
     };
   }
 

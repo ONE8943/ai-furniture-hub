@@ -8,13 +8,15 @@
  */
 import { z } from "zod";
 import { searchRakutenProducts, RakutenSearchResult, extractDimensions } from "../adapters/rakuten_api";
-import { estimateInnerSize, calcFittingCount, EstimatedInner, FitResult } from "../utils/inner_size_estimator";
+import { estimateInnerSize, calcFittingCount, type FitStatus } from "../utils/inner_size_estimator";
 import { detectScene, SceneCoordinate, PersonaHint } from "../data/scene_coordinates";
 import { logAnalytics, buildHitLog, buildMissLog } from "../utils/logger";
 import { detectGaps, logRequirementGap, buildGapFeedback, GapDetectionResult } from "../utils/gap_detector";
 import { RequirementGap } from "../schemas/requirement_gap";
 import { generateProposals } from "../utils/proposal_generator";
 import { buildAffiliateUrl } from "../services/affiliate";
+import { inferSafetyFlags, logDemandSignal } from "../utils/demand_logger";
+import { checkCarryIn, inferWeightFromDimensions, type CarryInNote } from "../utils/carry_in_checker";
 import { parseOrThrow } from "../utils/validation";
 
 // -----------------------------------------------------------------------
@@ -52,6 +54,7 @@ interface ProductSummary {
   width_mm: number;
   height_mm: number;
   depth_mm: number;
+  category?: string;
   affiliate_url: string;
   url: string;
 }
@@ -62,6 +65,14 @@ interface FittingStorage {
   total: number;
   set_price: number;
   fit_detail: string;
+  fit_status: FitStatus;
+  used_rotation: boolean;
+  safety_margin_mm: {
+    width_mm: number;
+    depth_mm: number;
+    height_mm: number;
+    policy: string;
+  };
 }
 
 interface ShelfProposal {
@@ -72,8 +83,11 @@ interface ShelfProposal {
     depth_mm: number;
     tiers: number;
     source: string;
+    confidence: string;
+    reason: string;
   };
   fitting_storage: FittingStorage[];
+  carry_in?: CarryInNote;
 }
 
 export interface CoordinateResult {
@@ -92,6 +106,13 @@ export interface CoordinateResult {
     note: string;
   };
 }
+
+const fitStatusRank: Record<FitStatus, number> = {
+  safe_fit: 3,
+  tight_fit: 2,
+  near_miss: 1,
+  miss: 0,
+};
 
 // -----------------------------------------------------------------------
 // メインロジック
@@ -122,6 +143,7 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
   // シーン推定
   const sceneText = params.scene ?? params.intent;
   const scene: SceneCoordinate | null = detectScene(sceneText);
+  const safetyFlags = inferSafetyFlags(`${params.intent} ${scene?.scene ?? ""}`);
 
   // Step 1: 棚を楽天で検索
   let shelfResult: RakutenSearchResult;
@@ -143,6 +165,21 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
   if (validShelves.length === 0) {
     const missLog = buildMissLog("coordinate_storage", { keyword: params.keyword }, params.intent, "棚が見つからない");
     logAnalytics(missLog).catch(() => {});
+    logDemandSignal({
+      timestamp: new Date().toISOString(),
+      tool: "coordinate_storage",
+      intent: params.intent,
+      scene_name: scene?.scene ?? null,
+      keywords: {
+        shelf_keyword: params.keyword,
+      },
+      outcome: {
+        result_count: 0,
+        miss: true,
+        miss_reason: "棚が見つからない",
+      },
+      safety_flags: safetyFlags,
+    }).catch(() => {});
     return {
       shelves: [],
       scene_tips: scene?.tips ?? [],
@@ -200,7 +237,17 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
     const fittingStorage: FittingStorage[] = [];
 
     for (const st of validStorage) {
-      const fit = calcFittingCount(inner, st.width_mm, st.height_mm, st.depth_mm);
+      const fit = calcFittingCount(
+        inner,
+        st.width_mm,
+        st.height_mm,
+        st.depth_mm,
+        {
+          intent_text: params.intent,
+          shelf_text: productText,
+          storage_text: `${st.name} ${st.description ?? ""}`,
+        },
+      );
       if (!fit.fits || fit.total === 0) continue;
 
       const stAff = buildAffiliateUrl(
@@ -214,6 +261,7 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
           width_mm: st.width_mm,
           height_mm: st.height_mm,
           depth_mm: st.depth_mm,
+          category: st.category ?? "家具・収納",
           affiliate_url: stAff.affiliate_url,
           url: st.url ?? "",
         },
@@ -221,13 +269,30 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
         total: fit.total,
         set_price: shelf.price + st.price * fit.total,
         fit_detail: fit.fit_detail,
+        fit_status: fit.status,
+        used_rotation: fit.used_rotation,
+        safety_margin_mm: fit.safety_margin_mm,
       });
     }
 
-    // 合計金額の安い順にソート
-    fittingStorage.sort((a, b) => a.set_price - b.set_price);
+    fittingStorage.sort((a, b) => {
+      if (fitStatusRank[b.fit_status] !== fitStatusRank[a.fit_status]) {
+        return fitStatusRank[b.fit_status] - fitStatusRank[a.fit_status];
+      }
+      return a.set_price - b.set_price;
+    });
 
     totalCombinations += fittingStorage.length;
+
+    const shelfCarryIn = checkCarryIn({
+      width_mm: shelf.width_mm,
+      height_mm: shelf.height_mm,
+      depth_mm: shelf.depth_mm,
+      weight_kg: inferWeightFromDimensions(
+        { width_mm: shelf.width_mm, height_mm: shelf.height_mm, depth_mm: shelf.depth_mm },
+        shelf.category ?? shelf.name,
+      ) ?? undefined,
+    });
 
     shelves.push({
       shelf: {
@@ -236,6 +301,7 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
         width_mm: shelf.width_mm,
         height_mm: shelf.height_mm,
         depth_mm: shelf.depth_mm,
+        category: shelf.category ?? "家具・収納",
         affiliate_url: shelfAff.affiliate_url,
         url: shelf.url ?? "",
       },
@@ -245,8 +311,11 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
         depth_mm: inner.depth_mm,
         tiers: inner.tiers,
         source: inner.source,
+        confidence: inner.confidence,
+        reason: inner.reason,
       },
       fitting_storage: fittingStorage.slice(0, 5),
+      ...(shelfCarryIn.risk !== "none" && { carry_in: shelfCarryIn }),
     });
   }
 
@@ -258,6 +327,43 @@ export async function coordinateStorage(rawInput: unknown): Promise<CoordinateRe
     totalCombinations,
   );
   logAnalytics(hitLog).catch(() => {});
+
+  const topShelf = shelves.find((s) => s.fitting_storage.length > 0) ?? shelves[0];
+  const topStorage = topShelf?.fitting_storage[0];
+  logDemandSignal({
+    timestamp: new Date().toISOString(),
+    tool: "coordinate_storage",
+    intent: params.intent,
+    scene_name: scene?.scene ?? null,
+    keywords: {
+      shelf_keyword: params.keyword,
+      storage_keywords: storageKeywords,
+    },
+    outcome: {
+      result_count: totalCombinations,
+      miss: totalCombinations === 0,
+      top_fit_status: topStorage?.fit_status,
+      top_fit_detail: topStorage?.fit_detail,
+      miss_reason: totalCombinations === 0
+        ? "棚は見つかったが、内寸に合う収納ボックスが見つからない"
+        : undefined,
+    },
+    fit_context: {
+      shelf_category: topShelf?.shelf.category,
+      storage_category: topStorage?.storage.category,
+      inner_source: topShelf
+        ? topShelf.estimated_inner.source as "text_inner" | "known_spec" | "estimated"
+        : undefined,
+      inner_confidence: topShelf
+        ? topShelf.estimated_inner.confidence as "high" | "medium" | "low"
+        : undefined,
+      safety_policy: topStorage?.safety_margin_mm.policy,
+      used_rotation: topStorage?.used_rotation,
+    },
+    safety_flags: topStorage?.used_rotation
+      ? [...safetyFlags, "rotated_placement"]
+      : safetyFlags,
+  }).catch(() => {});
 
   return {
     shelves,
