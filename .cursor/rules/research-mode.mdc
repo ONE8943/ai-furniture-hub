@@ -1,0 +1,121 @@
+---
+description: 軽量AI（Gemini Flash等）による情報収集モード。コード変更なしの読み取り調査専用。
+globs: 
+alwaysApply: false
+---
+
+# 情報収集モード（Research Mode）
+
+このルールは Gemini Flash 等の軽量AIが「情報収集だけ」を行う際に適用する。
+**コードの変更は一切行わない。** 調査結果を構造化して返すことだけが目的。
+
+## あなたの役割
+
+- プロジェクトのコードベース・ドキュメント・ログを読み取って状況を把握する
+- Web検索で最新の技術情報・競合情報・API仕様を調べる
+- 結果を構造化Markdownでまとめて返す
+
+## 絶対にやらないこと
+
+1. ファイルの作成・編集・削除
+2. git操作（commit, push等）
+3. npm install等のパッケージ変更
+4. 環境変数やAPIキーの変更
+5. コードの実装提案（求められた場合は「実装モードのエージェントに依頼してください」と返す）
+
+## プロジェクト概要（コンテキスト）
+
+- **名称**: AI Furniture Hub - MCP Server（家具・収納・家電まわりのエージェント向けデータ）
+- **技術**: TypeScript / MCP / Zod / 楽天・Amazon アダプタ / Express
+- **件数・ツール数・ブランド列挙は可変** → `lib/register_tools.ts`・`shared/catalog/`・`package.json` で確認すること（このファイルに固定数値を書かない）
+
+## 主要ファイルの場所（調査時）
+
+| 用途 | パス |
+|------|------|
+| MCP ツール登録・実装 | `lib/register_tools.ts`, `tools/` |
+| 外部API | `adapters/` |
+| カタログ・関連チェーン | `shared/catalog/known_products.ts` |
+| スキーマ | `schemas/` |
+| ルール詳細 | `rules/*.md`（必要なファイルだけ） |
+| 調査テンプレ・投入先 | `docs/research-prompts.md`, `staging/*.jsonl` |
+| レビュースクリプト | `scripts/review_research.ts`, `scripts/review_coordination.ts` |
+
+## 調査でよく使うコマンド
+
+```bash
+# プロジェクト構造の把握
+ls -la
+ls tools/ shared/catalog/ schemas/
+
+# 最近の変更確認
+git log --oneline -20
+git diff HEAD~5 --stat
+
+# カタログの製品数確認
+grep -c "id:" shared/catalog/known_products.ts
+
+# テスト状況
+npx vitest run --reporter=verbose
+
+# ビルド確認
+npm run build
+
+# ログ確認（存在する場合）
+wc -l logs/analytics.jsonl logs/conversions.jsonl
+```
+
+## 調査結果のフォーマット
+
+### A. 一般調査 → Markdown
+
+```markdown
+## 調査結果: [テーマ]
+
+### 概要
+[1-2文で結論]
+
+### 詳細
+[箇条書きで発見事項]
+
+### 推奨アクション
+[実装モードで実行すべきタスク一覧]
+
+### 参考リンク
+[調査で見つけたURL]
+```
+
+### B. 製品データ調査 → JSONL
+
+ファイル名: `staging/research_[テーマ].jsonl`
+スキーマ: `scripts/review_research.ts` の `ResearchEntrySchema` を参照
+
+### C. コーディネート・組み合わせ調査 → JSONL
+
+ファイル名: `staging/coord_[テーマ].jsonl`（`coord_` プレフィックス必須）
+
+```jsonl
+{"source_product":"元製品名","source_brand":"ブランド","related_name":"関連アイテム名","relation":"fits_inside","why":"理由（10文字以上）","search_keywords":["楽天検索キーワード1","キーワード2"],"price_range_yen":{"min":300,"max":1500},"required":false,"source_type":"blog","source_url":"https://...","scene":"リビング収納","tags":["定番","公式推奨"]}
+```
+
+relation の種類:
+- `requires` — 必須付属品（突っ張り棒のサポーター等）
+- `protects_with` — 保護材（壁紙パッド、床保護マット）
+- `fits_inside` — 内部に収まる（インナーボックス等）
+- `coordinates_with` — コーディネート（セット使い）
+- `enhances_with` — 機能拡張（キャスター、棚板追加）
+- `alternative` — 代替品（同機能・別ブランド）
+
+source_type の種類:
+- `blog` — ブログ記事 (RoomClip, folk, LIMIA 等)
+- `sns` — SNS投稿 (Instagram, X, Pinterest)
+- `ec` — ECサイト「一緒に買われている」(楽天, Amazon)
+- `maker` — メーカー公式推奨
+- `review` — ユーザーレビュー
+- `other` — その他
+
+調査テンプレートの詳細: `docs/research-prompts.md` を参照
+
+## ルール詳細の参照先
+
+調査テーマに**直接関係する** `rules/*.md` のみ読む（一覧の全通読は不要）。

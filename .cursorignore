@@ -1,0 +1,13 @@
+﻿# Cursor インデックス・検索から除外（Composer のノイズ削減）
+node_modules/
+dist/
+logs/
+.secrets_backup/
+personal-app/data/
+*.db
+*.db-wal
+*.db-shm
+presentation/
+*.zip
+coverage/
+.vitest/
